@@ -1,0 +1,242 @@
+[
+ {
+  "act": "a1",
+  "id": "wire",
+  "description": "Get the wire from the space tanker",
+  "points": 5
+ },
+ {
+  "act": "a1",
+  "id": "trash_bucket",
+  "description": "Getting into vertical trash bucket",
+  "points": 5
+ },
+ {
+  "act": "a1",
+  "id": "jump_rail",
+  "description": "Jumping up to the rail",
+  "points": 10
+ },
+ {
+  "act": "a1",
+  "id": "grab_motivator",
+  "description": "Getting the motivator with the grabber",
+  "points": 15
+ },
+ {
+  "act": "a1",
+  "id": "install_motivator",
+  "description": "Installing the motivator in the ship",
+  "points": 15
+ },
+ {
+  "act": "a1",
+  "id": "fall_chute",
+  "description": "Falling through the garbage chute",
+  "points": 5
+ },
+ {
+  "act": "a1",
+  "id": "get_reactor",
+  "description": "Getting the reactor from the rat's lair",
+  "points": 15
+ },
+ {
+  "act": "a1",
+  "id": "get_ladder",
+  "description": "Getting the ladder from the rat's lair",
+  "points": 10
+ },
+ {
+  "act": "a1",
+  "id": "robot_eye",
+  "description": "Climbing through the metal robot's broken eye",
+  "points": 5
+ },
+ {
+  "act": "a1",
+  "id": "ladder_ship_top",
+  "description": "Using the ladder to get to the top of the spaceship",
+  "points": 5
+ },
+ {
+  "act": "a1",
+  "id": "open_hatch",
+  "description": "Opening hatch and entering the spaceship",
+  "points": 10
+ },
+ {
+  "act": "a1",
+  "id": "install_reactor",
+  "description": "Installing the reactor",
+  "points": 5
+ },
+ {
+  "act": "a1",
+  "id": "install_wire",
+  "description": "Installing the wire",
+  "points": 5
+ },
+ {
+  "act": "a1",
+  "id": "escape_freighter",
+  "description": "Safely escaping the trash freighter",
+  "points": 25
+ },
+ {
+  "act": "a1",
+  "id": "search_cushion",
+  "description": "Finding buckazoids by searching the pilot's cushion",
+  "points": 10
+ },
+ {
+  "act": "a3",
+  "id": "buy_fun_meal",
+  "description": "Buying a Fun Mail (Monolith Fun Meal)",
+  "points": 10
+ },
+ {
+  "act": "a3",
+  "id": "decoder_ring",
+  "description": "Getting the decoder ring",
+  "points": 10
+ },
+ {
+  "act": "a3",
+  "id": "chickens_10",
+  "description": "Safely landing 10 chickens in Astro Chicken",
+  "points": 50
+ },
+ {
+  "act": "a3",
+  "id": "find_message",
+  "description": "Discovering the secret coded message",
+  "points": 50
+ },
+ {
+  "act": "a3",
+  "id": "decode_message",
+  "description": "Using the ring to decode the message",
+  "points": 20
+ },
+ {
+  "act": "a2",
+  "id": "sell_gem",
+  "description": "Selling gem to Fester for 425 buckazoids",
+  "points": 8
+ },
+ {
+  "act": "a2",
+  "id": "buy_hat",
+  "description": "Buying the Astro Chicken hat",
+  "points": 5
+ },
+ {
+  "act": "a2",
+  "id": "buy_orat",
+  "description": "Buying the Orat on a Stick",
+  "points": 5
+ },
+ {
+  "act": "a2",
+  "id": "buy_underwear",
+  "description": "Buying the Thermoweave underwear",
+  "points": 5
+ },
+ {
+  "act": "a2",
+  "id": "terminator_pods",
+  "description": "Leading the Terminator under the pulsating pods",
+  "points": 45
+ },
+ {
+  "act": "a2",
+  "id": "get_belt",
+  "description": "Getting the invisibility belt with the Orat on a Stick or the pole",
+  "points": 35
+ },
+ {
+  "act": "a4",
+  "id": "wear_underwear",
+  "description": "Wearing the Thermoweave underwear",
+  "points": 10
+ },
+ {
+  "act": "a4",
+  "id": "telescope",
+  "description": "Looking through the telescope",
+  "points": 10
+ },
+ {
+  "act": "a4",
+  "id": "get_pole",
+  "description": "Getting the pole from the anemometer",
+  "points": 10
+ },
+ {
+  "act": "a4",
+  "id": "get_detonator",
+  "description": "Getting the detonator from the crate",
+  "points": 10
+ },
+ {
+  "act": "a4",
+  "id": "detonator_generator",
+  "description": "Getting the detonator into the generator",
+  "points": 20
+ },
+ {
+  "act": "a4",
+  "id": "pole_cross",
+  "description": "Using the pole to cross the device",
+  "points": 20
+ },
+ {
+  "act": "a5",
+  "id": "enter_scumsoft",
+  "description": "Successfully entering ScumSoft",
+  "points": 25
+ },
+ {
+  "act": "a5",
+  "id": "coveralls",
+  "description": "Wearing the janitor's coveralls",
+  "points": 5
+ },
+ {
+  "act": "a5",
+  "id": "photocopy",
+  "description": "Making a photocopy of Elmo's picture",
+  "points": 5
+ },
+ {
+  "act": "a5",
+  "id": "keycard",
+  "description": "Getting the keycard off of Elmo's desk",
+  "points": 5
+ },
+ {
+  "act": "a5",
+  "id": "find_two_guys",
+  "description": "Entering the detention area and finding Two Guys",
+  "points": 20
+ },
+ {
+  "act": "a5",
+  "id": "vaporize_jello",
+  "description": "Vaporize jello",
+  "points": 10
+ },
+ {
+  "act": "a5",
+  "id": "nukem_robots",
+  "description": "Winning Nukem Dukem Robots",
+  "points": 100
+ },
+ {
+  "act": "a5",
+  "id": "dogfight",
+  "description": "Winning the dogfight and seeing the end of the game",
+  "points": 100
+ }
+]
