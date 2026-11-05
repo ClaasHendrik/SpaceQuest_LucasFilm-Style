@@ -1,0 +1,13 @@
+{
+  "uniform": {
+    "name": "uniform",
+    "look": "An orange-and-white sanitation uniform. Somewhere inside it, a sleeve is still holding a grudge from your last shift.",
+    "wearable": true,
+    "wear_flag": "wearing_uniform",
+    "wear_text": "You pull on the uniform. It fits the way a promise from management fits: loosely, and without commitment."
+  },
+  "wire": {
+    "name": "wire",
+    "look": "A length of wire. Probably live. Possibly sentient. Definitely not insured."
+  }
+}
