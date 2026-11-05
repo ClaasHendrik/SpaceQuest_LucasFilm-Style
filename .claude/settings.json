@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/tmp/claude-0/-home-user-SpaceQuest-LucasFilm-Style/7db01b00-b598-5261-b0ff-421f4ab3058d/scratchpad/godot/Godot_v4.3-stable_linux.x86_64:*)"
+    ]
+  }
+}
