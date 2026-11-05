@@ -1,13 +1,45 @@
 extends Node2D
-# Base class for rooms. Rooms are scripts that fill in hotspots, a walk polygon and entry points.
+# Base class for rooms. Art is 320x132 native, shown 2x (640x264). Coordinates in code are stage pixels;
+# use R() and P() to write them in art pixels.
 # Hotspot dictionary: id, name, rect (Rect2), approach (Vector2, optional), default_verb (optional),
 # visible (Callable -> bool, optional), verbs {verb_name: Callable(main, other_dict)}.
 
+const Art := preload("res://scripts/art.gd")
+
 var id := ""
 var title := ""
+var bg := ""
+var no_player := false
 var walk_poly := PackedVector2Array()
 var hotspots: Array = []
 var entries: Dictionary = {}
+
+
+static func R(x: float, y: float, w: float, h: float) -> Rect2:
+	return Rect2(x * 2, y * 2, w * 2, h * 2)
+
+
+static func P(x: float, y: float) -> Vector2:
+	return Vector2(x * 2, y * 2)
+
+
+static func PP(pts: Array) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	for p in pts:
+		out.append(Vector2(p[0] * 2, p[1] * 2))
+	return out
+
+
+func current_bg() -> String:
+	return bg
+
+
+func _draw() -> void:
+	var t := Art.tex("res://assets/backgrounds/%s.png" % current_bg())
+	if t != null:
+		draw_texture_rect(t, Rect2(0, 0, 640, 264), false)
+	else:
+		draw_rect(Rect2(0, 0, 640, 264), Color.DARK_SLATE_GRAY)
 
 
 func on_enter(_main) -> void:

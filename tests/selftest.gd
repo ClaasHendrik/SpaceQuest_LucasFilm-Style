@@ -65,5 +65,66 @@ func run(m) -> void:
 	m._on_restart()
 	check(not m.dead and m.overlay == null, "restart leaves the death screen")
 
+	print("--- world")
+	var f := FileAccess.open("res://data/rooms.json", FileAccess.READ)
+	var data: Array = JSON.parse_string(f.get_as_text())
+	var ids := {"escape_pod": true, "garbage_mountain": true}
+	for r in data:
+		ids[r["id"]] = true
+	check(m.room_ids.size() == ids.size(), "room list covers all %d rooms" % ids.size())
+	var graph := {"escape_pod": ["garbage_mountain"], "garbage_mountain": ["escape_pod", "robot_head", "conveyor"]}
+	var bad_exits := 0
+	var bad_rects := 0
+	for r in data:
+		graph[r["id"]] = []
+		for h in r["hotspots"]:
+			if h.has("exit"):
+				graph[r["id"]].append(h["exit"]["room"])
+				if not ids.has(h["exit"]["room"]):
+					bad_exits += 1
+			var rc: Array = h["rect"]
+			if rc[0] < 0 or rc[1] < 0 or rc[0] + rc[2] > 320 or rc[1] + rc[3] > 132:
+				bad_rects += 1
+	check(bad_exits == 0, "every exit leads to an existing room")
+	check(bad_rects == 0, "every hotspot lies inside the 320x132 stage")
+	for d in ["landing_strip", "monolith_exterior", "ortega_crater", "pestulon_exterior"]:
+		graph["cockpit"].append(d)   # reached through the navigation computer and launch lever
+	var seen := {"escape_pod": true}
+	var queue := ["escape_pod"]
+	while not queue.is_empty():
+		var cur: String = queue.pop_front()
+		for nxt in graph.get(cur, []):
+			if not seen.has(nxt):
+				seen[nxt] = true
+				queue.append(nxt)
+	# only the cockpit shortcut links the ship to later acts; everything must be reachable from the start
+	var unreachable: Array = []
+	for rid in ids:
+		if not seen.has(rid):
+			unreachable.append(rid)
+	check(unreachable.is_empty(), "every room is reachable from the start (unreachable: %s)" % str(unreachable))
+	var missing_art := 0
+	for rid in m.room_ids:
+		m.change_room(rid, "start")
+		var t = m.room.Art.tex("res://assets/backgrounds/%s.png" % m.room.current_bg())
+		if t == null or t.get_width() != 320 or t.get_height() != 132:
+			missing_art += 1
+			print("   bad art for ", rid)
+		var inside: bool = m.room.no_player or Geometry2D.is_point_in_polygon(m.player.position, m.room.walk_poly)
+		if not inside:
+			print("   entry outside walk area: ", rid)
+			missing_art += 1
+	check(missing_art == 0, "every room loads 320x132 art and starts Roger on walkable ground")
+
+	print("--- space travel")
+	m._on_restart()
+	m.change_room("nav_screen", "start")
+	for i in 2:
+		await m.act("Use", "hotspot", "course")
+	check(int(GameState.flag("course_index")) == 2, "set course twice selects Ortega")
+	m.change_room("cockpit", "start")
+	await m.act("Use", "hotspot", "launch")
+	check(m.room.id == "ortega_crater", "launch lever flies to the chosen planet")
+
 	print("RESULT: ", "PASS" if failures.is_empty() else "FAIL (%d)" % failures.size())
 	m.get_tree().quit(0 if failures.is_empty() else 1)

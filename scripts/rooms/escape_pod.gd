@@ -1,49 +1,37 @@
 extends "res://scripts/room_base.gd"
-# Act 1, scene 1: the escape pod. Placeholder art drawn in code.
+# Act 1, scene 1: the escape pod.
 
 
 func _init() -> void:
 	id = "escape_pod"
 	title = "Escape Pod"
-	walk_poly = PackedVector2Array([Vector2(60, 200), Vector2(580, 200), Vector2(615, 255), Vector2(25, 255)])
-	entries = {"start": Vector2(300, 228), "hatch": Vector2(500, 215)}
+	walk_poly = PP([[20, 102], [300, 102], [318, 129], [2, 129]])
+	entries = {"start": P(150, 114), "hatch": P(258, 110)}
 	add_hotspot({
-		"id": "cryo", "name": "cryo-chamber", "rect": Rect2(70, 50, 90, 150), "approach": Vector2(150, 215),
-		"verbs": {
-			"Look at": _look_cryo, "Open": _open_cryo, "Close": _close_cryo, "Climb": _climb_cryo,
-		},
+		"id": "cryo", "name": "cryo-chamber", "rect": R(16, 20, 56, 76), "approach": P(60, 108),
+		"verbs": {"Look at": _look_cryo, "Open": _open_cryo, "Close": _close_cryo, "Climb": _climb_cryo},
 	})
 	add_hotspot({
-		"id": "locker", "name": "wall locker", "rect": Rect2(260, 70, 70, 120), "approach": Vector2(295, 210),
+		"id": "locker", "name": "wall locker", "rect": R(122, 28, 40, 64), "approach": P(142, 108),
 		"verbs": {"Look at": _look_locker, "Open": _open_locker, "Close": _close_locker, "Pull": _open_locker},
 	})
 	add_hotspot({
-		"id": "uniform", "name": "uniform", "rect": Rect2(275, 95, 40, 70), "approach": Vector2(295, 210),
-		"default_verb": "Pick up",
+		"id": "uniform", "name": "uniform", "rect": R(130, 38, 24, 46), "approach": P(142, 108), "default_verb": "Pick up",
 		"visible": func(): return GameState.flag("locker_open") and not GameState.has_item("uniform") and not GameState.flag("wearing_uniform"),
 		"verbs": {"Look at": _look_uniform, "Pick up": _take_uniform},
 	})
 	add_hotspot({
-		"id": "hatch", "name": "airlock hatch", "rect": Rect2(470, 60, 80, 140), "approach": Vector2(500, 215),
+		"id": "hatch", "name": "airlock hatch", "rect": R(224, 26, 68, 70), "approach": P(258, 108),
 		"verbs": {"Look at": _look_hatch, "Open": _open_hatch, "Push": _open_hatch, "Use": _open_hatch},
 	})
 
 
-func _draw() -> void:
-	draw_rect(Rect2(0, 0, 640, 264), Color("0b0b1a"))                  # wall
-	draw_rect(Rect2(0, 200, 640, 64), Color("2a2a3a"))                  # floor grating
-	for x in range(0, 640, 24):
-		draw_line(Vector2(x, 200), Vector2(x, 264), Color("3a3a4c"))
-	draw_rect(Rect2(70, 50, 90, 150), Color("34506b"))                  # cryo chamber
-	draw_rect(Rect2(80, 62, 70, 126), Color("1c2b3a"))
-	draw_rect(Rect2(260, 70, 70, 120), Color("5a5a6a"))                 # locker
-	if GameState.flag("locker_open"):
-		draw_rect(Rect2(266, 76, 58, 108), Color("14141c"))
-		if not GameState.has_item("uniform") and not GameState.flag("wearing_uniform"):
-			draw_rect(Rect2(278, 98, 34, 66), Color("ff8c1a"))
-	draw_rect(Rect2(470, 60, 80, 140), Color("7a6a3a"))                 # hatch
-	draw_circle(Vector2(510, 130), 28, Color("1a1a24"))
-	draw_circle(Vector2(510, 130), 20, Color("02020a"))
+func current_bg() -> String:
+	if not GameState.flag("locker_open"):
+		return "escape_pod"
+	if GameState.has_item("uniform") or GameState.flag("wearing_uniform"):
+		return "escape_pod_open_empty"
+	return "escape_pod_open"
 
 
 func _look_cryo(m, _o) -> void:

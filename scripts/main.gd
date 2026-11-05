@@ -7,7 +7,10 @@ const TWO_STEP := {"Use": "with", "Give": "to"}
 const ROOMS := {
 	"escape_pod": "res://scripts/rooms/escape_pod.gd",
 	"garbage_mountain": "res://scripts/rooms/garbage_mountain.gd",
+	"cockpit": "res://scripts/rooms/cockpit.gd",
+	"nav_screen": "res://scripts/rooms/nav_screen.gd",
 }
+const DATA_ROOM := "res://scripts/rooms/data_room.gd"
 const SAVE_SLOT := "slot1"
 const COL_VERB := Color("55a0ff")
 const COL_HOVER := Color("ffff55")
@@ -46,13 +49,19 @@ var verb_buttons: Array = []
 var _say_skip := false
 var _walk_token := 0
 var _selftest
+var room_ids: Array = []
 
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color.BLACK)
 	_build_ui()
 	GameState.inventory_changed.connect(_refresh_inventory)
-	change_room(GameState.current_room, "start")
+	_load_room_ids()
+	var start_room: String = GameState.current_room
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--room="):
+			start_room = a.substr(7)
+	change_room(start_room, "start")
 	_refresh_inventory()
 	if OS.get_cmdline_user_args().has("--shot"):
 		_selftest = load("res://tests/shot.gd").new()
@@ -60,6 +69,13 @@ func _ready() -> void:
 	elif OS.get_cmdline_user_args().has("--selftest"):
 		_selftest = load("res://tests/selftest.gd").new()  # keep a reference or the coroutine is freed
 		_selftest.run(self)
+
+
+func _load_room_ids() -> void:
+	room_ids = ["escape_pod", "garbage_mountain"]
+	var f := FileAccess.open("res://data/rooms.json", FileAccess.READ)
+	for r in JSON.parse_string(f.get_as_text()):
+		room_ids.append(r["id"])
 
 
 # --- UI construction -------------------------------------------------------
@@ -173,7 +189,12 @@ func change_room(room_id: String, entry = "start") -> void:
 	if room != null:
 		stage.remove_child(room)
 		room.queue_free()
-	room = load(ROOMS[room_id]).new()
+	if ROOMS.has(room_id):
+		room = load(ROOMS[room_id]).new()
+	else:
+		room = load(DATA_ROOM).new()
+	if room.has_method("setup"):
+		room.setup(room_id)
 	stage.add_child(room)
 	stage.move_child(room, 0)
 	GameState.current_room = room_id
@@ -182,6 +203,7 @@ func change_room(room_id: String, entry = "start") -> void:
 		p = entry
 	else:
 		p = room.entries.get(entry, room.entries.values()[0])
+	player.visible = not room.no_player
 	player.position = p
 	player.walk_target = p
 	player.walking = false
@@ -317,6 +339,11 @@ func _unhandled_input(event: InputEvent) -> void:
 				_close_overlay()
 			else:
 				_open_menu()
+		elif (event.keycode == KEY_F2 or event.keycode == KEY_F3) and overlay == null and not busy:
+			# developer shortcut: F2 / F3 = previous / next room
+			var idx := room_ids.find(room.id)
+			idx = (idx + (1 if event.keycode == KEY_F3 else -1) + room_ids.size()) % room_ids.size()
+			change_room(room_ids[idx], "start")
 		elif event.keycode == KEY_TAB and overlay == null:
 			_flash("Score: %d of %d" % [GameState.score, GameState.max_score])
 
@@ -406,11 +433,12 @@ func _run_hotspot(v: String, hid: String, other: Dictionary) -> void:
 	var hs: Dictionary = room.get_hotspot(hid)
 	if hs.is_empty():
 		return
-	var approach: Vector2 = hs.get("approach", (hs["rect"] as Rect2).get_center())
-	await walk_to(approach)
-	if v == "Walk to":
+	var verbs: Dictionary = hs["verbs"]
+	if not room.no_player:
+		await walk_to(hs.get("approach", (hs["rect"] as Rect2).get_center()))
+	if v == "Walk to" and not verbs.has("Walk to"):
 		return
-	var h = (hs["verbs"] as Dictionary).get(v)
+	var h = verbs.get(v)
 	if h is Callable:
 		await h.call(self, other)
 	else:

@@ -1,14 +1,25 @@
 extends Node2D
-# Roger. Placeholder figure drawn in code until real sprites exist.
+# Roger. 14x28 sprite frames drawn at 2x; origin at his feet.
+
+const Art := preload("res://scripts/art.gd")
+const FW := 14
+const FH := 28
 
 var walk_target := Vector2.ZERO
 var walking := false
-var speed := 90.0
+var speed := 110.0
+var _t := 0.0
+var _tex: Texture2D
+
+
+func _ready() -> void:
+	_tex = Art.tex("res://assets/sprites/roger.png")
 
 
 func _process(delta: float) -> void:
 	if not walking:
 		return
+	_t += delta
 	var to := walk_target - position
 	var step := speed * delta
 	if to.length() <= step:
@@ -22,11 +33,10 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	# origin is at the feet
-	var body := Color("f0f0f0")
-	if GameState.flag("wearing_uniform"):
-		body = Color("ff8c1a")
-	draw_rect(Rect2(-5, -36, 10, 8), Color("e8b890"))   # head
-	draw_rect(Rect2(-6, -28, 12, 16), body)              # torso
-	draw_rect(Rect2(-6, -12, 5, 12), Color("e8b890"))    # legs
-	draw_rect(Rect2(1, -12, 5, 12), Color("e8b890"))
+	if _tex == null:
+		return
+	var outfit := 1 if GameState.flag("wearing_uniform") else 0
+	var frame := 0
+	if walking:
+		frame = 1 + int(_t * 8.0) % 2
+	draw_texture_rect_region(_tex, Rect2(-FW, -FH * 2, FW * 2, FH * 2), Rect2((outfit * 3 + frame) * FW, 0, FW, FH))
