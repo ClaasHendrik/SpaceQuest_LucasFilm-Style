@@ -9,5 +9,17 @@
   "wire": {
     "name": "wire",
     "look": "A length of wire. Probably live. Possibly sentient. Definitely not insured."
+  },
+  "reactor": {
+    "name": "reactor",
+    "look": "A warp-core reactor, cooled to merely 'unwise to lick'. It hums in a tone that suggests it has plans for you."
+  },
+  "ladder": {
+    "name": "ladder",
+    "look": "A lightweight ladder, the sort that has caught people out, and will catch you out too, if you let it."
+  },
+  "buckazoids": {
+    "name": "buckazoids",
+    "look": "350 buckazoids. The galaxy's currency, and the only sort of friend a janitor can afford."
   }
 }

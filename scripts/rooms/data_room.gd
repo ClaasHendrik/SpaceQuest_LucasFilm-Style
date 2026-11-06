@@ -5,6 +5,16 @@ const EXIT_VERBS := ["Walk to", "Open", "Climb", "Use", "Push", "Pull"]
 static var _db = null
 
 
+func on_verbs(hid: String, verbs: Array, handler: Callable) -> void:
+	var h := get_hotspot(hid)
+	for v in verbs:
+		h["verbs"][v] = handler
+
+
+func remove_hotspots(ids: Array) -> void:
+	hotspots = hotspots.filter(func(h): return not ids.has(h["id"]))
+
+
 func setup(room_id: String) -> void:
 	if _db == null:
 		_db = {}

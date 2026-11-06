@@ -18,6 +18,12 @@ const ROOMS := {
 	"garbage_mountain": "res://scripts/rooms/garbage_mountain.gd",
 	"cockpit": "res://scripts/rooms/cockpit.gd",
 	"nav_screen": "res://scripts/rooms/nav_screen.gd",
+	"robot_head": "res://scripts/rooms/robot_head.gd",
+	"conveyor": "res://scripts/rooms/conveyor.gd",
+	"rat_lair": "res://scripts/rooms/rat_lair.gd",
+	"rail_walk": "res://scripts/rooms/rail_walk.gd",
+	"crane_cabin": "res://scripts/rooms/crane_cabin.gd",
+	"mallard_bay": "res://scripts/rooms/mallard_bay.gd",
 }
 const DATA_ROOM := "res://scripts/rooms/data_room.gd"
 const SAVE_SLOT := "slot1"
@@ -84,7 +90,10 @@ func _ready() -> void:
 			start_room = a.substr(7)
 	change_room(start_room, "start")
 	_refresh_inventory()
-	if OS.get_cmdline_user_args().has("--shot-pilot"):
+	if OS.get_cmdline_user_args().has("--shot-act1"):
+		_selftest = load("res://tests/shot_act1.gd").new()
+		_selftest.run(self)
+	elif OS.get_cmdline_user_args().has("--shot-pilot"):
 		_selftest = load("res://tests/shot_pilot.gd").new()
 		_selftest.run(self)
 	elif OS.get_cmdline_user_args().has("--shot"):
@@ -354,7 +363,7 @@ func _show_overlay(title: String, text: String, buttons: Array) -> void:
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.86)
+	dim.color = Color(0, 0, 0, 0.94)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.add_child(dim)
@@ -464,6 +473,8 @@ func _on_stage_input(event: InputEvent) -> void:
 				pending = {}
 				verb = "Walk to"
 				_update_sentence()
+				if room.has_method("walk_request") and await room.walk_request(self, event.position):
+					return
 				walk_to(event.position)
 			else:
 				_on_target("hotspot", hs["id"])
