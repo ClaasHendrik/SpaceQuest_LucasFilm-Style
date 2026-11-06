@@ -259,31 +259,9 @@ def mallard_bay(lit=True):
     p.fill(p.m_rect(0, 104, W, H), p.lin(0, 104, 0, H, "#343c4c", "#0c1018"))
     p.multiply(0.7 + 0.6 * p.noise(8, 3, 3), 0.5)
     p.fill(p.m_rect(0, 104, W, 106), (190, 205, 225), 0.3)
-    # the Aluminum Mallard: small, angular, battered
-    hull = [(76, 86), (94, 54), (202, 44), (260, 64), (268, 96), (76, 102)]
-    m = shaded(p, hull, "#aab4c2", 1.45, 0.35, seed=25, tex=0.16)
-    p.edge(m, (255, 255, 255), 0.3, "top")
-    glass = p.m_poly([(224, 56), (256, 68), (258, 82), (218, 78)])
-    p.fill(glass, p.lin(218, 56, 258, 82, "#bff8ff" if lit else "#2a3a50", "#1a5a78" if lit else "#0a1018"))
-    p.edge(glass, (0, 0, 0), 0.7)
-    eng = p.m_rect(94, 70, 108, 100)
-    p.fill(eng, (4, 5, 8))
-    for y in range(72, 100, 5):
-        p.fill(p.m_rect(94, y, 108, y + 1), (110, 120, 134))
-    p.fill(p.m_rect(148, 62, 178, 78), (150, 76, 40), 0.9)               # rust
-    p.multiply(0.9 + 0.2 * p.noise(5, 2, 7), 0.5)
-    p.fill(p.m_poly([(138, 78), (196, 80), (190, 92), (142, 90)]), (120, 54, 34), 0.8)
-    p.fill(p.m_line(76, 86, 268, 96, 1), (10, 12, 16), 0.6)
-    if lit:
-        for x, y in [(112, 100), (240, 90), (180, 52)]:
-            p.fill(p.m_rect(x, y, x + 6, y + 2), (255, 210, 90))
-            p.glow(x + 3, y + 1, 18, (255, 190, 60), 0.5)
-    ramp = p.m_poly([(150, 102), (192, 102), (204, 118), (138, 118)])
-    p.shade(ramp, "#6a7484", 1.3, 0.4, seed=26)
-    p.edge(ramp, (0, 0, 0), 0.6)
-    for x in (62, 258):
-        p.fill(p.m_rect(x, 102, x + 12, 118), (60, 68, 82))
-    p.glow(172, 112, 70, (255, 200, 120), 0.12, 0.3)
+    p.glow(172, 118, 120, (255, 200, 120), 0.12, 0.3)
+    from solid import mallard
+    mallard(p, 62, 46, 1.0, lit=lit)
     return p
 
 
