@@ -37,9 +37,9 @@ func current_bg() -> String:
 func _draw() -> void:
 	var t := Art.tex("res://assets/backgrounds/%s.png" % current_bg())
 	if t != null:
-		draw_texture_rect(t, Rect2(0, 0, 640, 264), false)
+		draw_texture_rect(t, Rect2(0, 0, 640, t.get_height() * 2), false)
 	else:
-		draw_rect(Rect2(0, 0, 640, 264), Color.DARK_SLATE_GRAY)
+		draw_rect(Rect2(0, 0, 640, 288), Color.DARK_SLATE_GRAY)
 
 
 func on_enter(_main) -> void:

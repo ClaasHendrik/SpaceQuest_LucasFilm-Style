@@ -29,7 +29,7 @@ func run(m) -> void:
 	check(GameState.flag("locker_open"), "locker opens")
 	await m.act("Pick up", "hotspot", "uniform")
 	check(GameState.has_item("uniform"), "uniform in inventory")
-	await m.act("Wear", "item", "uniform")
+	await m.act("Use", "item", "uniform")
 	check(GameState.flag("wearing_uniform") and not GameState.has_item("uniform"), "uniform worn")
 	await m.act("Open", "hotspot", "hatch")
 	check(m.room.id == "garbage_mountain", "hatch leads to the garbage mountain")
@@ -53,8 +53,8 @@ func run(m) -> void:
 	print("--- two-step verb")
 	await m.act("Use", "item", "wire", "hotspot", "heap")
 	check(not m.busy, "use item on hotspot completes")
-	await m.act("Wear", "item", "wire")
-	check(not m.busy, "wearing a non-wearable item completes")
+	await m.act("What is", "item", "wire")
+	check(not m.busy, "What is on an item completes")
 
 	print("--- death")
 	m._on_restart()
@@ -83,10 +83,10 @@ func run(m) -> void:
 				if not ids.has(h["exit"]["room"]):
 					bad_exits += 1
 			var rc: Array = h["rect"]
-			if rc[0] < 0 or rc[1] < 0 or rc[0] + rc[2] > 320 or rc[1] + rc[3] > 132:
+			if rc[0] < 0 or rc[1] < 0 or rc[0] + rc[2] > 320 or rc[1] + rc[3] > 144:
 				bad_rects += 1
 	check(bad_exits == 0, "every exit leads to an existing room")
-	check(bad_rects == 0, "every hotspot lies inside the 320x132 stage")
+	check(bad_rects == 0, "every hotspot lies inside the 320x144 stage")
 	for d in ["landing_strip", "monolith_exterior", "ortega_crater", "pestulon_exterior"]:
 		graph["cockpit"].append(d)   # reached through the navigation computer and launch lever
 	var seen := {"escape_pod": true}
@@ -107,14 +107,22 @@ func run(m) -> void:
 	for rid in m.room_ids:
 		m.change_room(rid, "start")
 		var t = m.room.Art.tex("res://assets/backgrounds/%s.png" % m.room.current_bg())
-		if t == null or t.get_width() != 320 or t.get_height() != 132:
+		if t == null or t.get_width() != 320 or (t.get_height() != 132 and t.get_height() != 144):
 			missing_art += 1
 			print("   bad art for ", rid)
 		var inside: bool = m.room.no_player or Geometry2D.is_point_in_polygon(m.player.position, m.room.walk_poly)
 		if not inside:
 			print("   entry outside walk area: ", rid)
 			missing_art += 1
-	check(missing_art == 0, "every room loads 320x132 art and starts Roger on walkable ground")
+	check(missing_art == 0, "every room loads 320x132/144 art and starts Roger on walkable ground")
+
+	print("--- interface")
+	m.change_room("escape_pod", "start")
+	check(not m.verb_enabled("Talk to") and not m.verb_enabled("Travel"), "Talk to and Travel are greyed out in the escape pod")
+	check(m.verb_buttons["Talk to"].disabled, "the greyed verb buttons are disabled")
+	m.change_room("cockpit", "start")
+	check(m.verb_enabled("Travel"), "Travel is active in the cockpit")
+	check(not m.verb_buttons["Travel"].disabled, "the Travel button is enabled there")
 
 	print("--- space travel")
 	m._on_restart()

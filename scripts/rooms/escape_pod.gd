@@ -5,23 +5,23 @@ extends "res://scripts/room_base.gd"
 func _init() -> void:
 	id = "escape_pod"
 	title = "Escape Pod"
-	walk_poly = PP([[20, 102], [300, 102], [318, 129], [2, 129]])
-	entries = {"start": P(150, 114), "hatch": P(258, 110)}
+	walk_poly = PP([[14, 112], [306, 112], [318, 141], [2, 141]])
+	entries = {"start": P(160, 126), "hatch": P(266, 122)}
 	add_hotspot({
-		"id": "cryo", "name": "cryo-chamber", "rect": R(16, 20, 56, 76), "approach": P(60, 108),
-		"verbs": {"Look at": _look_cryo, "Open": _open_cryo, "Close": _close_cryo, "Climb": _climb_cryo},
+		"id": "cryo", "name": "cryo-chamber", "rect": R(10, 20, 72, 90), "approach": P(60, 120),
+		"verbs": {"Look at": _look_cryo, "Open": _open_cryo, "Close": _close_cryo, "Use": _climb_cryo},
 	})
 	add_hotspot({
-		"id": "locker", "name": "wall locker", "rect": R(122, 28, 40, 64), "approach": P(142, 108),
+		"id": "locker", "name": "wall locker", "rect": R(140, 38, 46, 70), "approach": P(163, 120),
 		"verbs": {"Look at": _look_locker, "Open": _open_locker, "Close": _close_locker, "Pull": _open_locker},
 	})
 	add_hotspot({
-		"id": "uniform", "name": "uniform", "rect": R(130, 38, 24, 46), "approach": P(142, 108), "default_verb": "Pick up",
+		"id": "uniform", "name": "uniform", "rect": R(150, 50, 28, 44), "approach": P(163, 120), "default_verb": "Pick up",
 		"visible": func(): return GameState.flag("locker_open") and not GameState.has_item("uniform") and not GameState.flag("wearing_uniform"),
 		"verbs": {"Look at": _look_uniform, "Pick up": _take_uniform},
 	})
 	add_hotspot({
-		"id": "hatch", "name": "airlock hatch", "rect": R(224, 26, 68, 70), "approach": P(258, 108),
+		"id": "hatch", "name": "airlock hatch", "rect": R(226, 24, 80, 84), "approach": P(266, 120),
 		"verbs": {"Look at": _look_hatch, "Open": _open_hatch, "Push": _open_hatch, "Use": _open_hatch},
 	})
 

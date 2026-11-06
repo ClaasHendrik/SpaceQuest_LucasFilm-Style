@@ -5,31 +5,31 @@ extends "res://scripts/room_base.gd"
 func _init() -> void:
 	id = "garbage_mountain"
 	title = "Garbage Mountain"
-	walk_poly = PP([[10, 106], [310, 106], [318, 129], [2, 129]])
-	entries = {"pod": P(62, 114), "start": P(62, 114), "east": P(290, 114), "south": P(160, 122)}
+	walk_poly = PP([[10, 114], [310, 114], [318, 141], [2, 141]])
+	entries = {"pod": P(80, 128), "start": P(80, 128), "east": P(290, 128), "south": P(160, 136)}
 	add_hotspot({
-		"id": "pod_hatch", "name": "escape pod", "rect": R(8, 56, 46, 44), "approach": P(62, 112),
+		"id": "pod_hatch", "name": "escape pod", "rect": R(6, 62, 54, 50), "approach": P(36, 124),
 		"verbs": {"Look at": _look_pod, "Open": _enter_pod},
 	})
 	add_hotspot({
-		"id": "wire", "name": "wire", "rect": R(194, 92, 34, 12), "approach": P(206, 112), "default_verb": "Pick up",
+		"id": "wire", "name": "wire", "rect": R(196, 104, 38, 14), "approach": P(214, 126), "default_verb": "Pick up",
 		"visible": func(): return not GameState.has_item("wire") and not GameState.flag("wire_taken"),
 		"verbs": {"Look at": _look_wire, "Pick up": _take_wire},
 	})
 	add_hotspot({
-		"id": "heap", "name": "junk heap", "rect": R(150, 30, 140, 66),
+		"id": "heap", "name": "junk heap", "rect": R(150, 50, 160, 56),
 		"verbs": {"Look at": _look_heap},
 	})
 	add_hotspot({
-		"id": "starfighter", "name": "wrecked starfighter", "rect": R(104, 62, 56, 50), "approach": P(132, 114),
+		"id": "starfighter", "name": "wrecked starfighter", "rect": R(106, 62, 66, 62), "approach": P(140, 126),
 		"verbs": {"Look at": _look_fighter},
 	})
 	add_hotspot({
-		"id": "east", "name": "path east", "rect": R(296, 50, 24, 56), "approach": P(300, 112), "default_verb": "Walk to",
+		"id": "east", "name": "path east", "rect": R(298, 56, 22, 80), "approach": P(304, 128), "default_verb": "Walk to",
 		"verbs": {"Walk to": _go_east, "Open": _go_east, "Use": _go_east},
 	})
 	add_hotspot({
-		"id": "south", "name": "way south", "rect": R(100, 118, 120, 11), "approach": P(160, 124), "default_verb": "Walk to",
+		"id": "south", "name": "way south", "rect": R(100, 134, 120, 10), "approach": P(160, 138), "default_verb": "Walk to",
 		"verbs": {"Walk to": _go_south, "Open": _go_south, "Use": _go_south},
 	})
 

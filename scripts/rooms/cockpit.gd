@@ -11,6 +11,8 @@ func setup(room_id: String) -> void:
 	get_hotspot("launch")["verbs"]["Pull"] = _launch
 	get_hotspot("launch")["verbs"]["Push"] = _launch
 	get_hotspot("launch")["verbs"]["Look at"] = _look_lever
+	get_hotspot("launch")["verbs"]["Travel"] = _launch
+	get_hotspot("computer")["verbs"]["Travel"] = func(m, _o): m.change_room("nav_screen", "start")
 
 
 func _look_lever(m, _o) -> void:
