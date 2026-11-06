@@ -57,7 +57,9 @@ def escape_pod(locker_open=False, uniform=True):
     p.multiply(0.85 + 0.3 * p.noise(10, 2, 8), 0.4)
     p.glow(162, 122, 90, (255, 170, 80), 0.16, 0.22)
     # --- cryo chamber (left)
-    fr = bevel(p, 10, 20, 82, 110, "#8e9aa4", 1.2, 0.55, seed=2)
+    from solid import box as sbox, soft_shadow as sshadow, sphere as ssphere
+    sshadow(p, [(6, 108), (92, 108), (100, 124), (10, 126)], 0.55, 3.0)
+    fr = sbox(p, 10, 20, 72, 90, 8, 5, "#8e9aa4", seed=2)[0]
     inner = p.m_rect(20, 30, 72, 106)
     p.fill(inner, p.lin(0, 30, 0, 106, "#9fe8f0", "#2a8ca0"))
     p.fill(p.m_rect(20, 30, 72, 50), (255, 255, 255), 0.22)          # frost haze
@@ -69,7 +71,7 @@ def escape_pod(locker_open=False, uniform=True):
     p.glow(46, 15, 26, (255, 70, 60), 0.45, 0.8)
     p.fill(p.m_rect(20, 106, 72, 110), (20, 40, 50))
     # --- control panel
-    bevel(p, 94, 44, 130, 86, "#3a4650", 1.2, 0.6, seed=3)
+    sbox(p, 94, 44, 36, 42, 5, 3, "#3a4650", seed=3)
     scr = p.m_rect(98, 50, 126, 66)
     p.fill(scr, p.lin(0, 50, 0, 66, "#1c5a34", "#0a2414"))
     for i in range(6):
@@ -78,7 +80,8 @@ def escape_pod(locker_open=False, uniform=True):
         p.fill(p.m_rect(100 + i * 7, 72, 104 + i * 7, 76), c)
         p.glow(102 + i * 7, 74, 8, c, 0.25)
     # --- wall locker
-    lk = bevel(p, 140, 38, 186, 108, "#7c8690", 1.2, 0.6, seed=4)
+    sshadow(p, [(138, 106), (196, 106), (206, 124), (146, 126)], 0.6, 3.0)
+    lk = sbox(p, 140, 38, 46, 70, 7, 4, "#7c8690", seed=4)[0]
     if not locker_open:
         p.fill(p.m_rect(162, 40, 164, 106), (10, 14, 18), 0.75)
         p.fill(p.m_rect(156, 66, 158, 80), (230, 190, 90))
@@ -108,7 +111,8 @@ def escape_pod(locker_open=False, uniform=True):
             p.fill(p.m_rect(162, 54, 164, 90), (70, 40, 16), 0.5)
         p.glow(163, 70, 30, (255, 170, 80), 0.18)
     # --- airlock hatch with a porthole onto the junk-filled dark
-    bevel(p, 226, 24, 306, 108, "#7a8a96", 1.2, 0.5, seed=7)
+    sshadow(p, [(224, 106), (314, 106), (318, 124), (230, 126)], 0.5, 3.0)
+    sbox(p, 226, 24, 80, 84, 8, 5, "#7a8a96", seed=7)
     ring = p.m_ell(238, 34, 294, 90)
     p.shade(ring, "#a0aab4", 1.3, 0.4, seed=8)
     glass = p.m_ell(244, 40, 288, 84)
@@ -195,18 +199,18 @@ def garbage_mountain(wire=True):
         p.fill(p.m_rect(x, y, x + int(rng.integers(4, 18)), y + 1), (20, 14, 12), 0.5)
     debris(p, rng, 0, W, 104, 140, 46, (2, 8), haze, 0.05, PAL)
     # --- escape pod (left)
-    pod = p.m_poly([(6, 112), (6, 74), (16, 64), (50, 64), (60, 74), (60, 112)])
-    p.shade(pod, "#7e8a98", 1.35, 0.4, tex=0.1, seed=4)
-    p.edge(pod, (0, 0, 0), 0.6)
+    from solid import box as sb2, ground_shadow as gs2
+    gs2(p, 2, 74, 112, 8, 0.6, 3.0)
+    sb2(p, 6, 66, 52, 46, 8, 5, "#7e8a98", seed=4, tex=0.1)
     win = p.m_ell(18, 74, 48, 100)
     p.fill(win, p.radial(33, 87, 16, "#9be4f0", "#1c5c78"))
     p.edge(win, (0, 0, 0), 0.7)
     p.fill(p.m_rect(8, 106, 58, 110), (230, 190, 40), 0.9)
     p.glow(33, 87, 36, (110, 220, 255), 0.25)
     # --- wrecked starfighter cockpit: a dented sphere with a cracked hexagonal window
-    ball = p.m_ell(106, 62, 172, 124)
-    p.shade(ball, "#7a8090", 1.5, 0.3, tex=0.16, seed=5)
-    p.edge(ball, (0, 0, 0), 0.6)
+    from solid import sphere as ssph, ground_shadow as gshadow
+    gshadow(p, 100, 176, 120, 8, 0.6, 3.0)
+    ssph(p, 139, 93, 33, "#7a8090", squash=0.94, spec=0.35)
     win = p.m_poly([(124, 80), (154, 78), (162, 98), (150, 114), (126, 112), (118, 96)])
     p.fill(win, p.lin(120, 78, 160, 114, "#2a3c58", "#04060c"))
     p.edge(win, (0, 0, 0), 0.8)

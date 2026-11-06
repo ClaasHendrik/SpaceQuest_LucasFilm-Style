@@ -85,7 +85,7 @@ room("nav_screen", "Navigation Computer", 1, no_player=True, hot=[
 
 # ---------------------------------------------------------------- Act 2: Phleebhut
 room("landing_strip", "Phleebhut: Landing Strip", 2, [[8, 92], [312, 92], [318, 129], [2, 129]], {"start": [120, 116], "west": [120, 116]}, hot=[
-    hs("ship", "Aluminum Mallard", [16, 86, 82, 32], "Your ship, parked at a slight angle, like a regret.", [60, 120], exit=("cockpit", "start")),
+    hs("ship", "Aluminum Mallard", [12, 73, 104, 48], "Your ship, parked at a slight angle, like a regret.", [60, 120], exit=("cockpit", "start")),
     hs("arches", "rock arch", [150, 38, 100, 54], "A rock arch the colour of an alien's idea of nature.", [200, 100]),
     hs("spires", "stone spires", [100, 54, 30, 40], "Sharp green spires. A quick glance says 'don't', a long one says 'really don't'.", [120, 100]),
     hs("e", "desert path", [296, 60, 24, 60], "A path east, towards a giant shape in the distance. Possibly a shop.", [300, 112], exit=("world_o_wonders", "west")),
@@ -118,7 +118,7 @@ room("monolith_exterior", "Monolith Burger: Station", 3, no_player=True, hot=[
 ])
 room("monolith_concourse", "Monolith Burger: Concourse", 3, [[10, 100], [300, 100], [318, 129], [2, 129]], {"start": [270, 116], "arcade": [60, 114]}, hot=[
     hs("counter", "counter", [60, 54, 190, 38], "A counter streaked with something that was a meal in a previous life.", [150, 108]),
-    hs("clerk", "clerk", [200, 22, 24, 34], "A teenage alien clerk who looks as though he's been bored since before you were born.", [210, 108]),
+    hs("clerk", "clerk", [206, 24, 24, 40], "A teenage alien clerk who looks as though he's been bored since before you were born.", [210, 108]),
     hs("menu", "menu board", [70, 8, 180, 32], "The menu board offers eight kinds of burger. All taste of the same disappointment.", [160, 108]),
     hs("cabinet", "arcade cabinet", [6, 44, 34, 60], "A cabinet for a game called Astro Chicken. It blinks like it knows something.", [50, 110], exit=("arcade_corner", "start")),
     hs("tables", "tables", [262, 78, 50, 34], "Tables bolted to the floor. A sensible precaution, given the food.", [270, 118]),
@@ -136,7 +136,7 @@ room("astro_chicken", "Astro Chicken", 3, no_player=True, hot=[
 
 # ---------------------------------------------------------------- Act 4: Ortega
 room("ortega_crater", "Ortega: Crater Field", 4, [[10, 80], [300, 80], [318, 129], [2, 129]], {"start": [60, 100]}, hot=[
-    hs("ship", "Aluminum Mallard", [16, 50, 50, 16], "Your ship on the ridge, smoking quietly to itself.", [50, 90], exit=("cockpit", "start")),
+    hs("ship", "Aluminum Mallard", [10, 48, 44, 26], "Your ship on the ridge, smoking quietly to itself.", [50, 90], exit=("cockpit", "start")),
     hs("lava", "lava pit", [150, 90, 70, 40], "A pit of glowing lava. It looks like the sunset, if the sunset wanted you dead.", [140, 100]),
     hs("s", "path south", [60, 120, 120, 9], "A narrow stone path south.", [100, 124], exit=("ortega_bridge", "start")),
 ])

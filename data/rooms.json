@@ -882,10 +882,10 @@
     "id": "ship",
     "name": "Aluminum Mallard",
     "rect": [
-     16,
-     94,
-     82,
-     35
+     12,
+     80,
+     104,
+     52
     ],
     "look": "Your ship, parked at a slight angle, like a regret.",
     "approach": [
@@ -1394,10 +1394,10 @@
     "id": "clerk",
     "name": "clerk",
     "rect": [
-     200,
+     206,
+     26,
      24,
-     24,
-     37
+     44
     ],
     "look": "A teenage alien clerk who looks as though he's been bored since before you were born.",
     "approach": [
@@ -1644,10 +1644,10 @@
     "id": "ship",
     "name": "Aluminum Mallard",
     "rect": [
-     16,
-     55,
-     50,
-     17
+     10,
+     52,
+     44,
+     28
     ],
     "look": "Your ship on the ridge, smoking quietly to itself.",
     "approach": [

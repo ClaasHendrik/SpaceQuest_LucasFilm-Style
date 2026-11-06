@@ -5,7 +5,7 @@ from paint import W, H
 import pilot
 
 OUT = "../../assets/backgrounds/"
-MODULES = ["p_act1", "p_act2", "p_act3", "p_act4", "p_act5"]
+MODULES = ["p_act1", "p_act2", "p_act3", "p_act4", "p_act5", "s_act1", "s_act2", "s_act3", "s_act4", "s_act5"]   # s_* = solid versions, override p_*
 
 
 def main():
@@ -13,14 +13,16 @@ def main():
     for name, fn in pilot.ROOMS.items():
         fn().save(OUT + name + ".png")
         written.append(name)
+    rooms = {}
     for m in MODULES:
         try:
             mod = importlib.import_module(m)
         except ModuleNotFoundError:
             continue
-        for name, fn in mod.ROOMS.items():
-            fn().finish(colors=190, vignette=0.45).save(OUT + name + ".png")
-            written.append(name)
+        rooms.update(mod.ROOMS)
+    for name, fn in rooms.items():
+        fn().finish(colors=190, vignette=0.45).save(OUT + name + ".png")
+        written.append(name)
     print(len(written), "backgrounds:", " ".join(written))
     if len(sys.argv) > 1:
         only = sys.argv[2:] or written
