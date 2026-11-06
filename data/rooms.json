@@ -7,29 +7,29 @@
   "walk": [
    [
     104,
-    106
+    116
    ],
    [
     310,
-    106
+    116
    ],
    [
     318,
-    129
+    141
    ],
    [
     100,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     120,
-    114
+    124
    ],
    "west": [
     120,
-    114
+    124
    ]
   },
   "no_player": false,
@@ -39,14 +39,14 @@
     "name": "giant robot head",
     "rect": [
      150,
-     14,
+     15,
      150,
-     86
+     94
     ],
     "look": "A robot head the size of a house, retired without ceremony. Somebody stuck it here and told nobody why.",
     "approach": [
      220,
-     110
+     120
     ]
    },
    {
@@ -54,14 +54,14 @@
     "name": "broken eye",
     "rect": [
      176,
-     34,
+     37,
      28,
-     28
+     31
     ],
     "look": "One eye is smashed. Through the crack, something metallic glints inside, like a plan.",
     "approach": [
      190,
-     110
+     120
     ]
    },
    {
@@ -69,14 +69,14 @@
     "name": "chasm",
     "rect": [
      0,
+     109,
      100,
-     100,
-     29
+     32
     ],
     "look": "A chasm. You can't see the bottom, which is the one detail the rumours agree on.",
     "approach": [
      110,
-     112
+     122
     ]
    },
    {
@@ -84,14 +84,14 @@
     "name": "metal plate",
     "rect": [
      110,
-     106,
+     116,
      22,
-     12
+     13
     ],
     "look": "A sharp-edged plate of metal, lying about like an invitation to a mistake.",
     "approach": [
      118,
-     116
+     127
     ]
    },
    {
@@ -99,14 +99,14 @@
     "name": "way west",
     "rect": [
      0,
-     40,
+     44,
      12,
-     60
+     65
     ],
     "look": "Back towards the mountain of garbage.",
     "approach": [
      112,
-     112
+     122
     ],
     "exit": {
      "room": "garbage_mountain",
@@ -123,29 +123,29 @@
   "walk": [
    [
     10,
-    110
+    120
    ],
    [
     300,
-    110
+    120
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     40,
-    118
+    129
    ],
    "west": [
     40,
-    118
+    129
    ]
   },
   "no_player": false,
@@ -155,14 +155,14 @@
     "name": "conveyor belt",
     "rect": [
      0,
-     84,
+     92,
      250,
-     20
+     22
     ],
     "look": "A conveyor belt that carries things to a hydraulic crusher. It's the only thing on this ship that's running on time.",
     "approach": [
      130,
-     114
+     124
     ]
    },
    {
@@ -170,14 +170,14 @@
     "name": "crusher",
     "rect": [
      252,
-     54,
+     59,
      44,
-     38
+     41
     ],
     "look": "A steel block the size of a bus. It rises, falls, and doesn't take the day off.",
     "approach": [
      240,
-     114
+     124
     ]
    },
    {
@@ -185,14 +185,14 @@
     "name": "drainage pipe",
     "rect": [
      296,
-     98,
+     107,
      22,
-     26
+     28
     ],
     "look": "A drainage pipe just beneath the crusher. A very bad idea, helpfully lit.",
     "approach": [
      290,
-     118
+     129
     ],
     "exit": {
      "room": "rat_lair",
@@ -204,14 +204,14 @@
     "name": "service ladder",
     "rect": [
      0,
-     10,
+     11,
      18,
-     70
+     76
     ],
     "look": "A service ladder up to the overhead rails. Somebody's coffee cup is still on the first rung.",
     "approach": [
      22,
-     112
+     122
     ],
     "exit": {
      "room": "rail_walk",
@@ -223,14 +223,14 @@
     "name": "way west",
     "rect": [
      0,
-     114,
+     124,
      40,
-     15
+     16
     ],
     "look": "Back to the mountain.",
     "approach": [
      40,
-     118
+     129
     ],
     "exit": {
      "room": "garbage_mountain",
@@ -247,29 +247,29 @@
   "walk": [
    [
     30,
-    76
+    83
    ],
    [
     290,
-    76
+    83
    ],
    [
     290,
-    100
+    109
    ],
    [
     30,
-    100
+    109
    ]
   ],
   "entries": {
    "start": [
     60,
-    90
+    98
    ],
    "pipe": [
     60,
-    90
+    98
    ]
   },
   "no_player": false,
@@ -279,14 +279,14 @@
     "name": "warp-core reactor",
     "rect": [
      104,
-     96,
+     105,
      112,
-     36
+     39
     ],
     "look": "A reactor glowing with the particular green that says 'do not touch' in every language.",
     "approach": [
      100,
-     98
+     107
     ]
    },
    {
@@ -294,14 +294,14 @@
     "name": "iron ladder",
     "rect": [
      22,
-     20,
+     22,
      16,
-     80
+     87
     ],
     "look": "A rusty iron ladder up to a crane platform. Each rung is a small act of faith.",
     "approach": [
      30,
-     96
+     105
     ],
     "exit": {
      "room": "crane_cabin",
@@ -313,14 +313,14 @@
     "name": "rat's pipe",
     "rect": [
      268,
-     10,
+     11,
      50,
-     24
+     26
     ],
     "look": "From the dark inside come two red eyes, and the sound of something that eats nobody's leftovers.",
     "approach": [
      270,
-     96
+     105
     ]
    },
    {
@@ -328,14 +328,14 @@
     "name": "suspension platform",
     "rect": [
      40,
-     66,
+     72,
      80,
-     10
+     11
     ],
     "look": "A platform bolted to the ceiling by someone who was in no hurry for a pay review.",
     "approach": [
      80,
-     92
+     100
     ]
    }
   ]
@@ -348,25 +348,25 @@
   "walk": [
    [
     10,
-    112
+    122
    ],
    [
     310,
-    112
+    122
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     30,
-    118
+    129
    ]
   },
   "no_player": false,
@@ -376,14 +376,14 @@
     "name": "cyan rail",
     "rect": [
      0,
-     70,
+     76,
      320,
      4
     ],
     "look": "A long rail along the ceiling. Something dangles from it, taking its time.",
     "approach": [
      150,
-     118
+     129
     ]
    },
    {
@@ -393,12 +393,12 @@
      130,
      0,
      80,
-     100
+     109
     ],
     "look": "A support tower painted in a colour chosen by someone who clearly never had to look at it.",
     "approach": [
      170,
-     118
+     129
     ]
    },
    {
@@ -406,14 +406,14 @@
     "name": "grabber",
     "rect": [
      196,
-     60,
+     65,
      18,
-     32
+     35
     ],
     "look": "A grabber hangs from the rail, waiting for a hand to move it.",
     "approach": [
      200,
-     118
+     129
     ]
    },
    {
@@ -421,14 +421,14 @@
     "name": "way down",
     "rect": [
      0,
-     100,
+     109,
      30,
-     29
+     32
     ],
     "look": "Back down the service ladder.",
     "approach": [
      30,
-     118
+     129
     ],
     "exit": {
      "room": "conveyor",
@@ -445,25 +445,25 @@
   "walk": [
    [
     40,
-    104
+    113
    ],
    [
     250,
-    104
+    113
    ],
    [
     300,
-    129
+    141
    ],
    [
     10,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     120,
-    114
+    124
    ]
   },
   "no_player": false,
@@ -473,14 +473,14 @@
     "name": "monitor",
     "rect": [
      60,
-     56,
+     61,
      80,
-     44
+     48
     ],
     "look": "An old green monitor showing the room below. In real time, and very green.",
     "approach": [
      100,
-     108
+     118
     ]
    },
    {
@@ -488,14 +488,14 @@
     "name": "joystick",
     "rect": [
      180,
-     62,
+     68,
      12,
-     38
+     41
     ],
     "look": "A joystick, worn smooth by many hands that are now elsewhere.",
     "approach": [
      186,
-     108
+     118
     ]
    },
    {
@@ -503,14 +503,14 @@
     "name": "red button",
     "rect": [
      220,
-     90,
+     98,
      16,
-     10
+     11
     ],
     "look": "A big red button. It's red for a reason; nobody wrote down what.",
     "approach": [
      226,
-     112
+     122
     ]
    },
    {
@@ -518,14 +518,14 @@
     "name": "window",
     "rect": [
      19,
-     13,
+     14,
      282,
-     40
+     44
     ],
     "look": "Through the glass you see the reactor, glowing in its pit like a bad idea.",
     "approach": [
      150,
-     108
+     118
     ]
    },
    {
@@ -533,14 +533,14 @@
     "name": "ladder hatch",
     "rect": [
      0,
-     100,
+     109,
      40,
-     29
+     32
     ],
     "look": "The way back down.",
     "approach": [
      50,
-     114
+     124
     ],
     "exit": {
      "room": "mallard_bay",
@@ -557,25 +557,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     60,
-    114
+    124
    ]
   },
   "no_player": false,
@@ -585,14 +585,14 @@
     "name": "Aluminum Mallard",
     "rect": [
      80,
-     44,
+     48,
      182,
-     66
+     72
     ],
     "look": "A ship stitched together from scrap. It's the first thing in the universe that's all yours. Technically.",
     "approach": [
      170,
-     112
+     122
     ]
    },
    {
@@ -600,14 +600,14 @@
     "name": "engine manifold",
     "rect": [
      96,
-     66,
+     72,
      12,
-     26
+     28
     ],
     "look": "An open engine mount. Plainly waiting for something glowing and expensive.",
     "approach": [
      100,
-     114
+     124
     ]
    },
    {
@@ -615,14 +615,14 @@
     "name": "boarding ramp",
     "rect": [
      140,
-     96,
+     105,
      60,
-     16
+     17
     ],
     "look": "A boarding ramp. Not exactly inviting, but it does lead inside.",
     "approach": [
      170,
-     114
+     124
     ],
     "exit": {
      "room": "cockpit",
@@ -639,25 +639,25 @@
   "walk": [
    [
     70,
-    104
+    113
    ],
    [
     250,
-    104
+    113
    ],
    [
     300,
-    129
+    141
    ],
    [
     20,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    116
+    127
    ]
   },
   "no_player": false,
@@ -667,14 +667,14 @@
     "name": "pilot's seat",
     "rect": [
      4,
-     56,
+     61,
      48,
-     64
+     70
     ],
     "look": "The pilot's seat. Somebody has been sitting in it for years, in spirit.",
     "approach": [
      60,
-     112
+     122
     ]
    },
    {
@@ -682,14 +682,14 @@
     "name": "navigation computer",
     "rect": [
      262,
+     59,
      54,
-     54,
-     56
+     61
     ],
     "look": "A computer that thinks about it for a while, then says maybe.",
     "approach": [
      250,
-     114
+     124
     ],
     "exit": {
      "room": "nav_screen",
@@ -701,14 +701,14 @@
     "name": "viewscreen",
     "rect": [
      60,
-     40,
+     44,
      200,
-     60
+     65
     ],
     "look": "Space. A great deal of it. Mostly nobody's.",
     "approach": [
      160,
-     108
+     118
     ]
    },
    {
@@ -716,14 +716,14 @@
     "name": "exit hatch",
     "rect": [
      0,
-     110,
+     120,
      30,
-     19
+     21
     ],
     "look": "The way out.",
     "approach": [
      30,
-     120
+     131
     ],
     "exit": {
      "room": "mallard_bay",
@@ -735,14 +735,14 @@
     "name": "launch lever",
     "rect": [
      150,
-     100,
+     109,
      20,
-     8
+     9
     ],
     "look": "Pulls the ship out into space. (Dev shortcut: takes you to Phleebhut.)",
     "approach": [
      160,
-     112
+     122
     ],
     "exit": {
      "room": "landing_strip",
@@ -759,25 +759,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    114
+    124
    ]
   },
   "no_player": true,
@@ -787,9 +787,9 @@
     "name": "planet readout",
     "rect": [
      30,
-     50,
+     55,
      70,
-     50
+     55
     ],
     "look": "Planet Phleebhut. Light atmosphere. One known settlement. You've been to worse places and paid more to see them."
    },
@@ -798,9 +798,9 @@
     "name": "star map",
     "rect": [
      6,
-     30,
+     33,
      308,
-     98
+     107
     ],
     "look": "A grid of stars so wide that your pointer seems to apologise."
    },
@@ -811,7 +811,7 @@
      6,
      4,
      70,
-     18
+     20
     ],
     "look": "Scans the next sector."
    },
@@ -822,7 +822,7 @@
      82,
      4,
      70,
-     18
+     20
     ],
     "look": "Sets a course. Not yet connected. (Work in progress.)"
    },
@@ -833,7 +833,7 @@
      158,
      4,
      70,
-     18
+     20
     ],
     "look": "Back to the cockpit.",
     "exit": {
@@ -851,29 +851,29 @@
   "walk": [
    [
     8,
-    92
+    100
    ],
    [
     312,
-    92
+    100
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     120,
-    116
+    127
    ],
    "west": [
     120,
-    116
+    127
    ]
   },
   "no_player": false,
@@ -883,14 +883,14 @@
     "name": "Aluminum Mallard",
     "rect": [
      16,
-     86,
+     94,
      82,
-     32
+     35
     ],
     "look": "Your ship, parked at a slight angle, like a regret.",
     "approach": [
      60,
-     120
+     131
     ],
     "exit": {
      "room": "cockpit",
@@ -902,14 +902,14 @@
     "name": "rock arch",
     "rect": [
      150,
-     38,
+     41,
      100,
-     54
+     59
     ],
     "look": "A rock arch the colour of an alien's idea of nature.",
     "approach": [
      200,
-     100
+     109
     ]
    },
    {
@@ -917,14 +917,14 @@
     "name": "stone spires",
     "rect": [
      100,
-     54,
+     59,
      30,
-     40
+     44
     ],
     "look": "Sharp green spires. A quick glance says 'don't', a long one says 'really don't'.",
     "approach": [
      120,
-     100
+     109
     ]
    },
    {
@@ -932,14 +932,14 @@
     "name": "desert path",
     "rect": [
      296,
-     60,
+     65,
      24,
-     60
+     65
     ],
     "look": "A path east, towards a giant shape in the distance. Possibly a shop.",
     "approach": [
      300,
-     112
+     122
     ],
     "exit": {
      "room": "world_o_wonders",
@@ -951,14 +951,14 @@
     "name": "canyon path",
     "rect": [
      100,
-     118,
+     129,
      120,
-     11
+     12
     ],
     "look": "A path south into a canyon.",
     "approach": [
      160,
-     124
+     135
     ],
     "exit": {
      "room": "canyon",
@@ -975,29 +975,29 @@
   "walk": [
    [
     20,
-    104
+    113
    ],
    [
     300,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    116
+    127
    ],
    "west": [
     30,
-    116
+    127
    ]
   },
   "no_player": false,
@@ -1007,14 +1007,14 @@
     "name": "sign",
     "rect": [
      86,
-     10,
+     11,
      150,
-     38
+     41
     ],
     "look": "'WORLD O' WONDERS.' Both words are used with remarkable optimism.",
     "approach": [
      160,
-     108
+     118
     ]
    },
    {
@@ -1022,14 +1022,14 @@
     "name": "shop entrance",
     "rect": [
      130,
-     76,
+     83,
      60,
-     22
+     24
     ],
     "look": "The entrance. Inside, a salesman is waiting. He's been waiting since before the planet cooled.",
     "approach": [
      160,
-     108
+     118
     ]
    },
    {
@@ -1039,12 +1039,12 @@
      0,
      0,
      60,
-     124
+     135
     ],
     "look": "A pair of giant claws holding up the shop. Whatever they belonged to is not coming back for them.",
     "approach": [
      70,
-     116
+     127
     ]
    },
    {
@@ -1052,14 +1052,14 @@
     "name": "little table",
     "rect": [
      210,
-     104,
+     113,
      26,
-     16
+     17
     ],
     "look": "A little table. A postcard rack, a stray alien sock.",
     "approach": [
      222,
-     122
+     133
     ]
    },
    {
@@ -1067,14 +1067,14 @@
     "name": "way west",
     "rect": [
      0,
-     100,
+     109,
      14,
-     29
+     32
     ],
     "look": "Back to the landing strip.",
     "approach": [
      24,
-     116
+     127
     ],
     "exit": {
      "room": "landing_strip",
@@ -1091,25 +1091,25 @@
   "walk": [
    [
     84,
-    76
+    83
    ],
    [
     236,
-    76
+    83
    ],
    [
     266,
-    129
+    141
    ],
    [
     54,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    120
+    131
    ]
   },
   "no_player": false,
@@ -1119,14 +1119,14 @@
     "name": "rock arch",
     "rect": [
      96,
-     30,
+     33,
      90,
-     46
+     50
     ],
     "look": "A natural arch. Nothing about this planet is natural for anyone from elsewhere.",
     "approach": [
      150,
-     100
+     109
     ]
    },
    {
@@ -1134,14 +1134,14 @@
     "name": "green spire",
     "rect": [
      200,
-     40,
+     44,
      20,
-     36
+     39
     ],
     "look": "A spire like a thorn from some enormous rose.",
     "approach": [
      210,
-     100
+     109
     ]
    },
    {
@@ -1149,14 +1149,14 @@
     "name": "mountain trail",
     "rect": [
      250,
-     70,
+     76,
      60,
-     59
+     64
     ],
     "look": "A steep trail up the mountain.",
     "approach": [
      244,
-     112
+     122
     ],
     "exit": {
      "room": "stalk_ridge",
@@ -1168,14 +1168,14 @@
     "name": "way back",
     "rect": [
      90,
-     120,
+     131,
      100,
-     9
+     10
     ],
     "look": "Back to the landing strip.",
     "approach": [
      140,
-     124
+     135
     ],
     "exit": {
      "room": "landing_strip",
@@ -1192,25 +1192,25 @@
   "walk": [
    [
     0,
-    112
+    122
    ],
    [
     320,
-    112
+    122
    ],
    [
     320,
-    129
+    141
    ],
    [
     0,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     30,
-    118
+    129
    ]
   },
   "no_player": false,
@@ -1220,14 +1220,14 @@
     "name": "stalk plant",
     "rect": [
      140,
-     38,
+     41,
      30,
-     60
+     65
     ],
     "look": "A carnivorous stalk plant. Its tendrils drip with something that is not water.",
     "approach": [
      150,
-     118
+     129
     ]
    },
    {
@@ -1235,14 +1235,14 @@
     "name": "pods",
     "rect": [
      120,
-     64,
+     70,
      100,
-     20
+     22
     ],
     "look": "Pulsating pods hang from the ledge. They throb, as if listening.",
     "approach": [
      170,
-     118
+     129
     ]
    },
    {
@@ -1250,14 +1250,14 @@
     "name": "trail down",
     "rect": [
      0,
-     100,
+     109,
      20,
-     29
+     32
     ],
     "look": "Back down the trail.",
     "approach": [
      24,
-     118
+     129
     ],
     "exit": {
      "room": "canyon",
@@ -1274,25 +1274,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    114
+    124
    ]
   },
   "no_player": true,
@@ -1302,9 +1302,9 @@
     "name": "Monolith Burger station",
     "rect": [
      60,
-     20,
+     22,
      190,
-     90
+     98
     ],
     "look": "An orbital station shaped like a hamburger. Billions served. Billions regretted."
    },
@@ -1313,9 +1313,9 @@
     "name": "docked ship",
     "rect": [
      0,
+     65,
      60,
-     60,
-     20
+     22
     ],
     "look": "Your ship is docked at the lower bun, like a bad habit.",
     "exit": {
@@ -1328,9 +1328,9 @@
     "name": "airlock",
     "rect": [
      52,
-     62,
+     68,
      14,
-     16
+     17
     ],
     "look": "The airlock. A sign inside says 'Please enjoy responsibly', which makes it clear nobody means it.",
     "exit": {
@@ -1348,29 +1348,29 @@
   "walk": [
    [
     10,
-    100
+    109
    ],
    [
     300,
-    100
+    109
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     270,
-    116
+    127
    ],
    "arcade": [
     60,
-    114
+    124
    ]
   },
   "no_player": false,
@@ -1380,14 +1380,14 @@
     "name": "counter",
     "rect": [
      60,
-     54,
+     59,
      190,
-     38
+     41
     ],
     "look": "A counter streaked with something that was a meal in a previous life.",
     "approach": [
      150,
-     108
+     118
     ]
    },
    {
@@ -1395,14 +1395,14 @@
     "name": "clerk",
     "rect": [
      200,
-     22,
      24,
-     34
+     24,
+     37
     ],
     "look": "A teenage alien clerk who looks as though he's been bored since before you were born.",
     "approach": [
      210,
-     108
+     118
     ]
    },
    {
@@ -1410,14 +1410,14 @@
     "name": "menu board",
     "rect": [
      70,
-     8,
+     9,
      180,
-     32
+     35
     ],
     "look": "The menu board offers eight kinds of burger. All taste of the same disappointment.",
     "approach": [
      160,
-     108
+     118
     ]
    },
    {
@@ -1425,14 +1425,14 @@
     "name": "arcade cabinet",
     "rect": [
      6,
-     44,
+     48,
      34,
-     60
+     65
     ],
     "look": "A cabinet for a game called Astro Chicken. It blinks like it knows something.",
     "approach": [
      50,
-     110
+     120
     ],
     "exit": {
      "room": "arcade_corner",
@@ -1444,14 +1444,14 @@
     "name": "tables",
     "rect": [
      262,
-     78,
+     85,
      50,
-     34
+     37
     ],
     "look": "Tables bolted to the floor. A sensible precaution, given the food.",
     "approach": [
      270,
-     118
+     129
     ]
    },
    {
@@ -1459,14 +1459,14 @@
     "name": "airlock",
     "rect": [
      304,
-     60,
+     65,
      16,
-     50
+     55
     ],
     "look": "Back to your ship.",
     "approach": [
      296,
-     116
+     127
     ],
     "exit": {
      "room": "monolith_exterior",
@@ -1483,25 +1483,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    114
+    124
    ]
   },
   "no_player": true,
@@ -1511,9 +1511,9 @@
     "name": "screen",
     "rect": [
      114,
-     14,
+     15,
      92,
-     60
+     65
     ],
     "look": "A chicken falls slowly through a toxic sky. You know the feeling."
    },
@@ -1522,9 +1522,9 @@
     "name": "play game",
     "rect": [
      116,
-     84,
+     92,
      88,
-     18
+     20
     ],
     "look": "Drop in a coin and take the stick.",
     "exit": {
@@ -1538,9 +1538,9 @@
     "name": "step back",
     "rect": [
      0,
-     112,
+     122,
      320,
-     20
+     22
     ],
     "look": "Step away from the machine.",
     "exit": {
@@ -1558,25 +1558,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    114
+    124
    ]
   },
   "no_player": true,
@@ -1586,9 +1586,9 @@
     "name": "trampoline pad",
     "rect": [
      130,
-     90,
+     98,
      60,
-     10
+     11
     ],
     "look": "Land softly on the pad. Ten times, apparently."
    },
@@ -1597,9 +1597,9 @@
     "name": "press F5 to exit",
     "rect": [
      120,
-     114,
+     124,
      100,
-     14
+     15
     ],
     "look": "Leave the game.",
     "exit": {
@@ -1617,25 +1617,25 @@
   "walk": [
    [
     10,
-    80
+    87
    ],
    [
     300,
-    80
+    87
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     60,
-    100
+    109
    ]
   },
   "no_player": false,
@@ -1645,14 +1645,14 @@
     "name": "Aluminum Mallard",
     "rect": [
      16,
+     55,
      50,
-     50,
-     16
+     17
     ],
     "look": "Your ship on the ridge, smoking quietly to itself.",
     "approach": [
      50,
-     90
+     98
     ],
     "exit": {
      "room": "cockpit",
@@ -1664,14 +1664,14 @@
     "name": "lava pit",
     "rect": [
      150,
-     90,
+     98,
      70,
-     40
+     44
     ],
     "look": "A pit of glowing lava. It looks like the sunset, if the sunset wanted you dead.",
     "approach": [
      140,
-     100
+     109
     ]
    },
    {
@@ -1679,14 +1679,14 @@
     "name": "path south",
     "rect": [
      60,
+     131,
      120,
-     120,
-     9
+     10
     ],
     "look": "A narrow stone path south.",
     "approach": [
      100,
-     124
+     135
     ],
     "exit": {
      "room": "ortega_bridge",
@@ -1703,29 +1703,29 @@
   "walk": [
    [
     4,
-    64
+    70
    ],
    [
     316,
-    64
+    70
    ],
    [
     316,
-    84
+    92
    ],
    [
     4,
-    84
+    92
    ]
   ],
   "entries": {
    "start": [
     24,
-    72
+    79
    ],
    "east": [
     296,
-    72
+    79
    ]
   },
   "no_player": false,
@@ -1735,14 +1735,14 @@
     "name": "shaky bridge",
     "rect": [
      92,
-     56,
+     61,
      136,
-     40
+     44
     ],
     "look": "A rope bridge over a chasm of lava. Strictly for people who've made peace with their choices.",
     "approach": [
      100,
-     72
+     79
     ]
    },
    {
@@ -1750,14 +1750,14 @@
     "name": "path back",
     "rect": [
      0,
-     60,
+     65,
      14,
-     24
+     26
     ],
     "look": "Back to the crater.",
     "approach": [
      20,
-     72
+     79
     ],
     "exit": {
      "room": "ortega_crater",
@@ -1769,14 +1769,14 @@
     "name": "path east",
     "rect": [
      304,
-     60,
+     65,
      16,
-     24
+     26
     ],
     "look": "On to the station.",
     "approach": [
      300,
-     72
+     79
     ],
     "exit": {
      "room": "ortega_station",
@@ -1793,29 +1793,29 @@
   "walk": [
    [
     10,
-    100
+    109
    ],
    [
     310,
-    100
+    109
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     30,
-    112
+    122
    ],
    "east": [
     290,
-    112
+    122
    ]
   },
   "no_player": false,
@@ -1825,14 +1825,14 @@
     "name": "telescope",
     "rect": [
      56,
-     76,
+     83,
      34,
-     40
+     44
     ],
     "look": "A telescope pointed at the distant dome. It's been left alone, which has never happened to a telescope before.",
     "approach": [
      74,
-     116
+     127
     ]
    },
    {
@@ -1840,14 +1840,14 @@
     "name": "green crate",
     "rect": [
      190,
-     92,
+     100,
      24,
-     20
+     22
     ],
     "look": "A green crate stamped 'DANGER, NOT A TOY'. A fine toy.",
     "approach": [
      202,
-     116
+     127
     ]
    },
    {
@@ -1855,14 +1855,14 @@
     "name": "wind meter",
     "rect": [
      254,
-     58,
+     63,
      16,
-     56
+     61
     ],
     "look": "A wind meter. The wind here has opinions.",
     "approach": [
      262,
-     116
+     127
     ]
    },
    {
@@ -1870,14 +1870,14 @@
     "name": "researchers",
     "rect": [
      120,
-     72,
+     79,
      36,
-     28
+     31
     ],
     "look": "Two ScumSoft researchers in blue, arguing about whose turn it is to look important.",
     "approach": [
      140,
-     110
+     120
     ]
    },
    {
@@ -1885,14 +1885,14 @@
     "name": "way back",
     "rect": [
      0,
-     60,
+     65,
      14,
-     60
+     65
     ],
     "look": "Back to the bridge.",
     "approach": [
      20,
-     112
+     122
     ],
     "exit": {
      "room": "ortega_bridge",
@@ -1904,14 +1904,14 @@
     "name": "path ahead",
     "rect": [
      304,
-     56,
+     61,
      16,
-     60
+     65
     ],
     "look": "A path to the ridge.",
     "approach": [
      296,
-     112
+     122
     ],
     "exit": {
      "room": "ortega_dome",
@@ -1928,29 +1928,29 @@
   "walk": [
    [
     10,
-    90
+    98
    ],
    [
     310,
-    90
+    98
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     30,
-    112
+    122
    ],
    "east": [
     290,
-    112
+    122
    ]
   },
   "no_player": false,
@@ -1960,14 +1960,14 @@
     "name": "research dome",
     "rect": [
      120,
-     50,
+     55,
      110,
-     70
+     76
     ],
     "look": "A silver dome of ScumSoft design, shiny, secure and entirely without taste.",
     "approach": [
      175,
-     112
+     122
     ]
    },
    {
@@ -1975,14 +1975,14 @@
     "name": "satellite dish",
     "rect": [
      60,
-     30,
+     33,
      40,
-     44
+     48
     ],
     "look": "A dish that points at a sky nobody else wants. It hums, as if bored.",
     "approach": [
      80,
-     100
+     109
     ]
    },
    {
@@ -1990,14 +1990,14 @@
     "name": "way back",
     "rect": [
      0,
-     70,
+     76,
      16,
-     40
+     44
     ],
     "look": "Back to the boulder field.",
     "approach": [
      20,
-     112
+     122
     ],
     "exit": {
      "room": "ortega_station",
@@ -2009,14 +2009,14 @@
     "name": "ridge path",
     "rect": [
      304,
-     70,
+     76,
      16,
-     40
+     44
     ],
     "look": "A path to the ridge.",
     "approach": [
      296,
-     112
+     122
     ],
     "exit": {
      "room": "ortega_ridge",
@@ -2033,25 +2033,25 @@
   "walk": [
    [
     10,
-    90
+    98
    ],
    [
     310,
-    90
+    98
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     30,
-    112
+    122
    ]
   },
   "no_player": false,
@@ -2061,14 +2061,14 @@
     "name": "metal pole",
     "rect": [
      166,
-     90,
+     98,
      28,
-     10
+     11
     ],
     "look": "A gleaming metal pole, quite unharmed, lying in the middle of the destruction like a promise.",
     "approach": [
      180,
-     106
+     116
     ]
    },
    {
@@ -2076,14 +2076,14 @@
     "name": "crater",
     "rect": [
      90,
-     84,
+     92,
      140,
-     28
+     31
     ],
     "look": "A smoking crater where something used to be. You'd rather not think about what.",
     "approach": [
      160,
-     116
+     127
     ]
    },
    {
@@ -2091,14 +2091,14 @@
     "name": "way back",
     "rect": [
      0,
-     70,
+     76,
      16,
-     40
+     44
     ],
     "look": "Back to the dome.",
     "approach": [
      20,
-     112
+     122
     ],
     "exit": {
      "room": "ortega_dome",
@@ -2115,25 +2115,25 @@
   "walk": [
    [
     10,
-    100
+    109
    ],
    [
     300,
-    100
+    109
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     180,
-    116
+    127
    ]
   },
   "no_player": false,
@@ -2143,14 +2143,14 @@
     "name": "ScumSoft building",
     "rect": [
      30,
-     44,
+     48,
      146,
-     52
+     57
     ],
     "look": "The ScumSoft headquarters. Each window is a monitor; each monitor is turned to look at you.",
     "approach": [
      140,
-     112
+     122
     ]
    },
    {
@@ -2158,14 +2158,14 @@
     "name": "ScumSoft sign",
     "rect": [
      100,
-     36,
+     39,
      60,
-     10
+     11
     ],
     "look": "SCUMSOFT. They don't even pretend.",
     "approach": [
      130,
-     112
+     122
     ]
    },
    {
@@ -2173,14 +2173,14 @@
     "name": "door",
     "rect": [
      214,
-     74,
+     81,
      30,
-     22
+     24
     ],
     "look": "A door in the side of the building. A scanner winks next to it.",
     "approach": [
      230,
-     106
+     116
     ],
     "exit": {
      "room": "closet",
@@ -2194,7 +2194,7 @@
      60,
      0,
      62,
-     30
+     33
     ],
     "look": "A dish that watches all the sky for the one thing that will upset them."
    },
@@ -2203,14 +2203,14 @@
     "name": "landing pad",
     "rect": [
      270,
-     96,
+     105,
      48,
-     33
+     36
     ],
     "look": "Your ship waits on the pad, looking small and out of place.",
     "approach": [
      290,
-     116
+     127
     ],
     "exit": {
      "room": "cockpit",
@@ -2227,25 +2227,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     260,
-    116
+    127
    ]
   },
   "no_player": false,
@@ -2255,14 +2255,14 @@
     "name": "shelves",
     "rect": [
      20,
-     20,
+     22,
      100,
-     74
+     81
     ],
     "look": "Shelves of cleaning supplies. Every bottle says 'Not for Consumption' in a tone of long-suffering.",
     "approach": [
      70,
-     108
+     118
     ]
    },
    {
@@ -2270,14 +2270,14 @@
     "name": "coveralls",
     "rect": [
      134,
-     22,
+     24,
      42,
-     50
+     55
     ],
     "look": "A janitor's coveralls, hanging like a surrender.",
     "approach": [
      155,
-     108
+     118
     ]
    },
    {
@@ -2285,14 +2285,14 @@
     "name": "locker",
     "rect": [
      220,
-     40,
+     44,
      70,
-     54
+     59
     ],
     "look": "A locker with something inside that looks like a handheld vaporizer.",
     "approach": [
      255,
-     108
+     118
     ]
    },
    {
@@ -2300,14 +2300,14 @@
     "name": "bucket",
     "rect": [
      210,
-     98,
+     107,
      22,
-     12
+     13
     ],
     "look": "A bucket. The only thing here that isn't pretending to be more.",
     "approach": [
      220,
-     118
+     129
     ]
    },
    {
@@ -2315,14 +2315,14 @@
     "name": "door",
     "rect": [
      304,
-     40,
+     44,
      16,
-     60
+     65
     ],
     "look": "Back to the corridor.",
     "approach": [
      296,
-     112
+     122
     ],
     "exit": {
      "room": "cubicle_maze",
@@ -2339,25 +2339,25 @@
   "walk": [
    [
     8,
-    104
+    113
    ],
    [
     312,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     30,
-    116
+    127
    ]
   },
   "no_player": false,
@@ -2369,12 +2369,12 @@
      4,
      4,
      312,
-     98
+     107
     ],
     "look": "Cubicles in endless rows. Each has a drone, a lamp and a look like a closed door.",
     "approach": [
      150,
-     110
+     120
     ]
    },
    {
@@ -2382,14 +2382,14 @@
     "name": "trash cans",
     "rect": [
      56,
-     104,
+     113,
      210,
-     18
+     20
     ],
     "look": "Full trash cans. Each looks like the end of somebody's career.",
     "approach": [
      150,
-     118
+     129
     ]
    },
    {
@@ -2397,14 +2397,14 @@
     "name": "way back",
     "rect": [
      0,
-     100,
+     109,
      14,
-     29
+     32
     ],
     "look": "Back to the closet.",
     "approach": [
      20,
-     116
+     127
     ],
     "exit": {
      "room": "closet",
@@ -2416,14 +2416,14 @@
     "name": "boss's office",
     "rect": [
      296,
-     36,
+     39,
      24,
-     66
+     72
     ],
     "look": "The office of the boss. The nameplate is longer than the person.",
     "approach": [
      290,
-     112
+     122
     ],
     "exit": {
      "room": "elmo_office",
@@ -2440,25 +2440,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     40,
-    116
+    127
    ]
   },
   "no_player": false,
@@ -2468,14 +2468,14 @@
     "name": "desk",
     "rect": [
      100,
-     70,
+     76,
      130,
-     30
+     33
     ],
     "look": "A desk so large it needs its own zip code.",
     "approach": [
      160,
-     108
+     118
     ]
    },
    {
@@ -2483,14 +2483,14 @@
     "name": "portrait",
     "rect": [
      130,
-     14,
+     15,
      60,
-     40
+     44
     ],
     "look": "A portrait of the boss, looking exactly as important as he'd like to be.",
     "approach": [
      160,
-     108
+     118
     ]
    },
    {
@@ -2498,14 +2498,14 @@
     "name": "copy machine",
     "rect": [
      250,
+     44,
      40,
-     40,
-     60
+     65
     ],
     "look": "A copy machine. It's making copies of something it ought not to be copying.",
     "approach": [
      262,
-     108
+     118
     ]
    },
    {
@@ -2513,14 +2513,14 @@
     "name": "door",
     "rect": [
      0,
-     40,
+     44,
      16,
-     60
+     65
     ],
     "look": "Back to the cubicles.",
     "approach": [
      24,
-     112
+     122
     ],
     "exit": {
      "room": "cubicle_maze",
@@ -2532,14 +2532,14 @@
     "name": "security door",
     "rect": [
      304,
-     40,
+     44,
      16,
-     60
+     65
     ],
     "look": "A heavy security door. It has a scanner, and presumably a grudge.",
     "approach": [
      296,
-     112
+     122
     ],
     "exit": {
      "room": "cell_block",
@@ -2556,25 +2556,25 @@
   "walk": [
    [
     20,
-    108
+    118
    ],
    [
     300,
-    108
+    118
    ],
    [
     318,
-    130
+    142
    ],
    [
     2,
-    130
+    142
    ]
   ],
   "entries": {
    "start": [
     40,
-    116
+    127
    ]
   },
   "no_player": false,
@@ -2584,14 +2584,14 @@
     "name": "glass pods",
     "rect": [
      112,
-     40,
+     44,
      110,
-     52
+     57
     ],
     "look": "Two glass pods. Inside: the two weariest men in the galaxy, writing spreadsheets.",
     "approach": [
      166,
-     112
+     122
     ]
    },
    {
@@ -2599,14 +2599,14 @@
     "name": "console",
     "rect": [
      100,
-     100,
+     109,
      120,
-     18
+     20
     ],
     "look": "A control console blinking its small, uncaring lights.",
     "approach": [
      160,
-     120
+     131
     ]
    },
    {
@@ -2614,14 +2614,14 @@
     "name": "door",
     "rect": [
      0,
-     60,
+     65,
      16,
-     60
+     65
     ],
     "look": "Back to the office.",
     "approach": [
      24,
-     116
+     127
     ],
     "exit": {
      "room": "elmo_office",
@@ -2633,14 +2633,14 @@
     "name": "blast door",
     "rect": [
      304,
-     60,
+     65,
      16,
-     60
+     65
     ],
     "look": "A blast door to the hangar.",
     "approach": [
      296,
-     116
+     127
     ],
     "exit": {
      "room": "hangar",
@@ -2657,25 +2657,25 @@
   "walk": [
    [
     10,
-    110
+    120
    ],
    [
     310,
-    110
+    120
    ],
    [
     318,
-    130
+    142
    ],
    [
     2,
-    130
+    142
    ]
   ],
   "entries": {
    "start": [
     40,
-    118
+    129
    ]
   },
   "no_player": false,
@@ -2685,14 +2685,14 @@
     "name": "arena",
     "rect": [
      60,
-     80,
+     87,
      200,
-     30
+     33
     ],
     "look": "A combat arena in the middle of the hangar. Nobody installed it to be friendly.",
     "approach": [
      160,
-     118
+     129
     ]
    },
    {
@@ -2700,14 +2700,14 @@
     "name": "mech suits",
     "rect": [
      86,
-     44,
+     48,
      144,
-     52
+     57
     ],
     "look": "Two mech suits with boxing gloves. An engineer had a day.",
     "approach": [
      160,
-     118
+     129
     ]
    },
    {
@@ -2715,14 +2715,14 @@
     "name": "door",
     "rect": [
      0,
-     60,
+     65,
      16,
-     60
+     65
     ],
     "look": "Back to the cell block.",
     "approach": [
      24,
-     118
+     129
     ],
     "exit": {
      "room": "cell_block",
@@ -2734,14 +2734,14 @@
     "name": "ship hatch",
     "rect": [
      304,
-     60,
+     65,
      16,
-     60
+     65
     ],
     "look": "The way to the ship.",
     "approach": [
      296,
-     118
+     129
     ],
     "exit": {
      "room": "space_battle",
@@ -2758,25 +2758,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    114
+    124
    ]
   },
   "no_player": true,
@@ -2786,9 +2786,9 @@
     "name": "radar",
     "rect": [
      250,
-     6,
+     7,
      60,
-     22
+     24
     ],
     "look": "A radar. It shows enemies in front, behind and everywhere between."
    },
@@ -2799,7 +2799,7 @@
      4,
      4,
      76,
-     18
+     20
     ],
     "look": "The shield meter. Higher is better, as with most things."
    },
@@ -2808,9 +2808,9 @@
     "name": "viewscreen",
     "rect": [
      60,
-     40,
+     44,
      160,
-     80
+     87
     ],
     "look": "Space. Full of things that want your ship for scrap.",
     "exit": {
@@ -2828,25 +2828,25 @@
   "walk": [
    [
     10,
-    104
+    113
    ],
    [
     310,
-    104
+    113
    ],
    [
     318,
-    129
+    141
    ],
    [
     2,
-    129
+    141
    ]
   ],
   "entries": {
    "start": [
     150,
-    114
+    124
    ]
   },
   "no_player": true,
@@ -2856,9 +2856,9 @@
     "name": "galaxy",
     "rect": [
      110,
-     40,
+     44,
      100,
-     60
+     65
     ],
     "look": "A whole galaxy, and for once you're not mopping any of it."
    }

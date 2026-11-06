@@ -107,14 +107,14 @@ func run(m) -> void:
 	for rid in m.room_ids:
 		m.change_room(rid, "start")
 		var t = m.room.Art.tex("res://assets/backgrounds/%s.png" % m.room.current_bg())
-		if t == null or t.get_width() != 320 or (t.get_height() != 132 and t.get_height() != 144):
+		if t == null or t.get_width() != 320 or t.get_height() != 144:
 			missing_art += 1
 			print("   bad art for ", rid)
 		var inside: bool = m.room.no_player or Geometry2D.is_point_in_polygon(m.player.position, m.room.walk_poly)
 		if not inside:
 			print("   entry outside walk area: ", rid)
 			missing_art += 1
-	check(missing_art == 0, "every room loads 320x132/144 art and starts Roger on walkable ground")
+	check(missing_art == 0, "every room loads 320x144 art and starts Roger on walkable ground")
 
 	print("--- interface")
 	m.change_room("escape_pod", "start")

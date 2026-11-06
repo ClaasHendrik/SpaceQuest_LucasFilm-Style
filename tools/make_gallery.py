@@ -39,7 +39,7 @@ c.setTitle("Space Quest III (LucasFilm-style) - Room Gallery")
 def footer(n):
     c.setFont("Helvetica", 8)
     c.setFillGray(0.45)
-    c.drawString(M, 8 * mm, "Space Quest III, LucasFilm-style remake - room gallery (placeholder art, work in progress)")
+    c.drawString(M, 8 * mm, "Space Quest III, LucasFilm-style remake - room gallery (painted placeholder art, work in progress)")
     c.drawRightString(PAGE_W - M, 8 * mm, str(n))
     c.setFillGray(0)
 
@@ -55,10 +55,11 @@ c.drawString(M, PAGE_H - 30 * mm, "Space Quest III - LucasFilm-style remake")
 c.setFont("Helvetica", 13)
 c.drawString(M, PAGE_H - 38 * mm, "Room gallery: every area in the game as it appears on screen")
 y = PAGE_H - 52 * mm
-intro = ("Each screenshot is taken from the running game: the 640x400 window with the verb grid underneath. "
-         "The art is painted at 320x132 pixels in the 16-colour EGA palette and shown at 2x, in the style of the original "
-         "Sierra screens (dithered shading, a different palette per planet). It is a first draft to work from, not final art. "
-         "Roger is a placeholder sprite. Objects listed under each screen can be examined in the game with 'Look at'; "
+intro = ("Each screenshot is taken from the running game: the 640x480 view with the speech strip on top and the verb grid and "
+         "inventory underneath, in the style of the Lucasfilm Games interface. The scenes are painted at 320x144 pixels with "
+         "gradients, lighting and texture, reduced to a 190-colour palette and shown at 2x. Each planet has its own palette. "
+         "It is a draft to work from, not final art: some rooms (the escape pod, the garbage mountain) are more finished than others "
+         "(the hangar, the cell block). Roger is a placeholder sprite. Objects listed under each screen can be examined in the game; "
          "exits lead to the rooms named.")
 for ln in wrap(intro, "Helvetica", 10, PAGE_W - 2 * M):
     c.setFont("Helvetica", 10)
@@ -93,8 +94,8 @@ c.showPage()
 page += 1
 
 # ---- rooms, two per page
-IMG_W = (PAGE_W - 2 * M) * 0.9
-IMG_H = IMG_W * 800 / 1280
+IMG_W = (PAGE_W - 2 * M) * 0.74
+IMG_H = IMG_W * 960 / 1280
 slot_h = (PAGE_H - 2 * M - 8 * mm) / 2
 
 
@@ -150,9 +151,9 @@ variants = [("escape_pod_open", "Escape pod: locker opened, uniform inside"),
             ("garbage_mountain_nowire", "Garbage mountain: wire taken")]
 y = PAGE_H - 35 * mm
 vw = (PAGE_W - 2 * M) * 0.85
-vh = vw * 132 / 320
+vh = vw * 144 / 320
 for name, cap in variants:
-    c.drawImage(ImageReader(Image.open(ART + name + ".png").resize((960, 396), Image.NEAREST)), M, y - vh, vw, vh)
+    c.drawImage(ImageReader(Image.open(ART + name + ".png").resize((960, 432), Image.NEAREST)), M, y - vh, vw, vh)
     c.rect(M, y - vh, vw, vh)
     c.setFont("Helvetica", 9)
     c.drawString(M, y - vh - 4.5 * mm, cap)

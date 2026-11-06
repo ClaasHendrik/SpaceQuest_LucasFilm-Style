@@ -40,6 +40,12 @@ func _draw() -> void:
 		draw_texture_rect(t, Rect2(0, 0, 640, t.get_height() * 2), false)
 	else:
 		draw_rect(Rect2(0, 0, 640, 288), Color.DARK_SLATE_GRAY)
+	if OS.has_environment("HOTSPOTS"):   # debug overlay: hotspot rectangles and the walkable area
+		for h in hotspots:
+			draw_rect(h["rect"], Color(1, 1, 0, 0.9), false, 1.0)
+			if h.has("approach"):
+				draw_circle(h["approach"], 3, Color(1, 0, 0))
+		draw_polyline(walk_poly + PackedVector2Array([walk_poly[0]]) if walk_poly.size() > 0 else walk_poly, Color(0, 1, 1, 0.8), 1.0)
 
 
 func on_enter(_main) -> void:

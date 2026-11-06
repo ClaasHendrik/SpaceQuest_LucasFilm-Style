@@ -80,6 +80,7 @@ class Paint:
         self.a = np.where(m, self.a * (1 - alpha) + c * alpha, self.a)
 
     def shade(self, mask, color, hi=1.3, lo=0.55, angle=(-1, -1), tex=0.12, seed=1):
+        tex = tex * 0.55   # global: calmer surface texture
         """fill a shape with directional light (top-left by default) and light texture"""
         ys, xs = np.nonzero(mask)
         if len(xs) == 0:

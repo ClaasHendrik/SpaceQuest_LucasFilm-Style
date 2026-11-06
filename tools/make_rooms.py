@@ -214,5 +214,17 @@ room("deep_space", "The End", 5, no_player=True, hot=[
     hs("galaxy", "galaxy", [110, 40, 100, 60], "A whole galaxy, and for once you're not mopping any of it."),
 ])
 
+# The art is 320x144; this layout was drawn for 132 rows, so stretch every y coordinate to match.
+K = 144 / 132
+for r in ROOMS:
+    r["walk"] = [[x, round(y * K)] for x, y in r["walk"]]
+    r["entries"] = {k: [x, round(y * K)] for k, (x, y) in r["entries"].items()}
+    for h in r["hotspots"]:
+        x, y, w, hh = h["rect"]
+        h["rect"] = [x, round(y * K), w, round(hh * K)]
+        if "approach" in h:
+            h["approach"] = [h["approach"][0], round(h["approach"][1] * K)]
+        # keep everything inside the 320x144 stage
+        h["rect"][3] = min(h["rect"][3], 144 - h["rect"][1])
 json.dump(ROOMS, open("data/rooms.json", "w"), indent=1)
 print(len(ROOMS), "rooms,", sum(len(r["hotspots"]) for r in ROOMS), "hotspots")
