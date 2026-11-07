@@ -29,7 +29,7 @@ def rivets(p, pts, color=(30, 34, 40)):
 _POD_PAL = {}
 
 
-def escape_pod(locker_open=False, uniform=True):
+def escape_pod(locker_open=False, manual=True):
     p = Paint(base="#1c2a34", seed=11)
     # --- back wall: teal-steel gradient with panel seams and grime
     p.fill(p.m_rect(0, 0, W, 108), p.lin(0, 0, 0, 108, "#142029", "#35505c"))
@@ -105,8 +105,19 @@ def escape_pod(locker_open=False, uniform=True):
         p.fill(p.m_rect(bx0, by0 + 2, bx1, by0 + 5), (150, 156, 168))                       # the hanging rail across the back
         p.fill(p.m_rect(bx0, by0 + 2, bx1, by0 + 3), (255, 255, 255), 0.5)
         p.fill(p.m_rect(bx0, by0 + 5, bx1, by0 + 6), (0, 0, 0), 0.5)
-        if uniform:
-            _garment(p, (bx0 + bx1) / 2 + 1, by0 + 7, 38, seed=31)
+        from solid import box as _b, cylinder_v as _cv, soft_shadow as _ss
+        shelf_y = by0 + 26
+        _b(p, bx0, shelf_y, bx1 - bx0, 3, 3, 2, "#7a8694", seed=33)                      # a shelf with a lit front edge
+        _ss(p, [(bx0 + 2, shelf_y + 3), (bx1, shelf_y + 3), (bx1, shelf_y + 8), (bx0 + 4, shelf_y + 8)], 0.4, 1.2)
+        _cv(p, int(bx1 - 9), int(bx1 - 4), int(shelf_y - 11), int(shelf_y), "#c83a30")     # the flare
+        p.fill(p.m_rect(bx1 - 9, shelf_y - 11, bx1 - 4, shelf_y - 9), (250, 220, 150), 0.7)
+        _b(p, bx0 + 1, by1 - 10, 16, 8, 3, 2, "#6a7a9a", seed=34, tex=0.1)               # a folded emergency blanket on the floor
+        p.fill(p.m_rect(bx0 + 2, by1 - 7, bx0 + 16, by1 - 6), (255, 255, 255), 0.25)
+        if manual:
+            _ss(p, [(bx0 + 4, shelf_y - 1), (bx0 + 18, shelf_y - 1), (bx0 + 20, shelf_y + 2), (bx0 + 6, shelf_y + 2)], 0.4, 1.0)
+            _b(p, bx0 + 3, shelf_y - 6, 14, 6, 3, 2, "#d04a3a", seed=35, tex=0.05)         # the manual lying flat
+            p.fill(p.m_rect(bx0 + 5, shelf_y - 5, bx0 + 12, shelf_y - 3), (246, 232, 190), 0.9)
+            p.fill(p.m_rect(bx0 + 5, shelf_y - 4, bx0 + 9, shelf_y - 3.5), (60, 40, 30), 0.7)
         p.glow((bx0 + bx1) / 2, by0 + 20, 30, (255, 170, 80), 0.14)
         _door(p, 146, 42, 104, 22, "#7c8690", side=-1, panels=2, handle=True, seed=32)       # the locker door, swung open to the left
     # --- airlock hatch with a porthole onto the junk-filled dark
@@ -201,11 +212,12 @@ def garbage_mountain(wire=True):
     from solid import box as sb2, ground_shadow as gs2
     gs2(p, 2, 74, 112, 8, 0.6, 3.0)
     sb2(p, 6, 66, 52, 46, 8, 5, "#7e8a98", seed=4, tex=0.1)
-    win = p.m_ell(18, 74, 48, 100)
-    p.fill(win, p.radial(33, 87, 16, "#9be4f0", "#1c5c78"))
-    p.edge(win, (0, 0, 0), 0.7)
+    from solid import recess as _rec2, hinged_door as _door2
+    _rec2(p, 18, 74, 46, 106, d=6, wall="#4a5a6a", back_top="#1a5a74", back_bot="#082838", floor_c="#9ab0c0", seed=52)
+    p.glow(34, 92, 30, (110, 220, 255), 0.4, 0.8)
+    _door2(p, 18, 74, 106, 10, "#7a8896", side=-1, glass="#9ae8f8", handle=True, seed=53)    # the pod's hatch, hanging open
     p.fill(p.m_rect(8, 106, 58, 110), (230, 190, 40), 0.9)
-    p.glow(33, 87, 36, (110, 220, 255), 0.25)
+    p.glow(33, 100, 50, (110, 220, 255), 0.22)
     # --- wrecked starfighter cockpit: a dented sphere with a cracked hexagonal window
     from solid import sphere as ssph, ground_shadow as gshadow
     gshadow(p, 100, 176, 120, 8, 0.6, 3.0)

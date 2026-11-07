@@ -53,10 +53,10 @@
     "id": "eye",
     "name": "broken eye",
     "rect": [
-     176,
+     170,
      37,
-     28,
-     31
+     46,
+     37
     ],
     "look": "One eye is smashed. Through the crack, something metallic glints inside, like a plan.",
     "approach": [
@@ -532,10 +532,10 @@
     "id": "hatch",
     "name": "ladder hatch",
     "rect": [
-     0,
-     109,
-     40,
-     32
+     2,
+     113,
+     52,
+     28
     ],
     "look": "The way back down.",
     "approach": [

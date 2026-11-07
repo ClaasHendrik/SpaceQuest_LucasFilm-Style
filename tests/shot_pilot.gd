@@ -26,14 +26,13 @@ func run(m) -> void:
 	await m.act("Open", "hotspot", "locker")
 	m.message.visible = false
 	m.verb = "Pick up"
-	m._update_sentence("uniform")
+	m._update_sentence("pod manual")
 	await _save(m, "2_locker_open")
-	await m.act("Pick up", "hotspot", "uniform")
+	await m.act("Pick up", "hotspot", "manual")
 	m.message.visible = false
 	m.verb = "Use"
 	m._update_sentence()
-	await _save(m, "3_uniform_in_inventory")
-	await m.act("Use", "item", "uniform")
+	await _save(m, "3_manual_in_inventory")
 	m.message.visible = false
 	await m.act("Open", "hotspot", "hatch")
 	m.message.visible = false

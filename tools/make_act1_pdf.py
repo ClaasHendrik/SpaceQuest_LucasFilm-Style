@@ -32,7 +32,7 @@ def para(text, y, size=9.5, font="Helvetica", width=IW, lead=4.6, x=M):
 
 
 STEPS = [
-    ("Escape pod", "Open the wall locker, take the uniform, then Use it to put it on. Leaving in your underwear is fatal (frostbite).", []),
+    ("Escape pod", "Open the wall locker and take the pod manual (it explains the ship's computer: engines first, radar before takeoff, front shields before firing). Read it with Look. Then open the airlock hatch.", []),
     ("Garbage mountain", "Pick up the wire. Go east to the robot head.", ["wire"]),
     ("Robot head", "Use the broken eye to climb in and see the Mallard's open panel. Don't touch the chasm or the metal plate. Go back and south.", ["robot_eye"]),
     ("Conveyor", "A clock is running: the crusher is coming. Use the trash bucket to be carried up to the rail.", ["trash_bucket"]),
@@ -68,13 +68,14 @@ for room, text, ev in STEPS:
 c.setFont("Helvetica-Bold", 11)
 c.drawString(M, y - 2 * mm, "Act 1 total: %d points (of 738)" % total)
 y -= 9 * mm
-y = para("Deaths in this act: frostbite (no uniform), the chasm, the metal plate, the crusher (too slow), stepping off the rail, "
+y = para("Deaths in this act, each with its own painted picture: the chasm, the metal plate, the crusher (too slow), stepping off the rail, "
          "the rat (too slow), taking off without radar, switching the engines off in flight, and firing without front shields. "
          "The game checks the whole route from the first screen to the escape: all 15 events, exactly 145 points.", y, 9)
 footer(1)
 c.showPage()
 
 SHOTS = [
+    ("a1_0_pod.png", "The escape pod: Roger in his original suit, the locker open with the manual on the shelf."),
     ("a1_1_conveyor.png", "Conveyor: the clock is running. The trash bucket (left) is the way up."),
     ("a1_2_rail_ride.png", "Overhead rail: Roger rides the grabber to the pedestal."),
     ("a1_3_motivator_installed.png", "The motivator, lowered into the Mallard's open panel."),
@@ -82,16 +83,19 @@ SHOTS = [
     ("a1_5_crane.png", "Crane cabin: the reticle hovers over the reactor pit."),
     ("a1_6_bay.png", "Construction bay: the ladder is up and the reactor is on the deck."),
     ("a1_7_computer.png", "The ship's computer: Engines, Radar, Weapons, Takeoff."),
-    ("a1_9_death.png", "One of the deaths: 'Deceleration Trauma'."),
+    ("a1_10_death_plate.png", "One of the deaths, now with its own picture."),
 ]
 hw = (IW - 6 * mm) / 2
 hh = hw * 960 / 1280
 n = 2
-for page in range(2):
+for page in range((len(SHOTS) + 3) // 4):
     y = PH - 20 * mm
     for row in range(2):
         for col in range(2):
-            name, cap = SHOTS[page * 4 + row * 2 + col]
+            k = page * 4 + row * 2 + col
+            if k >= len(SHOTS):
+                continue
+            name, cap = SHOTS[k]
             x = M + col * (hw + 6 * mm)
             c.drawImage(ImageReader(os.path.join(SH, name)), x, y - hh, hw, hh)
             c.setStrokeGray(0.5)

@@ -37,7 +37,7 @@ func setup(room_id: String) -> void:
 		"verbs": {"Look at": _look_motivator, "Pick up": _heavy, "Pull": _heavy},
 	})
 	add_hotspot({
-		"id": "panel", "name": "open panel", "rect": R(262, 92, 44, 24), "approach": P(270, 126),
+		"id": "panel", "name": "open panel", "rect": R(262, 90, 52, 28), "approach": P(270, 126),
 		"verbs": {"Look at": _look_panel},
 	})
 	add_hotspot({
@@ -77,9 +77,8 @@ func _draw() -> void:
 		draw_texture_rect(grabber_tex, Rect2(gx * 2 - 24, GRABBER_Y * 2, 48, 92), false)
 		if riding:
 			var rt := Art.tex("res://assets/sprites/roger.png")
-			var outfit := 1 if GameState.flag("wearing_uniform") else 0
 			if rt != null:
-				draw_texture_rect_region(rt, Rect2(gx * 2 - 28, (GRABBER_Y + 4) * 2 - 104, 56, 104), Rect2(outfit * 5 * 28, 0, 28, 52))
+				draw_texture_rect_region(rt, Rect2(gx * 2 - 16, (GRABBER_Y + 4) * 2 - 60, 32, 60), Rect2(0, 0, 16, 30))
 
 
 func _on_rail(m) -> void:

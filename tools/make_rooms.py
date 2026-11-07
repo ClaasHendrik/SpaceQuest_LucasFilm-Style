@@ -27,7 +27,7 @@ def hs(id, name, rect, look, approach=None, exit=None, default_verb=None):
 room("robot_head", "The Robot Head", 1, [[104, 106], [310, 106], [318, 129], [100, 129]],
      {"start": [120, 114], "west": [120, 114]}, hot=[
     hs("head", "giant robot head", [150, 14, 150, 86], "A robot head the size of a house, retired without ceremony. Somebody stuck it here and told nobody why.", [220, 110]),
-    hs("eye", "broken eye", [176, 34, 28, 28], "One eye is smashed. Through the crack, something metallic glints inside, like a plan.", [190, 110]),
+    hs("eye", "broken eye", [170, 34, 46, 34], "One eye is smashed. Through the crack, something metallic glints inside, like a plan.", [190, 110]),
     hs("chasm", "chasm", [0, 100, 100, 29], "A chasm. You can't see the bottom, which is the one detail the rumours agree on.", [110, 112]),
     hs("plate", "metal plate", [110, 106, 22, 12], "A sharp-edged plate of metal, lying about like an invitation to a mistake.", [118, 116]),
     hs("w", "way west", [0, 40, 12, 60], "Back towards the mountain of garbage.", [112, 112], exit=("garbage_mountain", "east")),
@@ -60,7 +60,7 @@ room("crane_cabin", "The Crane Cabin", 1, [[40, 104], [250, 104], [300, 129], [1
     hs("stick", "joystick", [180, 62, 12, 38], "A joystick, worn smooth by many hands that are now elsewhere.", [186, 108]),
     hs("button", "red button", [220, 90, 16, 10], "A big red button. It's red for a reason; nobody wrote down what.", [226, 112]),
     hs("window", "window", [19, 13, 282, 40], "Through the glass you see the reactor, glowing in its pit like a bad idea.", [150, 108]),
-    hs("hatch", "ladder hatch", [0, 100, 40, 29], "The way back down.", [50, 114], exit=("mallard_bay", "start")),
+    hs("hatch", "ladder hatch", [2, 104, 52, 26], "The way back down.", [50, 114], exit=("mallard_bay", "start")),
 ])
 room("mallard_bay", "The Construction Bay", 1, None, {"start": [60, 114]}, hot=[
     hs("ship", "Aluminum Mallard", [80, 44, 182, 66], "A ship stitched together from scrap. It's the first thing in the universe that's all yours. Technically.", [170, 112]),

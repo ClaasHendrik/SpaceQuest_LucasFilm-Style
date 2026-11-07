@@ -183,6 +183,20 @@ def mallard(p, ox, oy, s=1.0, lit=True, ramp=True, seed=40):
     p.fill(p.m_line(*[int(v) for v in R(163, 9, 168, 29)], 1), (30, 36, 46), 0.9)
     if lit:
         p.glow(ox + 170 * s, oy + 20 * s, 34 * s, (150, 230, 255), 0.25, 0.8)
+    # --- detail layer in the manner of the reference cars: chrome edge lines, a barred intake, headlamp discs
+    for (x0, y0, x1, y1) in ((24, 8, 122, 2), (122, 2, 178, 12), (178, 12, 200, 34)):
+        p.fill(p.m_line(*[int(v) for v in R(x0, y0 + 1, x1, y1 + 1)], 1) & side, (255, 255, 255), 0.7)                    # chrome along the roof line
+    p.fill(p.m_line(*[int(v) for v in R(0, 47, 198, 51)], 1) & side, (255, 255, 255), 0.35)                              # lower sill
+    gr = p.m_poly(T([(184, 34), (198, 36), (198, 50), (184, 48)]))
+    p.fill(gr, (6, 8, 12))
+    for gx in range(186, 198, 3):                                                                                       # vertical bars of the intake
+        p.fill(p.m_poly(T([(gx, 35), (gx + 1.4, 35.2), (gx + 1.4, 49), (gx, 48.6)])), (190, 198, 214))
+        p.fill(p.m_poly(T([(gx, 35), (gx + 0.6, 35.1), (gx + 0.6, 48.8), (gx, 48.6)])), (255, 255, 255), 0.6)
+    p.edge(gr, (255, 255, 255), 0.5, "top")
+    for (cx_, cy_) in ((178, 38), (178, 48)):                                                                           # round headlamps
+        sphere(p, ox + cx_ * s, oy + cy_ * s, 3.4 * s, "#fffbe0" if lit else "#aab0b8", spec=0.9, tint=(255, 240, 180))
+        if lit:
+            p.glow(ox + cx_ * s, oy + cy_ * s, 16 * s, (255, 240, 170), 0.5)
     # amber running lights with glow
     if lit:
         for x, y in ((24, 56), (102, 3), (186, 44)):

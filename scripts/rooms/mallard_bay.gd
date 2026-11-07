@@ -29,7 +29,7 @@ func setup(room_id: String) -> void:
 		"verbs": {"Look at": _look_reactor, "Pick up": _take_reactor, "Pull": _take_reactor},
 	})
 	add_hotspot({
-		"id": "door", "name": "service door", "rect": R(0, 46, 18, 76), "approach": P(24, 128),
+		"id": "door", "name": "service door", "rect": R(0, 42, 30, 68), "approach": P(34, 128),
 		"verbs": {"Look at": _look_door, "Open": _go_door, "Walk to": _go_door, "Use": _go_door},
 	})
 

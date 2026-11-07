@@ -24,14 +24,26 @@ def robot_head():
     ear_r = box(p, 302, 40, 14, 44, 8, 4, "#6a7486", seed=8)
     brow = box(p, 160, 24, 134, 12, 6, 4, "#a8b4c4", seed=9)               # protruding brow
     soft_shadow(p, [(162, 36), (296, 36), (296, 48), (162, 48)], 0.55, 2.0)
-    for cx, broken in ((192, True), (260, False)):
-        sock = p.m_ell(cx - 19, 36, cx + 19, 74)
-        p.fill(sock, (4, 5, 9))
-        p.edge(sock, (255, 255, 255), 0.18, "bottom")
-        sphere(p, cx, 55, 15, "#ff5a30" if broken else "#8ee8ff", spec=0.8, tint=(255, 120, 60) if broken else (80, 200, 255))
-        p.glow(cx, 55, 46, (255, 80, 50) if broken else (120, 220, 255), 0.35 if broken else 0.2)
-    p.fill(p.m_line(176, 40, 212, 70, 2), (4, 4, 8))                         # the crack across the broken eye
-    p.fill(p.m_line(180, 38, 208, 66, 1), (255, 170, 120), 0.55)
+    # the good eye: a socket with a lit lens
+    sock = p.m_ell(241, 36, 279, 74)
+    p.fill(sock, (4, 5, 9))
+    p.edge(sock, (255, 255, 255), 0.18, "bottom")
+    sphere(p, 260, 55, 15, "#8ee8ff", spec=0.8, tint=(80, 200, 255))
+    p.glow(260, 55, 46, (120, 220, 255), 0.2)
+    # the broken eye: the lens is smashed out and what is left is an opening you can climb into
+    p.fill(p.m_rect(170, 36, 215, 76), (0, 0, 0), 0.0)
+    rx0, ry0, rx1, ry1 = recess(p, 172, 38, 214, 74, d=7, wall="#566070", back_top="#1a1410", back_bot="#05060a", floor_c="#8a94a4", seed=40)
+    for (sx, sy, sw, sh_) in ((rx0 + 4, ry1 - 8, 12, 6), (rx0 + 20, ry1 - 11, 9, 9), (rx0 + 26, ry1 - 6, 8, 5)):              # scrap inside
+        facet_rock(p, [(sx, sy + sh_), (sx + 2, sy), (sx + sw - 2, sy + 1), (sx + sw, sy + sh_)], "#7a6a5a", seed=int(sx), facets=1, edge=0.5)
+    p.fill(p.m_rect(rx1 - 10, ry0 + 6, rx1 - 4, ry0 + 14), (255, 190, 90))                                                  # a bright patch: the Mallard seen through the head
+    p.glow(rx1 - 7, ry0 + 10, 14, (255, 190, 90), 0.6)
+    for k in range(9):                                                                                                       # shards of the lens around the rim
+        a = 3.14159 * (0.1 + 0.9 * k / 8)
+        x = 193 + 23 * np.cos(a) * (1 if k % 2 else 1.06)
+        y = 56 - 20 * np.sin(a)
+        p.fill(p.m_poly([(x, y), (x + 3, y + 1), (x + 1, y + 4)]), (255, 150, 110))
+    p.glow(193, 56, 46, (255, 80, 50), 0.28)
+    p.glow(193, 118, 70, (255, 80, 50), 0.18, 0.3)                                                                            # the broken eye throws red light on the deck
     mouth = p.m_rect(190, 84, 274, 102)
     p.fill(mouth, (4, 6, 10))
     p.fill(p.m_rect(190, 84, 274, 86), (0, 0, 0), 0.6)
@@ -95,6 +107,11 @@ def conveyor():
     p.fill(p.m_rect(310, 0, 314, 104), (24, 28, 40))
     for k in range(3):
         p.glow(318, 76 - k * 14, 22, (210, 225, 240), 0.35)
+    soft_shadow(p, [(246, 84), (250, 84), (232, 118), (214, 118)], 0.5, 3.0)                  # the crusher's shadow falls across the belt
+    cylinder_v(p, 232, 236, 8, 28, "#8a94a6")                                                  # a rotating warning beacon over the belt
+    sphere(p, 234, 30, 6, "#ff6a2a", spec=0.9, tint=(255, 120, 40))
+    p.glow(234, 30, 40, (255, 120, 40), 0.55)
+    p.fill(p.m_poly([(234, 34), (180, 98), (250, 98)]), (255, 150, 60), 0.10)                  # its light cone
     # drainage pipe: a tube mouth with a bevelled rim
     rim = p.m_ell(298, 112, 322, 140)
     p.shade(rim, "#6a7486", 1.4, 0.4, seed=13)
@@ -196,11 +213,14 @@ def rail_walk(motivator="floor"):
         p.fill(p.m_rect(x, 21, x + 8, 34), (240, 240, 250))
     p.glow(171, 27, 40, (255, 255, 255), 0.12)
     # the blue garbage chute at the left end of the rail
-    cylinder_v(p, 0, 30, 54, 96, "#2a52d8")
-    mouth = p.m_ell(-8, 56, 30, 94)
-    p.fill(mouth, p.radial(10, 75, 22, "#02060e", "#0a1a50", 1.2))
-    p.edge(mouth, (150, 190, 255), 0.5, "top")
-    p.glow(12, 75, 30, (60, 110, 220), 0.25)
+    cylinder_v(p, 0, 34, 52, 98, "#2a52d8")
+    rim = p.m_ell(-12, 54, 34, 96)
+    p.shade(rim, "#6a8aff", 1.5, 0.4, seed=62)
+    p.edge(rim, (0, 0, 0), 0.6)
+    mouth = p.m_ell(-6, 58, 28, 92)
+    p.fill(mouth, p.radial(10, 76, 20, "#02060e", "#0a1a50", 1.2))
+    p.edge(mouth, (255, 255, 255), 0.25, "bottom")
+    p.glow(12, 76, 30, (60, 110, 220), 0.3)
     # the glossy rail and the lattice beneath it
     cylinder_h(p, 0, W, 75, 81, "#5ad8e0")
     for x in range(0, W, 20):
@@ -220,15 +240,15 @@ def rail_walk(motivator="floor"):
         p.glow(38, 100, 36, (110, 255, 90), 0.5)
     # the Mallard's back end with its open maintenance panel
     mallard(p, 236, 98, 0.5, lit=True, ramp=False)
-    pan = p.m_rect(266, 102, 300, 112)
-    p.fill(pan, (4, 6, 10))
+    rx0, ry0, rx1, ry1 = recess(p, 266, 100, 300, 114, d=4, wall="#5a6678", back_top="#0a0e14", back_bot="#03050a", floor_c="#7a8696", seed=60)
     if motivator == "installed":
-        sphere(p, 283, 107, 6, "#a8ff8a", squash=0.7, spec=0.9, tint=(120, 255, 90))
-        p.glow(283, 107, 30, (110, 255, 90), 0.5)
+        sphere(p, 284, 107, 6, "#a8ff8a", squash=0.8, spec=0.9, tint=(120, 255, 90))
+        p.glow(284, 107, 30, (110, 255, 90), 0.5)
     else:
-        for x in range(268, 298, 6):
-            p.fill(p.m_line(x, 103, x + 3, 111, 1), (255, 150, 60), 0.9)
-        p.fill(p.m_poly([(266, 102), (300, 102), (304, 94), (270, 94)]), (150, 160, 176))   # the panel lid, hinged open
+        for x in range(270, 298, 6):
+            p.fill(p.m_line(x, 102, x + 3, 112, 1), (255, 150, 60), 0.9)
+        p.glow(283, 107, 16, (255, 150, 60), 0.25)
+    hinged_door(p, 300, 96, 114, 12, "#8a96a6", side=1, eye=70.0, scale=1.06, panels=1, handle=False, seed=61)   # the panel lid, swung open
     p.glow(171, 80, 160, (180, 255, 250), 0.16, 0.2)
     return p
 
@@ -279,7 +299,10 @@ def crane_cabin():
     box(p, 250, 70, 46, 56, 8, 5, "#8a2a90", seed=28, tex=0.1)            # backrest
     box(p, 252, 104, 62, 18, 8, 5, "#b85ac0", seed=29, tex=0.1)           # seat cushion
     box(p, 256, 76, 34, 22, 3, 2, "#a040a8", seed=30, tex=0.1)            # padded panel
+    p.glow(100, 94, 70, (80, 255, 120), 0.18, 0.35)                                            # the monitor lights the desk
     p.glow(160, 60, 160, (90, 255, 70), 0.12, 0.5)
+    recess(p, 8, 118, 40, 140, d=5, wall="#3a4252", back_top="#04060a", back_bot="#010203", floor_c="#6a7486", seed=71)   # the hatch down to the bay
+    hinged_door(p, 40, 116, 142, 12, "#6a7486", side=1, eye=60.0, scale=1.06, panels=1, handle=True, seed=72)
     return p
 
 
@@ -332,6 +355,9 @@ def mallard_bay_v(ladder_on=False, reactor_on_floor=False, lit=True):
     p.fill(p.m_rect(0, 104, W, 106), (190, 205, 225), 0.3)
     p.glow(172, 118, 120, (255, 200, 120), 0.12, 0.3)
     mallard(p, 62, 46, 1.0, lit=lit)
+    recess(p, 4, 44, 26, 108, d=5, wall="#2a3040", back_top="#06080e", back_bot="#020306", floor_c="#5a6678", seed=80)   # the service door, standing open
+    hinged_door(p, 4, 44, 108, 10, "#4a566a", side=1, eye=76.0, scale=1.08, panels=2, handle=True, seed=81)
+    p.glow(172, 112, 150, (255, 200, 120), 0.12, 0.3)
     if ladder_on:                                                # a ladder propped against the hull up to the hatch
         soft_shadow(p, [(204, 34), (222, 34), (232, 116), (214, 116)], 0.4, 2.0)
         for k in range(2):

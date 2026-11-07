@@ -1,10 +1,10 @@
 extends Node2D
-# Roger. 28x52 sprite frames (stand + 4 walk frames per outfit), drawn at 2x; origin at his feet.
+# Roger. 16x30 sprite frames (stand + 4 walk frames), drawn at 2x; origin at his feet.
 
 const Art := preload("res://scripts/art.gd")
-const FW := 28
-const FH := 52
-const FEET := 50          # feet baseline inside the frame
+const FW := 16
+const FH := 30
+const FEET := 29          # feet baseline inside the frame
 
 var walk_target := Vector2.ZERO
 var walking := false
@@ -36,9 +36,8 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	if _tex == null:
 		return
-	var outfit := 1 if GameState.flag("wearing_uniform") else 0
 	var frame := 0
 	if walking:
 		frame = 1 + int(_t * 7.0) % 4
-	var src := Rect2((outfit * 5 + frame) * FW, 0, FW, FH)
+	var src := Rect2(frame * FW, 0, FW, FH)
 	draw_texture_rect_region(_tex, Rect2(-FW, -FEET * 2, FW * 2, FH * 2), src)

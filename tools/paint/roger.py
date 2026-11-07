@@ -1,12 +1,18 @@
-"""Roger Wilco sprite sheet, painted at 8x then reduced: 10 frames of 28x52 (outfit 0 = underwear, outfit 1 = uniform),
+"""Roger Wilco sprite sheet, painted at 8x then reduced: 5 frames of 28x52 in his original outfit (grey jumpsuit, magenta sleeves, red belt),
 each outfit: stand, walk1..walk4. Right-facing; the game flips for left."""
 import math
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-FW, FH = 28, 52
+LW, LH = 28, 52          # logical drawing size
+FW, FH = 16, 30          # final sprite size (about 21% of the scene height at 2x)
 S = 8
-SKIN, SKIN_D, SKIN_L = (238, 186, 146), (196, 136, 104), (252, 214, 180)
+SKIN, SKIN_D, SKIN_L = (238, 168, 148), (192, 118, 106), (252, 206, 188)
+TROUSER = ((150, 154, 166), (98, 102, 116), (196, 200, 212))
+SLEEVE = ((186, 38, 176), (118, 20, 112), (238, 112, 228))
+GREY_T, GREY_D, GREY_L = (176, 180, 190), (120, 124, 138), (216, 220, 228)
+BELT = (196, 34, 40)
+BOOT = (66, 70, 84)
 HAIR, HAIR_D, HAIR_L = (158, 78, 38), (104, 46, 24), (214, 122, 62)
 OUTLINE = (34, 22, 26)
 
@@ -32,7 +38,7 @@ def fk(hip, t1, bend, l1=9.0, l2=9.0):
 
 
 def frame(outfit, f):
-    img = Image.new("RGBA", (FW * S, FH * S), (0, 0, 0, 0))
+    img = Image.new("RGBA", (LW * S, LH * S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     phase = [None, 0.0, 0.25, 0.5, 0.75][f]
     if phase is None:
@@ -52,8 +58,8 @@ def frame(outfit, f):
     base_y = 50.0
     hip = (13.0, 31.0 - bob)
     uniform = outfit == 1
-    leg_col = ((226, 112, 40), (170, 76, 22), (250, 160, 80)) if uniform else (SKIN, SKIN_D, SKIN_L)
-    shoe = (74, 50, 40) if uniform else SKIN_D
+    leg_col = TROUSER
+    shoe = BOOT
     # back leg and arm first
     for a, b, back in ((a_b, bend_b, True), (a_f, bend_f, False)):
         if back:
@@ -70,27 +76,19 @@ def frame(outfit, f):
             sh = (12.0, 17.5 - bob)
             elb = (sh[0] - 2.5 * math.sin(swing + 0.3) * -1, sh[1] + 6.5)
             hand = (elb[0] - 2.0 * math.sin(swing) * -1, elb[1] + 6.0)
-            acol = ((200, 94, 30), (140, 62, 18), (230, 140, 70)) if uniform else (SKIN_D, SKIN_D, SKIN)
+            acol = tuple(tuple(int(v * 0.82) for v in c) for c in SLEEVE)
             limb(d, sh, elb, 3.6, *acol)
             limb(d, elb, hand, 3.2, *acol)
             limb(d, hand, (hand[0] + 0.4, hand[1] + 1.0), 2.6, SKIN_D, SKIN_D, SKIN)
     # torso
     torso = [(8.5, 16.2 - bob), (17.5, 16.2 - bob), (17.0, 31.5 - bob), (9.0, 31.5 - bob)]
-    if uniform:
-        poly(d, torso, (214, 104, 36))
-        poly(d, [(15.0, 17 - bob), (17.5, 16.2 - bob), (17.0, 31.5 - bob), (14.4, 31.5 - bob)], (160, 70, 20))   # shaded side
-        poly(d, [(9.4, 17 - bob), (10.6, 17 - bob), (10.4, 31 - bob), (9.2, 31 - bob)], (244, 150, 76))         # lit edge
-        poly(d, [(8.5, 16.2 - bob), (17.5, 16.2 - bob), (17.2, 18.4 - bob), (8.8, 18.4 - bob)], (244, 238, 224))   # white collar
-        poly(d, [(8.9, 29.2 - bob), (17.0, 29.2 - bob), (17.0, 31.5 - bob), (8.9, 31.5 - bob)], (244, 238, 224))  # white hem
-        poly(d, [(12.6, 18.4 - bob), (13.6, 18.4 - bob), (13.6, 29.2 - bob), (12.6, 29.2 - bob)], (140, 60, 18))  # zip
-    else:
-        poly(d, torso, SKIN)
-        poly(d, [(15.0, 17 - bob), (17.5, 16.2 - bob), (17.0, 31.5 - bob), (14.4, 31.5 - bob)], SKIN_D)
-        poly(d, [(9.4, 17 - bob), (10.8, 17 - bob), (10.4, 31 - bob), (9.2, 31 - bob)], SKIN_L)
-        # white boxy high-waisted shorts
-        poly(d, [(8.8, 26.0 - bob), (17.3, 26.0 - bob), (17.6, 36.0 - bob), (8.6, 36.0 - bob)], (246, 246, 250))
-        poly(d, [(15.0, 26.0 - bob), (17.3, 26.0 - bob), (17.6, 36.0 - bob), (14.6, 36.0 - bob)], (196, 200, 220))
-        poly(d, [(8.8, 26.0 - bob), (17.3, 26.0 - bob), (17.3, 27.2 - bob), (8.8, 27.2 - bob)], (150, 170, 214))
+    poly(d, torso, GREY_T)
+    poly(d, [(15.0, 17 - bob), (17.5, 16.2 - bob), (17.0, 31.5 - bob), (14.4, 31.5 - bob)], GREY_D)           # shaded side
+    poly(d, [(9.4, 17 - bob), (10.6, 17 - bob), (10.4, 31 - bob), (9.2, 31 - bob)], GREY_L)                   # lit edge
+    poly(d, [(8.5, 16.2 - bob), (17.5, 16.2 - bob), (17.2, 18.0 - bob), (8.8, 18.0 - bob)], GREY_D)           # collar
+    poly(d, [(8.9, 28.4 - bob), (17.0, 28.4 - bob), (17.0, 30.6 - bob), (8.9, 30.6 - bob)], BELT)             # red belt
+    poly(d, [(12.2, 28.4 - bob), (13.8, 28.4 - bob), (13.8, 30.6 - bob), (12.2, 30.6 - bob)], (236, 200, 90)) # buckle
+    poly(d, [(12.6, 18.0 - bob), (13.4, 18.0 - bob), (13.4, 28.4 - bob), (12.6, 28.4 - bob)], GREY_D)         # zip line
     # neck, head, hair
     poly(d, [(11.4, 13.5 - bob), (14.6, 13.5 - bob), (14.8, 16.6 - bob), (11.2, 16.6 - bob)], SKIN_D)
     hx, hy = 13.4, 8.2 - bob
@@ -110,19 +108,27 @@ def frame(outfit, f):
     sh = (13.4, 17.5 - bob)
     elb = (sh[0] + 2.2 * math.sin(-swing), sh[1] + 6.5)
     hand = (elb[0] + 2.4 * math.sin(-swing * 1.2) + 0.5, elb[1] + 6.0)
-    acol = ((226, 112, 40), (170, 76, 22), (250, 160, 80)) if uniform else (SKIN, SKIN_D, SKIN_L)
+    acol = SLEEVE
     limb(d, sh, elb, 3.8, *acol)
     limb(d, elb, hand, 3.3, *acol)
-    if uniform:
-        limb(d, (elb[0] - 0.2, elb[1] + 3.2), hand, 3.6, (244, 238, 224), (200, 196, 186), (255, 255, 255))   # white cuff
     limb(d, hand, (hand[0] + 0.5, hand[1] + 1.2), 2.8, SKIN, SKIN_D, SKIN_L)
     # --- reduce: coverage-weighted box filter, hard alpha edge, dark rim outline
     arr = np.asarray(img, np.float32)
     a = arr[..., 3] / 255.0
     rgb = arr[..., :3] * a[..., None]
-    a_s = a.reshape(FH, S, FW, S).mean((1, 3))
-    rgb_s = rgb.reshape(FH, S, FW, S, 3).mean((1, 3))
-    col = np.where(a_s[..., None] > 0, rgb_s / np.maximum(a_s[..., None], 1e-4), 0)
+    pm = np.dstack([rgb, a * 255.0]).astype(np.float32)
+    # area-average the premultiplied image down to the final size
+    ys = np.linspace(0, LH * S, FH + 1).astype(int)
+    xs = np.linspace(0, LW * S, FW + 1).astype(int)
+    a_s = np.zeros((FH, FW), np.float32)
+    rgb_s = np.zeros((FH, FW, 3), np.float32)
+    for j in range(FH):
+        for i in range(FW):
+            blk = pm[ys[j]:ys[j + 1], xs[i]:xs[i + 1]]
+            a_s[j, i] = blk[..., 3].mean() / 255.0
+            rgb_s[j, i] = blk[..., :3].mean((0, 1)) / 255.0
+    col = np.where(a_s[..., None] > 0, rgb_s * 255.0 / np.maximum(a_s[..., None], 1e-4) , 0)
+    col = np.clip(col, 0, 255)
     opaque = a_s >= 0.5
     out = np.zeros((FH, FW, 4), np.uint8)
     out[opaque, :3] = np.clip(col[opaque], 0, 255).astype(np.uint8)
@@ -139,10 +145,9 @@ def frame(outfit, f):
 
 
 def build(path):
-    sheet = Image.new("RGBA", (FW * 10, FH), (0, 0, 0, 0))
-    for o in range(2):
-        for f in range(5):
-            sheet.paste(frame(o, f), ((o * 5 + f) * FW, 0))
+    sheet = Image.new("RGBA", (FW * 5, FH), (0, 0, 0, 0))
+    for f in range(5):
+        sheet.paste(frame(1, f), (f * FW, 0))
     sheet.save(path)
     return sheet
 

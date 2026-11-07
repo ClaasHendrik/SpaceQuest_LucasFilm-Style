@@ -19,7 +19,13 @@ func run(m) -> void:
 	m.fast = true
 	await m.get_tree().create_timer(0.3).timeout
 	GameState.reset()
-	GameState.set_flag("wearing_uniform")
+	# 0. the pod, with the locker open
+	m.change_room("escape_pod", "start")
+	await m.act("Open", "hotspot", "locker")
+	m.message.visible = false
+	m.verb = "Pick up"
+	m._update_sentence("pod manual")
+	await _save(m, "0_pod")
 	# 1. the conveyor, with the crusher's warning
 	m.change_room("conveyor", "start")
 	_talk(m, "Somewhere above you, the crusher clears its throat. It has an appointment, and you are in it.")
@@ -74,9 +80,14 @@ func run(m) -> void:
 	m.room._wall_menu(m)
 	await _save(m, "8_takeoff")
 	m._close_overlay()
-	# 9. a death
+	# 9. deaths
 	m.change_room("robot_head", "start")
 	m.act("Walk to", "hotspot", "chasm")
 	await m.get_tree().create_timer(0.6).timeout
 	await _save(m, "9_death")
+	m._on_restart()
+	m.change_room("robot_head", "start")
+	m.act("Pick up", "hotspot", "plate")
+	await m.get_tree().create_timer(0.6).timeout
+	await _save(m, "10_death_plate")
 	m.get_tree().quit()

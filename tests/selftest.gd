@@ -22,15 +22,15 @@ func run(m) -> void:
 	check(GameState.max_score == 738, "point list sums to 738 (got %d)" % GameState.max_score)
 	check(GameState.points.size() == 40, "40 score events")
 
-	print("--- escape pod puzzle")
+	print("--- escape pod")
 	m.change_room("escape_pod", "start")
 	check(m.room.id == "escape_pod", "starts in the escape pod")
 	await m.act("Open", "hotspot", "locker")
 	check(GameState.flag("locker_open"), "locker opens")
-	await m.act("Pick up", "hotspot", "uniform")
-	check(GameState.has_item("uniform"), "uniform in inventory")
-	await m.act("Use", "item", "uniform")
-	check(GameState.flag("wearing_uniform") and not GameState.has_item("uniform"), "uniform worn")
+	await m.act("Pick up", "hotspot", "manual")
+	check(GameState.has_item("manual"), "pod manual in inventory")
+	await m.act("Look at", "item", "manual")
+	check(not m.busy, "reading the manual completes")
 	await m.act("Open", "hotspot", "hatch")
 	check(m.room.id == "garbage_mountain", "hatch leads to the garbage mountain")
 
@@ -59,9 +59,10 @@ func run(m) -> void:
 	print("--- death")
 	m._on_restart()
 	check(GameState.score == 0 and GameState.inventory.is_empty(), "restart resets state")
-	m.act("Open", "hotspot", "hatch")  # not awaited: die() never returns
+	m.change_room("robot_head", "start")
+	m.act("Walk to", "hotspot", "chasm")  # not awaited: die() never returns
 	await m.get_tree().create_timer(0.5).timeout
-	check(m.dead and m.overlay != null, "walking out in underwear is fatal and shows the death screen")
+	check(m.dead and m.overlay != null, "the chasm is fatal and shows the death screen")
 	m._on_restart()
 	check(not m.dead and m.overlay == null, "restart leaves the death screen")
 
@@ -148,10 +149,9 @@ func _act1(m) -> void:
 	print("--- Act 1 playthrough")
 	m._on_restart()
 	var seq := func(room_id: String): check(m.room.id == room_id, "now in " + room_id)
-	# the escape pod: no uniform, no future
+	# the escape pod: the manual in the locker, then out through the hatch
 	await m.act("Open", "hotspot", "locker")
-	await m.act("Pick up", "hotspot", "uniform")
-	await m.act("Use", "item", "uniform")
+	await m.act("Pick up", "hotspot", "manual")
 	await m.act("Open", "hotspot", "hatch")
 	seq.call("garbage_mountain")
 	await m.act("Pick up", "hotspot", "wire")

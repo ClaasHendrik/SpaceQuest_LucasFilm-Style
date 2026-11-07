@@ -16,9 +16,9 @@ func _init() -> void:
 		"verbs": {"Look at": _look_locker, "Open": _open_locker, "Close": _close_locker, "Pull": _open_locker},
 	})
 	add_hotspot({
-		"id": "uniform", "name": "uniform", "rect": R(150, 50, 28, 44), "approach": P(163, 120), "default_verb": "Pick up",
-		"visible": func(): return GameState.flag("locker_open") and not GameState.has_item("uniform") and not GameState.flag("wearing_uniform"),
-		"verbs": {"Look at": _look_uniform, "Pick up": _take_uniform},
+		"id": "manual", "name": "pod manual", "rect": R(150, 62, 28, 30), "approach": P(163, 120), "default_verb": "Pick up",
+		"visible": func(): return GameState.flag("locker_open") and not GameState.has_item("manual") and not GameState.flag("manual_taken"),
+		"verbs": {"Look at": _look_manual, "Pick up": _take_manual},
 	})
 	add_hotspot({
 		"id": "hatch", "name": "airlock hatch", "rect": R(226, 24, 80, 84), "approach": P(266, 120),
@@ -29,7 +29,7 @@ func _init() -> void:
 func current_bg() -> String:
 	if not GameState.flag("locker_open"):
 		return "escape_pod"
-	if GameState.has_item("uniform") or GameState.flag("wearing_uniform"):
+	if GameState.has_item("manual") or GameState.flag("manual_taken"):
 		return "escape_pod_open_empty"
 	return "escape_pod_open"
 
@@ -48,10 +48,10 @@ func _climb_cryo(m, _o) -> void:
 
 func _look_locker(m, _o) -> void:
 	if GameState.flag("locker_open"):
-		if GameState.has_item("uniform") or GameState.flag("wearing_uniform"):
-			await m.say("An empty locker. It has the quiet dignity of something that has finished its job.")
+		if GameState.has_item("manual") or GameState.flag("manual_taken"):
+			await m.say("An empty locker, apart from a flare and a folded blanket that nobody has ever needed. It has the quiet dignity of something that has finished its job.")
 		else:
-			await m.say("Inside hangs a single orange-and-white uniform, pressed by the loving hands of nobody.")
+			await m.say("On the shelf: a flare, a folded emergency blanket, and a thin booklet that looks as though it has never once been opened.")
 	else:
 		await m.say("A battered wall locker with a hand-lettered sign: 'PROPERTY OF SOMEONE WHO ISN'T YOU'.")
 
@@ -61,7 +61,7 @@ func _open_locker(m, _o) -> void:
 		return
 	GameState.set_flag("locker_open", true)
 	queue_redraw()
-	await m.say("The locker opens with the groan of a door that has opinions. Inside hangs a single orange-and-white uniform.")
+	await m.say("The locker opens with the groan of a door that has opinions. On the shelf lies a thin manual, bored and unread.")
 
 func _close_locker(m, _o) -> void:
 	if not GameState.flag("locker_open"):
@@ -71,20 +71,17 @@ func _close_locker(m, _o) -> void:
 	queue_redraw()
 	await m.say("You close the locker. It sighs, which you choose to take as thanks.")
 
-func _look_uniform(m, _o) -> void:
-	await m.say("A sanitation uniform in regulation orange. The only colour in a universe otherwise committed to grey.")
+func _look_manual(m, _o) -> void:
+	await m.say("The Escape Pod Owner's Manual. The cover promises 'Everything You Need to Know'. The back cover is less committal.")
 
-func _take_uniform(m, _o) -> void:
-	GameState.give_item("uniform")
+func _take_manual(m, _o) -> void:
+	GameState.give_item("manual")
+	GameState.set_flag("manual_taken")
 	queue_redraw()
-	await m.say("You take the uniform. It's the first thing in your life that has been issued to you on purpose.")
+	await m.say("You take the manual. It is light, unthumbed and, you suspect, the only thing on this ship that was ever meant to help.")
 
 func _look_hatch(m, _o) -> void:
 	await m.say("The airlock hatch. Beyond it: space, scrap, and a temperature best described as 'professional disappointment'.")
 
 func _open_hatch(m, _o) -> void:
-	if not GameState.flag("wearing_uniform"):
-		await m.die("Cold Reception",
-			"You step into the freighter in your underwear.\nThe air there is -80 degrees. Your last thought is that nobody ever tells you how loud your own teeth are.")
-		return
 	m.change_room("garbage_mountain", "pod")

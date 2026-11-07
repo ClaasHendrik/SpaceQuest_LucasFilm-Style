@@ -26,6 +26,14 @@ const ROOMS := {
 	"mallard_bay": "res://scripts/rooms/mallard_bay.gd",
 }
 const DATA_ROOM := "res://scripts/rooms/data_room.gd"
+const DEATH_PICS := {
+	"Deceleration Trauma": "deceleration",
+	"One Way to Lower Your Blood Pressure": "plate",
+	"It Slices, It Dices...": "crusher",
+	"Rats!": "rat",
+	"Learn to Drive That Thing!": "bad_flight",
+	"Decompression Blues": "decompression",
+}
 const SAVE_SLOT := "slot1"
 # Layout, 640x480: dialogue strip 0-40, scene 40-328, sentence line, verbs and inventory below.
 const STRIP_H := 40
@@ -352,12 +360,12 @@ func _flash(text: String) -> void:
 
 func die(title: String, text: String) -> void:
 	dead = true
-	_show_overlay(title, text, [["Restore", _on_restore], ["Restart", _on_restart], ["Quit", _on_quit]])
+	_show_overlay(title, text, [["Restore", _on_restore], ["Restart", _on_restart], ["Quit", _on_quit]], DEATH_PICS.get(title, ""))
 	await _never
 
 
 # --- overlay (death screen and menu) -------------------------------------------
-func _show_overlay(title: String, text: String, buttons: Array) -> void:
+func _show_overlay(title: String, text: String, buttons: Array, pic := "") -> void:
 	_close_overlay()
 	overlay = Control.new()
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -367,17 +375,40 @@ func _show_overlay(title: String, text: String, buttons: Array) -> void:
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.add_child(dim)
-	var t := _make_label(Vector2(60, 80), Vector2(520, 30), Color("ff5555"))
+	var has_pic := pic != ""
+	var ty := 14 if has_pic else 80
+	var t := _make_label(Vector2(60, ty), Vector2(520, 30), Color("ff5555"))
 	t.text = title
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	t.add_theme_font_size_override("font_size", 30)
 	overlay.add_child(t)
-	var body := _make_label(Vector2(80, 130), Vector2(480, 150), Color("ffffff"))
+	var by := 128 if not has_pic else 252
+	if has_pic:
+		var tex = load("res://scripts/art.gd").tex("res://assets/deaths/%s.png" % pic)
+		if tex != null:
+			var tr := TextureRect.new()
+			tr.texture = tex
+			tr.position = Vector2(160, 50)
+			tr.size = Vector2(320, 180)
+			tr.stretch_mode = TextureRect.STRETCH_SCALE
+			tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			overlay.add_child(tr)
+			var frame := ReferenceRect.new()
+			frame.position = tr.position - Vector2(1, 1)
+			frame.size = tr.size + Vector2(2, 2)
+			frame.border_color = Color("555555")
+			frame.editor_only = false
+			frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			overlay.add_child(frame)
+	var body := _make_label(Vector2(60, by), Vector2(520, 80 if has_pic else 150), Color("ffffff"))
 	body.text = text
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_theme_font_size_override("font_size", 20 if has_pic else FONT_SIZE)
 	overlay.add_child(body)
-	var y := 300
+	var y := 360 if has_pic else 300
+	var step := 24 if has_pic else 26
 	for bd in buttons:
 		var b := _make_button(bd[0], COL_VERB, COL_VERB_HOVER)
 		b.alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -385,7 +416,7 @@ func _show_overlay(title: String, text: String, buttons: Array) -> void:
 		b.size = Vector2(160, 22)
 		b.pressed.connect(bd[1])
 		overlay.add_child(b)
-		y += 26
+		y += step
 	add_child(overlay)
 
 

@@ -9,6 +9,7 @@ Status: design v0.1. Source for content: the AdventureDoor SQ3 walkthrough (crit
 | Engine | Godot 4.3, GDScript, exported as a native Linux binary |
 | Display | Fullscreen at start (`window/size/mode=3`), 640x400 canvas, integer-scaled with letterbox |
 | Interface | LucasFilm Games (Indy LC era) SCUMM verb grid + sentence line + inventory panel; dialogue choices replace the grid |
+| Roger | Original outfit (grey jumpsuit, magenta sleeves, red belt); about 21% of the scene height. The underwear puzzle in the script was dropped for Act 1 (the Thermoweave underwear in Acts 2 and 4 stays). |
 | Fail states | Classic Sierra: deaths and possible dead ends, manual save/restore, death screen with Restore / Restart / Quit |
 | Tone | Rewritten, more atmospheric and understated; humour stays dry and situational, not slapstick |
 | Scope | Private. All-new art and music. No original game files are extracted or used |

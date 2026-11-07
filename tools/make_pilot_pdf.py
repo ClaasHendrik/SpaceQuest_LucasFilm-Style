@@ -93,14 +93,14 @@ c.showPage()
 
 # ---- page 2
 y = PH - 20 * mm
-y = shot("pilot_2_locker_open.png", y, "Escape pod: locker open, pointing at the uniform ('Pick up uniform').")
-y = shot("pilot_3_uniform_in_inventory.png", y, "The uniform is in the inventory (magenta). 'Use' puts it on.")
+y = shot("pilot_2_locker_open.png", y, "Escape pod: locker open, pointing at the manual ('Pick up pod manual').")
+y = shot("pilot_3_manual_in_inventory.png", y, "The manual is in the inventory (magenta).")
 footer(2)
 c.showPage()
 
 # ---- page 3
 y = PH - 20 * mm
-y = shot("pilot_4_garbage_mountain.png", y, "Garbage mountain: speech in the top strip, in Roger's yellow, wearing the uniform.")
+y = shot("pilot_4_garbage_mountain.png", y, "Garbage mountain: speech in the top strip, in Roger's yellow, in his original suitniform.")
 y = shot("pilot_5_with_wire.png", y, "After picking up the wire: +5 points, wire in the inventory.")
 y -= 2 * mm
 c.setFont("Helvetica-Bold", 11)

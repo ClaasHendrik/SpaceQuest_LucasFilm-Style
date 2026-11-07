@@ -15,7 +15,7 @@ rooms = json.load(open("data/rooms.json"))
 byid = {r["id"]: r for r in rooms}
 # scripted rooms live in GDScript; describe them here
 byid["escape_pod"] = {"id": "escape_pod", "title": "Escape Pod", "act": 1, "hotspots": [
-    {"name": "cryo-chamber"}, {"name": "wall locker"}, {"name": "uniform (after opening locker)"},
+    {"name": "cryo-chamber"}, {"name": "wall locker"}, {"name": "pod manual (after opening locker)"},
     {"name": "airlock hatch", "exit": {"room": "garbage_mountain"}}]}
 byid["garbage_mountain"] = {"id": "garbage_mountain", "title": "Garbage Mountain", "act": 1, "hotspots": [
     {"name": "escape pod", "exit": {"room": "escape_pod"}}, {"name": "wire"}, {"name": "junk heap"},
@@ -146,8 +146,8 @@ while i < len(order):
 # ---- variants page: art states that change during play
 c.setFont("Helvetica-Bold", 14)
 c.drawString(M, PAGE_H - 25 * mm, "Room variants (the art changes as you play)")
-variants = [("escape_pod_open", "Escape pod: locker opened, uniform inside"),
-            ("escape_pod_open_empty", "Escape pod: locker opened, uniform taken"),
+variants = [("escape_pod_open", "Escape pod: locker opened, manual on the shelf"),
+            ("escape_pod_open_empty", "Escape pod: locker opened, manual taken"),
             ("garbage_mountain_nowire", "Garbage mountain: wire taken")]
 y = PAGE_H - 35 * mm
 vw = (PAGE_W - 2 * M) * 0.85
