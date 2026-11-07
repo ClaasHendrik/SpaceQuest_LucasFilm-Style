@@ -327,3 +327,104 @@ def building(p, x, y, w, h, dx, dy, wall, roof, seed=1):
     mf, mt, ms = box(p, x, y, w, h, dx, dy, wall, seed=seed, tex=0.08)
     p.fill(mt, p.lin(0, y - dy, 0, y, roof, roof), 0.0)
     return mf, mt, ms
+
+
+# ====================================================================== doors and cavities (from the style analysis)
+def _lerp(a, b, t):
+    return a + (b - a) * t
+
+
+def hinged_door(p, hx, y0, y1, dx, base, side=-1, eye=70.0, scale=1.12, panels=2, handle=True, glass=None, seed=1, shade_k=0.78):
+    """A door leaf hinged at x=hx, swung open towards the viewer.
+    The free edge is dx away from the hinge (side=-1: to the left) and is TALLER than the hinge edge (perspective about eye).
+    The leaf has a visible edge (thickness), hinges, inset panels (or a glass pane) and a handle, and throws a shadow."""
+    fx = hx + side * dx
+    ty = eye - (eye - y0) * scale
+    by = eye + (y1 - eye) * scale
+    poly = [(hx, y0), (fx, ty), (fx, by), (hx, y1)]
+
+    def at(u, v):   # u: 0 at the hinge .. 1 at the free edge; v: 0 top .. 1 bottom
+        x = _lerp(hx, fx, u)
+        return (x, _lerp(_lerp(y0, ty, u), _lerp(y1, by, u), v))
+
+    # shadows first: on the wall behind (falls right and down) and on the floor in front of the door
+    soft_shadow(p, [(x + 5, y + 1.5) for x, y in poly], 0.42, 1.0)
+    soft_shadow(p, [(fx, by), (hx, y1), (hx + 12, y1 + 3.5), (fx + 12, by + 3.5)], 0.38, 1.4)
+    # the leaf: its inner face is turned away from the key light, so it is darker than the outer face
+    m = plane(p, poly, base, shade_k, angle=(-1, 0), spread=0.5, tex=0.04, seed=seed, edge=0.5)
+    # thickness: a lit strip on the free edge and a thin strip along the top
+    edge_strip = [(fx, ty), (fx - 2 * (-side) * -1, ty + 0.5), (fx - 2 * (-side) * -1, by - 0.5), (fx, by)]
+    p.fill(p.m_poly([(fx, ty), (fx + side * 2, ty + 0.6), (fx + side * 2, by - 0.6), (fx, by)]), rgb(base) * 1.5 if isinstance(base, str) else base)
+    p.fill(p.m_poly([(fx, ty), (fx + side * 2, ty + 0.6), (fx + side * 2, by - 0.6), (fx, by)]), (255, 255, 255), 0.18)
+    p.fill(p.m_line(hx, y0 - 1, fx, ty - 1, 1), (255, 255, 255), 0.4)
+    # hinge edge: a dark crease and two small hinges
+    p.fill(p.m_line(hx, y0, hx, y1, 2), (0, 0, 0), 0.55)
+    for v in (0.12, 0.86):
+        hy = _lerp(y0, y1, v)
+        p.fill(p.m_rect(hx - 1.5, hy - 2, hx + 1.5, hy + 2), (200, 205, 215))
+        p.fill(p.m_rect(hx - 0.5, hy - 2, hx + 0.5, hy + 2), (60, 64, 76))
+    if glass is not None:
+        a, b, c, d = at(0.14, 0.07), at(0.86, 0.07), at(0.86, 0.93), at(0.14, 0.93)
+        gm = p.m_poly([a, b, c, d])
+        p.fill(gm, rgb(glass) if isinstance(glass, str) else glass, 0.55)
+        p.fill(p.m_poly([at(0.24, 0.1), at(0.42, 0.1), at(0.30, 0.9), at(0.2, 0.9)]) & gm, (255, 255, 255), 0.30)
+        p.edge(gm, (0, 0, 0), 0.5)
+        p.edge(gm, (255, 255, 255), 0.25, "top")
+    else:
+        n = panels
+        for i in range(n):
+            v0 = 0.08 + i * (0.84 / n) + 0.02
+            v1 = 0.08 + (i + 1) * (0.84 / n) - 0.02
+            a, b, c, d = at(0.16, v0), at(0.84, v0), at(0.84, v1), at(0.16, v1)
+            inset = p.m_poly([a, b, c, d])
+            p.fill(inset, (0, 0, 0), 0.16)
+            p.fill(p.m_line(a[0], a[1], b[0], b[1], 1) & m, (0, 0, 0), 0.5)      # top and left inner edges are in shadow
+            p.fill(p.m_line(a[0], a[1], d[0], d[1], 1) & m, (0, 0, 0), 0.4)
+            p.fill(p.m_line(d[0], d[1], c[0], c[1], 1) & m, (255, 255, 255), 0.4)   # bottom and right inner edges catch light
+            p.fill(p.m_line(b[0], b[1], c[0], c[1], 1) & m, (255, 255, 255), 0.3)
+    if handle:
+        hxx, hyy = at(0.86, 0.52)
+        p.fill(p.m_rect(hxx - 1.5, hyy - 3.5, hxx + 1.5, hyy + 3.5), (0, 0, 0), 0.5)
+        p.fill(p.m_rect(hxx - 1, hyy - 3, hxx + 1, hyy + 3), (232, 214, 150))
+        p.fill(p.m_rect(hxx - 1, hyy - 3, hxx, hyy - 2), (255, 255, 255), 0.9)
+    return m
+
+
+def recess(p, x0, y0, x1, y1, d=7.0, wall="#4a5664", back_top="#0a0e14", back_bot="#03050a", floor_c="#8a96a6", seed=1):
+    """An opening with real depth: you see the left inner wall, the roof (dark), the floor (lit) and the back wall.
+    Returns the back wall rectangle (bx0, by0, bx1, by1)."""
+    dt, db = d * 0.6, d * 0.8
+    bx0, by0, bx1, by1 = x0 + d, y0 + dt, x1, y1 - db
+    p.fill(p.m_rect(bx0, by0, bx1, by1), p.lin(0, by0, 0, by1, back_top, back_bot))
+    lw = plane(p, [(x0, y0), (bx0, by0), (bx0, by1), (x0, y1)], wall, 0.62, angle=(-1, 0), spread=0.3, tex=0.03, seed=seed, edge=0.4)
+    plane(p, [(x0, y0), (x1, y0), (x1, by0), (bx0, by0)], wall, 0.3, angle=(0, -1), spread=0.2, tex=0.03, seed=seed + 1, edge=0.4)
+    plane(p, [(x0, y1), (bx0, by1), (x1, by1), (x1, y1)], floor_c, 1.0, angle=(0, -1), spread=0.3, tex=0.03, seed=seed + 2, edge=0.4)
+    # contact darkening where the walls meet the back wall
+    p.fill(p.m_rect(bx0, by0, bx0 + 2, by1), (0, 0, 0), 0.4)
+    p.fill(p.m_rect(bx0, by0, bx1, by0 + 2), (0, 0, 0), 0.4)
+    return bx0, by0, bx1, by1
+
+
+def hanging_garment(p, cx, top, h, base="#d8702a", trim=(240, 236, 226), seed=1):
+    """a uniform on a hanger: sloped shoulders, a V collar, folds, sleeves with cuffs, a hook, and a shadow on the wall behind"""
+    # shadow on the back wall
+    soft_shadow(p, [(cx - 8, top + 4), (cx + 14, top + 4), (cx + 16, top + h), (cx - 6, top + h)], 0.42, 1.2)
+    # hook and hanger
+    p.fill(p.m_line(cx, top - 3, cx, top + 1, 1), (210, 214, 224))
+    p.fill(p.m_poly([(cx - 10, top + 6), (cx, top + 1), (cx + 10, top + 6)]), (150, 154, 168))
+    # sleeves hang behind and beside the body
+    for sx, sgn, k in ((cx - 11, -1, 1.15), (cx + 8, 1, 0.55)):
+        sl = [(cx + sgn * 6, top + 7), (cx + sgn * 11, top + 9), (cx + sgn * 13.5, top + h * 0.78), (cx + sgn * 9, top + h * 0.8)]
+        plane(p, sl, base, k, angle=(-1, 0), spread=0.3, tex=0.04, seed=seed + 3, edge=0.5)
+        p.fill(p.m_poly([sl[3], sl[2], (sl[2][0], sl[2][1] + 3), (sl[3][0], sl[3][1] + 3)]), trim)
+    # body with a lit left side and a darker right side
+    body = [(cx - 7, top + 5), (cx - 3, top + 3), (cx + 3, top + 3), (cx + 7, top + 5), (cx + 8, top + h * 0.92), (cx - 8, top + h * 0.92)]
+    mb = plane(p, body, base, 1.0, angle=(-1, 0), spread=0.9, tex=0.05, seed=seed, edge=0.55)
+    # folds
+    for dx_ in (-4, -1, 3):
+        p.fill(p.m_line(cx + dx_, top + 12, cx + dx_ + 0.5, top + h * 0.9, 1) & mb, (0, 0, 0), 0.32)
+        p.fill(p.m_line(cx + dx_ - 1, top + 12, cx + dx_ - 0.5, top + h * 0.9, 1) & mb, (255, 220, 170), 0.2)
+    # white V collar and the hem band
+    p.fill(p.m_poly([(cx - 4, top + 3), (cx, top + 9), (cx + 4, top + 3), (cx + 2.5, top + 3), (cx, top + 6.5), (cx - 2.5, top + 3)]), trim)
+    p.fill(p.m_rect(cx - 8, top + h * 0.86, cx + 8, top + h * 0.92), trim)
+    p.fill(p.m_line(cx, top + 9, cx, top + h * 0.86, 1), (90, 44, 16), 0.5)

@@ -60,16 +60,22 @@ def escape_pod(locker_open=False, uniform=True):
     from solid import box as sbox, soft_shadow as sshadow, sphere as ssphere
     sshadow(p, [(6, 108), (92, 108), (100, 124), (10, 126)], 0.55, 3.0)
     fr = sbox(p, 10, 20, 72, 90, 8, 5, "#8e9aa4", seed=2)[0]
-    inner = p.m_rect(20, 30, 72, 106)
-    p.fill(inner, p.lin(0, 30, 0, 106, "#9fe8f0", "#2a8ca0"))
-    p.fill(p.m_rect(20, 30, 72, 50), (255, 255, 255), 0.22)          # frost haze
-    p.fill(p.m_poly([(26, 34), (36, 34), (28, 104), (22, 104)]), (255, 255, 255), 0.14)   # glass glint
-    door = p.m_poly([(20, 30), (4, 38), (4, 100), (20, 106)])
-    p.fill(door, p.lin(4, 0, 20, 0, "#38b4c4", "#79d4e0"))
-    p.edge(door, (0, 0, 0), 0.5)
+    from solid import recess as _recess, hinged_door as _door, hanging_garment as _garment, cylinder_h as _cylh
+    bx0, by0, bx1, by1 = _recess(p, 20, 30, 72, 106, d=8, wall="#4a6a78", back_top="#0e3a48", back_bot="#041820", floor_c="#9ac8d4", seed=20)
+    for yy in range(int(by0) + 6, int(by1) - 4, 9):                                   # ribs on the back wall
+        p.fill(p.m_rect(bx0, yy, bx1, yy + 1), (0, 0, 0), 0.45)
+        p.fill(p.m_rect(bx0, yy + 1, bx1, yy + 2), (150, 230, 240), 0.14)
+    cot = sbox(p, bx0 + 3, by1 - 14, 36, 10, 4, 3, "#7ab8c8", seed=21, tex=0.04)[0]       # the padded cot
+    p.fill(p.m_rect(bx0 + 3, by1 - 14, bx0 + 12, by1 - 12), (240, 250, 255), 0.5)         # pillow
+    p.fill(p.m_rect(bx1 - 8, by0 + 6, bx1 - 3, by0 + 22), (6, 18, 22))                    # status strip with lights
+    for i, c in enumerate([(255, 90, 80), (255, 220, 90), (100, 240, 140)]):
+        p.fill(p.m_rect(bx1 - 7, by0 + 8 + i * 5, bx1 - 4, by0 + 10 + i * 5), c)
+        p.glow(bx1 - 5.5, by0 + 9 + i * 5, 6, c, 0.3)
+    p.glow(46, 98, 40, (160, 255, 255), 0.35, 0.5)                                         # cold mist at the floor of the chamber
+    p.glow(46, 60, 60, (120, 230, 255), 0.14, 1.2)
+    _door(p, 20, 30, 106, 17, "#6aa8b8", side=-1, glass="#9ae8f8", handle=True, seed=22)   # the glass door, swung open to the left
     p.fill(p.m_rect(26, 12, 66, 18), p.lin(0, 12, 0, 18, "#c04040", "#701818"))      # alarm light
     p.glow(46, 15, 26, (255, 70, 60), 0.45, 0.8)
-    p.fill(p.m_rect(20, 106, 72, 110), (20, 40, 50))
     # --- control panel
     sbox(p, 94, 44, 36, 42, 5, 3, "#3a4650", seed=3)
     scr = p.m_rect(98, 50, 126, 66)
@@ -95,21 +101,14 @@ def escape_pod(locker_open=False, uniform=True):
         for k in range(4):
             p.fill(p.m_rect(152 + k * 6, 55, 155 + k * 6, 57), (70, 60, 50), 0.8)
     else:
-        cav = p.m_rect(146, 42, 180, 104)
-        p.fill(cav, p.lin(0, 42, 0, 104, "#0a0d12", "#020304"))
-        dr = p.m_poly([(146, 42), (122, 52), (122, 100), (146, 104)])
-        p.shade(dr, "#707a84", 1.1, 0.6, seed=5)
-        p.edge(dr, (0, 0, 0), 0.55)
-        p.fill(p.m_rect(150, 44, 176, 46), (150, 150, 150))          # hanging rail
+        bx0, by0, bx1, by1 = _recess(p, 146, 42, 180, 104, d=7, wall="#566270", back_top="#12161e", back_bot="#05070a", floor_c="#7a8694", seed=30)
+        p.fill(p.m_rect(bx0, by0 + 2, bx1, by0 + 5), (150, 156, 168))                       # the hanging rail across the back
+        p.fill(p.m_rect(bx0, by0 + 2, bx1, by0 + 3), (255, 255, 255), 0.5)
+        p.fill(p.m_rect(bx0, by0 + 5, bx1, by0 + 6), (0, 0, 0), 0.5)
         if uniform:
-            body = p.m_poly([(152, 50), (174, 50), (176, 92), (150, 92)])
-            p.shade(body, "#d8702a", 1.25, 0.55, tex=0.08, seed=6)
-            p.fill(p.m_rect(152, 50, 174, 55), (240, 236, 226))     # white collar trim
-            p.fill(p.m_poly([(150, 56), (146, 80), (152, 80), (154, 58)]), (216, 112, 44))
-            p.fill(p.m_poly([(176, 56), (180, 80), (174, 80), (172, 58)]), (216, 112, 44))
-            p.fill(p.m_rect(150, 88, 176, 92), (240, 236, 226))
-            p.fill(p.m_rect(162, 54, 164, 90), (70, 40, 16), 0.5)
-        p.glow(163, 70, 30, (255, 170, 80), 0.18)
+            _garment(p, (bx0 + bx1) / 2 + 1, by0 + 7, 38, seed=31)
+        p.glow((bx0 + bx1) / 2, by0 + 20, 30, (255, 170, 80), 0.14)
+        _door(p, 146, 42, 104, 22, "#7c8690", side=-1, panels=2, handle=True, seed=32)       # the locker door, swung open to the left
     # --- airlock hatch with a porthole onto the junk-filled dark
     sshadow(p, [(224, 106), (314, 106), (318, 124), (230, 126)], 0.5, 3.0)
     sbox(p, 226, 24, 80, 84, 8, 5, "#7a8a96", seed=7)
