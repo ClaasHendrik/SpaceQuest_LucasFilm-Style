@@ -226,5 +226,8 @@ for r in ROOMS:
             h["approach"] = [h["approach"][0], round(h["approach"][1] * K)]
         # keep everything inside the 320x144 stage
         h["rect"][3] = min(h["rect"][3], 144 - h["rect"][1])
+# Act 1 is built from the original screens (tools/make_act1_rooms.py), the old Act 1 rooms are dropped here
+REMOVED = {"robot_head", "conveyor", "rat_lair", "rail_walk", "crane_cabin", "mallard_bay", "cockpit"}
+ROOMS = [r for r in ROOMS if r["id"] not in REMOVED]
 json.dump(ROOMS, open("data/rooms.json", "w"), indent=1)
 print(len(ROOMS), "rooms,", sum(len(r["hotspots"]) for r in ROOMS), "hotspots")

@@ -32,10 +32,11 @@ func run(m) -> void:
 	await m.act("Look at", "item", "manual")
 	check(not m.busy, "reading the manual completes")
 	await m.act("Open", "hotspot", "hatch")
-	check(m.room.id == "garbage_mountain", "hatch leads to the garbage mountain")
+	check(m.room.id == "crash_site", "hatch leads to the crash site")
 
 	print("--- scoring")
-	await m.act("Pick up", "hotspot", "wire")
+	m.change_room("wire_tube", "west")
+	await m.act("Pick up", "hotspot", "wires")
 	check(GameState.has_item("wire"), "wire picked up")
 	check(GameState.score == 5, "wire awards 5 points (score %d)" % GameState.score)
 	m.award("wire")
@@ -48,10 +49,10 @@ func run(m) -> void:
 	GameState.score = 999
 	GameState.inventory = []
 	check(GameState.load_slot("selftest"), "load works")
-	check(GameState.score == 5 and GameState.has_item("wire") and GameState.current_room == "garbage_mountain", "state restored")
+	check(GameState.score == 5 and GameState.has_item("wire") and GameState.current_room == "wire_tube", "state restored")
 
 	print("--- two-step verb")
-	await m.act("Use", "item", "wire", "hotspot", "heap")
+	await m.act("Use", "item", "wire", "hotspot", "w")
 	check(not m.busy, "use item on hotspot completes")
 	await m.act("What is", "item", "wire")
 	check(not m.busy, "What is on an item completes")
@@ -67,13 +68,15 @@ func run(m) -> void:
 	check(not m.dead and m.overlay == null, "restart leaves the death screen")
 
 	print("--- world")
-	var f := FileAccess.open("res://data/rooms.json", FileAccess.READ)
-	var data: Array = JSON.parse_string(f.get_as_text())
-	var ids := {"escape_pod": true, "garbage_mountain": true}
+	var data: Array = []
+	for path in ["res://data/rooms.json", "res://data/act1_rooms.json"]:
+		var f := FileAccess.open(path, FileAccess.READ)
+		data.append_array(JSON.parse_string(f.get_as_text()))
+	var ids := {"escape_pod": true}
 	for r in data:
 		ids[r["id"]] = true
 	check(m.room_ids.size() == ids.size(), "room list covers all %d rooms" % ids.size())
-	var graph := {"escape_pod": ["garbage_mountain"], "garbage_mountain": ["escape_pod", "robot_head", "conveyor"]}
+	var graph := {"escape_pod": ["crash_site"]}
 	var bad_exits := 0
 	var bad_rects := 0
 	for r in data:
@@ -88,8 +91,18 @@ func run(m) -> void:
 				bad_rects += 1
 	check(bad_exits == 0, "every exit leads to an existing room")
 	check(bad_rects == 0, "every hotspot lies inside the 320x160 stage")
+	# links made by the Act 1 scripts rather than by data exits
+	graph["robot_head"].append("yard")
+	graph["junk_tower"].append("conveyor")
+	graph["conveyor"].append("rail_west")
+	graph["rail_tower"].append("yard")
+	graph["yard"].append("rail_west")
+	graph["rail_west"].append("dark_room")
+	graph["yard_ladder"].append("cockpit")
+	graph["cockpit"].append("nav_screen")
 	for d in ["landing_strip", "monolith_exterior", "ortega_crater", "pestulon_exterior"]:
 		graph["cockpit"].append(d)   # reached through the navigation computer and launch lever
+	graph["yard"].append("yard_ladder")
 	var seen := {"escape_pod": true}
 	var queue := ["escape_pod"]
 	while not queue.is_empty():
@@ -146,68 +159,90 @@ func run(m) -> void:
 
 # ---------------------------------------------------------------------------- Act 1, start to finish
 func _act1(m) -> void:
-	print("--- Act 1 playthrough")
+	print("--- Act 1 playthrough (original layout)")
 	m._on_restart()
-	var seq := func(room_id: String): check(m.room.id == room_id, "now in " + room_id)
-	# the escape pod: the manual in the locker, then out through the hatch
+	var at := func(room_id: String): check(m.room.id == room_id, "now in " + room_id)
+	# the pod: the manual, then out through the hatch
 	await m.act("Open", "hotspot", "locker")
 	await m.act("Pick up", "hotspot", "manual")
 	await m.act("Open", "hotspot", "hatch")
-	seq.call("garbage_mountain")
-	await m.act("Pick up", "hotspot", "wire")
-	# the robot head: through the broken eye
-	await m.act("Walk to", "hotspot", "east")
-	seq.call("robot_head")
+	at.call("crash_site")
+	# east, into the tube: the wire
+	await m.act("Walk to", "hotspot", "e")
+	at.call("tube_entrance")
+	await m.act("Open", "hotspot", "arches")
+	at.call("wire_tube")
+	await m.act("Pick up", "hotspot", "wires")
+	check(GameState.has_item("wire"), "wire taken in the tube")
+	# robot head: through the eye, see the shuttle, and back down
+	await m.act("Walk to", "hotspot", "e")
+	at.call("robot_head")
 	await m.act("Use", "hotspot", "eye")
-	check(GameState.flag("saw_panel"), "the robot eye shows the Mallard's open panel")
+	at.call("yard")
+	check(GameState.flag("eye_done"), "the eye leads up to the shuttle")
+	await m.act("Walk to", "hotspot", "ladder")
+	at.call("robot_head")
+	# back to the pod place, south and east to the lift
 	await m.act("Walk to", "hotspot", "w")
-	await m.act("Walk to", "hotspot", "south")
-	seq.call("conveyor")
-	# the trash bucket takes Roger up to the rail
-	await m.act("Use", "hotspot", "bucket")
-	seq.call("rail_walk")
-	# on the rail: jump, ride the grabber, lift the motivator from the pedestal and drop it in the ship's panel
-	await m.act("Use", "hotspot", "grabber")
-	check(not m.room.riding, "can't ride the grabber from the floor")
+	await m.act("Walk to", "hotspot", "w")
+	await m.act("Walk to", "hotspot", "w")
+	at.call("crash_site")
+	await m.act("Walk to", "hotspot", "s")
+	at.call("junk_field")
+	await m.act("Walk to", "hotspot", "e")
+	at.call("junk_tower")
+	await m.act("Use", "hotspot", "lift")
+	at.call("conveyor")
 	await m.act("Use", "hotspot", "rail")
-	check(GameState.flag("on_rail"), "Roger is up on the rail")
+	at.call("rail_west")
+	await m.act("Walk to", "hotspot", "w")
+	at.call("rail_window")
+	await m.act("Walk to", "hotspot", "w")
+	at.call("rail_tower")
+	# the grabber: the claw over the yard
 	await m.act("Use", "hotspot", "grabber")
+	at.call("yard")
 	check(m.room.riding, "Roger rides the grabber")
-	m.room.set_grabber(38.0)
-	await m.act("Push", "hotspot", "grabber")
+	m.room.claw_x = 52.0
+	await m.act("Push", "hotspot", "motivator")
 	check(GameState.flag("motivator_held"), "the claw takes the warp motivator")
-	m.room.set_grabber(283.0)
-	await m.act("Push", "hotspot", "grabber")
-	check(GameState.flag("motivator_installed"), "the motivator is set into the ship's panel")
-	await m.act("Use", "hotspot", "grabber")
+	m.room.claw_x = 130.0
+	await m.act("Push", "hotspot", "panel")
+	check(GameState.flag("motivator_installed"), "the motivator is set into the open panel")
+	await m.act("Walk to", "hotspot", "platform")
+	at.call("rail_west")
 	await m.act("Use", "hotspot", "chute")
-	seq.call("rat_lair")
-	# the reactor cavern: take the ladder, climb to the crane
-	await m.act("Pick up", "hotspot", "portable")
-	check(GameState.has_item("ladder"), "the portable ladder is in the inventory")
-	await m.act("Use", "hotspot", "ladder")
-	seq.call("crane_cabin")
-	# the crane: over the pit, grab the reactor, over the bay, drop it
-	await m.act("Push", "hotspot", "stick")
-	await m.act("Push", "hotspot", "button")
-	check(GameState.flag("crane_holding"), "the claw holds the reactor")
-	await m.act("Push", "hotspot", "stick")
-	await m.act("Push", "hotspot", "button")
-	check(GameState.flag("reactor_delivered"), "the reactor is delivered to the bay")
-	await m.act("Walk to", "hotspot", "hatch")
-	seq.call("mallard_bay")
-	await m.act("Open", "hotspot", "ramp")
-	check(m.room.id == "mallard_bay", "the ramp stays up while the ship has no power")
+	at.call("dark_room")
 	await m.act("Pick up", "hotspot", "reactor")
-	check(GameState.has_item("reactor"), "Roger picks up the reactor")
+	check(GameState.has_item("reactor"), "the reactor is taken from the hole")
+	await m.act("Open", "hotspot", "ladder")
+	at.call("tube_entrance")
+	# the rat takes the reactor and the wire in the tube
+	await m.act("Open", "hotspot", "arches")
+	at.call("wire_tube")
+	await m.get_tree().create_timer(0.3).timeout
+	check(not GameState.has_item("reactor") and not GameState.has_item("wire"), "the rat steals the reactor and the wire")
+	# fetch them again
+	await m.act("Walk to", "hotspot", "w")
+	await m.act("Open", "hotspot", "e")
+	at.call("dark_room")
+	await m.act("Pick up", "hotspot", "reactor")
+	check(GameState.has_item("reactor") and GameState.has_item("wire"), "reactor and wire are back in hand")
+	await m.act("Open", "hotspot", "ladder")
+	await m.act("Pick up", "hotspot", "ladder")
+	check(GameState.has_item("ladder"), "the ladder at the tube entrance")
+	await m.act("Open", "hotspot", "arches")
+	await m.act("Walk to", "hotspot", "e")
+	at.call("robot_head")
+	await m.act("Use", "hotspot", "eye")
+	at.call("yard")
 	await m.act("Use", "item", "ladder", "hotspot", "ship")
-	check(GameState.flag("ladder_placed"), "the ladder is propped against the hull")
-	await m.act("Open", "hotspot", "tophatch")
+	at.call("yard_ladder")
+	await m.act("Open", "hotspot", "hatch")
 	await m.act("Use", "item", "reactor", "hotspot", "panel")
 	await m.act("Use", "item", "wire", "hotspot", "panel")
-	await m.act("Open", "hotspot", "ramp")
-	seq.call("cockpit")
-	# the cockpit: buckazoids in the cushion, then power-up and the escape
+	await m.act("Open", "hotspot", "to_cockpit")
+	at.call("cockpit")
 	await m.act("Use", "hotspot", "seat")
 	check(GameState.has_item("buckazoids"), "buckazoids found in the pilot's seat")
 	for f in ["sys_engines", "sys_radar", "sys_weapons", "sys_front"]:
@@ -217,15 +252,15 @@ func _act1(m) -> void:
 	await m.get_tree().create_timer(0.2).timeout
 	check(GameState.flag("escaped_freighter"), "the Mallard blasts out of the freighter")
 	check(GameState.score == 145, "Act 1 is worth exactly 145 points (score %d)" % GameState.score)
-	# deaths on the way
+	# deaths
 	m._on_restart()
-	m.change_room("robot_head", "start")
+	m.change_room("robot_head", "west")
 	m.act("Walk to", "hotspot", "chasm")
 	await m.get_tree().create_timer(0.4).timeout
 	check(m.dead, "walking into the chasm kills Roger")
 	m._on_restart()
 	m.change_room("cockpit", "start")
-	for f in ["sys_engines", "sys_weapons"]:
+	for f in ["sys_engines", "sys_weapons", "motivator_installed", "reactor_installed", "wire_installed"]:
 		GameState.set_flag(f)
 	m.room._takeoff(m)
 	await m.get_tree().create_timer(0.2).timeout

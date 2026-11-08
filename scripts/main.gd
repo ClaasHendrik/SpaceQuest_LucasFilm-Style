@@ -13,17 +13,13 @@ const VERB_COLUMNS := [
 const VERB_X := [6, 100, 209, 352, 515]
 const CONTEXT_VERBS := ["Talk to", "Travel"]          # greyed out unless something in the room responds to them
 const TWO_STEP := {"Use": "with", "Give": "to"}
+const ACT1 := "res://scripts/rooms/act1.gd"
 const ROOMS := {
 	"escape_pod": "res://scripts/rooms/escape_pod.gd",
-	"garbage_mountain": "res://scripts/rooms/garbage_mountain.gd",
-	"cockpit": "res://scripts/rooms/cockpit.gd",
 	"nav_screen": "res://scripts/rooms/nav_screen.gd",
-	"robot_head": "res://scripts/rooms/robot_head.gd",
-	"conveyor": "res://scripts/rooms/conveyor.gd",
-	"rat_lair": "res://scripts/rooms/rat_lair.gd",
-	"rail_walk": "res://scripts/rooms/rail_walk.gd",
-	"crane_cabin": "res://scripts/rooms/crane_cabin.gd",
-	"mallard_bay": "res://scripts/rooms/mallard_bay.gd",
+	"cockpit": "res://scripts/rooms/cockpit.gd",
+	"crash_site": ACT1, "tube_entrance": ACT1, "wire_tube": ACT1, "robot_head": ACT1, "yard": ACT1, "yard_ladder": ACT1,
+	"junk_field": ACT1, "junk_tower": ACT1, "conveyor": ACT1, "rail_west": ACT1, "rail_window": ACT1, "rail_tower": ACT1, "dark_room": ACT1,
 }
 const DATA_ROOM := "res://scripts/rooms/data_room.gd"
 const DEATH_PICS := {
@@ -113,10 +109,11 @@ func _ready() -> void:
 
 
 func _load_room_ids() -> void:
-	room_ids = ["escape_pod", "garbage_mountain"]
-	var f := FileAccess.open("res://data/rooms.json", FileAccess.READ)
-	for r in JSON.parse_string(f.get_as_text()):
-		room_ids.append(r["id"])
+	room_ids = ["escape_pod"]
+	for path in ["res://data/act1_rooms.json", "res://data/rooms.json"]:
+		var f := FileAccess.open(path, FileAccess.READ)
+		for r in JSON.parse_string(f.get_as_text()):
+			room_ids.append(r["id"])
 
 
 # --- UI construction -------------------------------------------------------
@@ -291,8 +288,11 @@ func _target_name(t: Dictionary) -> String:
 # --- rooms ------------------------------------------------------------------
 func change_room(room_id: String, entry = "start") -> void:
 	if room != null:
-		stage.remove_child(room)
-		room.queue_free()
+		# keep the old room alive for a moment: an action that is still running in it (a message after the room change)
+		# would otherwise be cancelled when the node is freed, and the game would wait for it forever
+		var old: Node = room
+		stage.remove_child(old)
+		get_tree().create_timer(3.0).timeout.connect(old.queue_free)
 	if ROOMS.has(room_id):
 		room = load(ROOMS[room_id]).new()
 	else:

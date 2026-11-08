@@ -84,4 +84,4 @@ func _look_hatch(m, _o) -> void:
 	await m.say("The airlock hatch. Beyond it: space, scrap, and a temperature best described as 'professional disappointment'.")
 
 func _open_hatch(m, _o) -> void:
-	m.change_room("garbage_mountain", "pod")
+	m.change_room("crash_site", "pod")

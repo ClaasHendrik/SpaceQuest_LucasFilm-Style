@@ -46,6 +46,9 @@ func _computer(m, _o) -> void:
 	if GameState.flag("escaped_freighter"):
 		m.change_room("nav_screen", "start")
 		return
+	if not (GameState.flag("motivator_installed") and GameState.flag("reactor_installed") and GameState.flag("wire_installed")):
+		await m.say("The computer is dark. It is waiting for a warp motivator, a reactor and a wire, and it is not shy about the order.")
+		return
 	_menu(m)
 
 

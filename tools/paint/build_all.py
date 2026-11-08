@@ -5,12 +5,15 @@ from paint import W, H
 import pilot
 
 OUT = "../../assets/backgrounds/"
+SKIP = {'garbage_mountain','garbage_mountain_nowire','robot_head','conveyor','rat_lair','rat_lair_noreactor','rat_lair_noladder','rat_lair_empty','rail_walk','rail_walk_gone','rail_walk_installed','crane_cabin','mallard_bay','mallard_bay_l','mallard_bay_r','mallard_bay_lr','cockpit'}   # Act 1 now comes from build_act1.py (original screens)
 MODULES = ["p_act1", "p_act2", "p_act3", "p_act4", "p_act5", "s_act1", "s_act2", "s_act3", "s_act4", "s_act5"]   # s_* = solid versions, override p_*
 
 
 def main():
     written = []
     for name, fn in pilot.ROOMS.items():
+        if name in SKIP:
+            continue
         fn().save(OUT + name + ".png")
         written.append(name)
     rooms = {}
@@ -21,6 +24,8 @@ def main():
             continue
         rooms.update(mod.ROOMS)
     for name, fn in rooms.items():
+        if name in SKIP:
+            continue
         fn().finish(colors=190, vignette=0.45).save(OUT + name + ".png")
         written.append(name)
     print(len(written), "backgrounds:", " ".join(written))

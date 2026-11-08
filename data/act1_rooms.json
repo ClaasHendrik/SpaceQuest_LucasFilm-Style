@@ -1,0 +1,1585 @@
+[
+ {
+  "id": "crash_site",
+  "title": "Crash site",
+  "act": 1,
+  "bg": "crash_site",
+  "walk": [
+   [
+    40,
+    112
+   ],
+   [
+    292,
+    112
+   ],
+   [
+    316,
+    152
+   ],
+   [
+    6,
+    152
+   ]
+  ],
+  "entries": {
+   "start": [
+    140,
+    128
+   ],
+   "pod": [
+    120,
+    126
+   ],
+   "east": [
+    292,
+    128
+   ],
+   "north": [
+    150,
+    134
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "pod",
+    "name": "your escape pod",
+    "rect": [
+     95,
+     55,
+     72,
+     52
+    ],
+    "look": "Your escape pod, lying in the junk like a very expensive mistake. It got you here, and that is the whole review.",
+    "approach": [
+     128,
+     122
+    ],
+    "exit": {
+     "room": "escape_pod",
+     "entry": "hatch"
+    }
+   },
+   {
+    "id": "object",
+    "name": "small object",
+    "rect": [
+     170,
+     128,
+     26,
+     14
+    ],
+    "look": "A small object lies on the ground. It is not yours, it is not important, and you are already planning to remember where it is.",
+    "approach": [
+     183,
+     140
+    ]
+   },
+   {
+    "id": "barrel",
+    "name": "red barrel",
+    "rect": [
+     0,
+     70,
+     92,
+     50
+    ],
+    "look": "A big red drum, lying on its side and rusting with the dignity of something that was once in charge of something.",
+    "approach": [
+     96,
+     126
+    ]
+   },
+   {
+    "id": "console",
+    "name": "control stick",
+    "rect": [
+     193,
+     92,
+     66,
+     50
+    ],
+    "look": "A control stick on a broken pedestal. Whatever it controlled has stopped answering.",
+    "approach": [
+     226,
+     142
+    ]
+   },
+   {
+    "id": "pipe",
+    "name": "bent pipe",
+    "rect": [
+     268,
+     66,
+     52,
+     50
+    ],
+    "look": "A pipe, bent into an arch by some event nobody mentions.",
+    "approach": [
+     290,
+     128
+    ]
+   },
+   {
+    "id": "e",
+    "name": "way east",
+    "rect": [
+     300,
+     60,
+     20,
+     90
+    ],
+    "look": "A gap in the junk to the east, leading towards a large tube.",
+    "approach": [
+     296,
+     128
+    ],
+    "exit": {
+     "room": "tube_entrance",
+     "entry": "west"
+    }
+   },
+   {
+    "id": "s",
+    "name": "way south",
+    "rect": [
+     60,
+     146,
+     200,
+     14
+    ],
+    "look": "A path south, through more junk.",
+    "approach": [
+     150,
+     148
+    ],
+    "exit": {
+     "room": "junk_field",
+     "entry": "north"
+    }
+   }
+  ]
+ },
+ {
+  "id": "tube_entrance",
+  "title": "Entrance to the tube",
+  "act": 1,
+  "bg": "tube_entrance",
+  "walk": [
+   [
+    10,
+    114
+   ],
+   [
+    310,
+    114
+   ],
+   [
+    316,
+    152
+   ],
+   [
+    4,
+    152
+   ]
+  ],
+  "entries": {
+   "west": [
+    40,
+    130
+   ],
+   "east": [
+    290,
+    130
+   ],
+   "pit": [
+    100,
+    128
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "arches",
+    "name": "arched doorways",
+    "rect": [
+     37,
+     59,
+     186,
+     62
+    ],
+    "look": "Three arched doorways into a long, round tube. The middle one is open, and it breathes slightly.",
+    "approach": [
+     128,
+     124
+    ],
+    "exit": {
+     "room": "wire_tube",
+     "entry": "west"
+    }
+   },
+   {
+    "id": "ladder",
+    "name": "ladder",
+    "rect": [
+     236,
+     80,
+     36,
+     52
+    ],
+    "look": "A light ladder, leaning on a pile of nothing in particular, waiting for someone to have a reason.",
+    "approach": [
+     250,
+     134
+    ],
+    "default_verb": "Pick up"
+   },
+   {
+    "id": "w",
+    "name": "way west",
+    "rect": [
+     0,
+     70,
+     16,
+     80
+    ],
+    "look": "Back to the crash site.",
+    "approach": [
+     20,
+     130
+    ],
+    "exit": {
+     "room": "crash_site",
+     "entry": "east"
+    }
+   },
+   {
+    "id": "e",
+    "name": "hole in the floor",
+    "rect": [
+     276,
+     120,
+     44,
+     32
+    ],
+    "look": "A square hole in the floor with a ladder inside. Cold air comes up. So do small, interested sounds.",
+    "approach": [
+     292,
+     132
+    ],
+    "exit": {
+     "room": "dark_room",
+     "entry": "ladder"
+    }
+   }
+  ]
+ },
+ {
+  "id": "wire_tube",
+  "title": "Inside the tube",
+  "act": 1,
+  "bg": "wire_tube",
+  "walk": [
+   [
+    24,
+    100
+   ],
+   [
+    296,
+    100
+   ],
+   [
+    300,
+    116
+   ],
+   [
+    20,
+    116
+   ]
+  ],
+  "entries": {
+   "west": [
+    40,
+    108
+   ],
+   "east": [
+    276,
+    108
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "wires",
+    "name": "hanging wires",
+    "rect": [
+     135,
+     58,
+     82,
+     20
+    ],
+    "look": "Wires hang from the ceiling of the tube, some of them still carrying current and all of them still carrying opinions.",
+    "approach": [
+     172,
+     108
+    ],
+    "default_verb": "Pick up"
+   },
+   {
+    "id": "w",
+    "name": "tube entrance",
+    "rect": [
+     0,
+     60,
+     24,
+     60
+    ],
+    "look": "Back out of the tube.",
+    "approach": [
+     34,
+     108
+    ],
+    "exit": {
+     "room": "tube_entrance",
+     "entry": "east"
+    }
+   },
+   {
+    "id": "e",
+    "name": "far end",
+    "rect": [
+     296,
+     60,
+     24,
+     60
+    ],
+    "look": "The far end of the tube.",
+    "approach": [
+     286,
+     108
+    ],
+    "exit": {
+     "room": "robot_head",
+     "entry": "west"
+    }
+   }
+  ]
+ },
+ {
+  "id": "robot_head",
+  "title": "The robot head",
+  "act": 1,
+  "bg": "robot_head",
+  "walk": [
+   [
+    100,
+    96
+   ],
+   [
+    256,
+    96
+   ],
+   [
+    304,
+    152
+   ],
+   [
+    60,
+    152
+   ]
+  ],
+  "entries": {
+   "west": [
+    110,
+    118
+   ],
+   "top": [
+    150,
+    120
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "eye",
+    "name": "broken eye",
+    "rect": [
+     0,
+     40,
+     106,
+     74
+    ],
+    "look": "The robot's eye: a huge red lens, cracked in the middle. Behind the crack there is room for a person with poor judgement.",
+    "approach": [
+     112,
+     120
+    ],
+    "default_verb": "Use"
+   },
+   {
+    "id": "head",
+    "name": "giant robot head",
+    "rect": [
+     178,
+     46,
+     142,
+     114
+    ],
+    "look": "A giant robot head with a green diamond on its forehead. It has been looking at the same piece of ceiling for years.",
+    "approach": [
+     220,
+     130
+    ]
+   },
+   {
+    "id": "door",
+    "name": "green panel",
+    "rect": [
+     122,
+     72,
+     46,
+     62
+    ],
+    "look": "A green panel, bent out of its frame. It looks like a door that has given up its job.",
+    "approach": [
+     146,
+     126
+    ]
+   },
+   {
+    "id": "chasm",
+    "name": "chasm",
+    "rect": [
+     40,
+     142,
+     170,
+     18
+    ],
+    "look": "A chasm lies at the edge of the platform. It does not look deep. It looks patient.",
+    "approach": [
+     130,
+     140
+    ]
+   },
+   {
+    "id": "w",
+    "name": "way west",
+    "rect": [
+     0,
+     120,
+     20,
+     40
+    ],
+    "look": "Back along the tube.",
+    "approach": [
+     24,
+     126
+    ],
+    "exit": {
+     "room": "wire_tube",
+     "entry": "east"
+    }
+   }
+  ]
+ },
+ {
+  "id": "yard",
+  "title": "On top of the head",
+  "act": 1,
+  "bg": "yard",
+  "walk": [
+   [
+    24,
+    108
+   ],
+   [
+    296,
+    108
+   ],
+   [
+    316,
+    152
+   ],
+   [
+    6,
+    152
+   ]
+  ],
+  "entries": {
+   "eye": [
+    40,
+    130
+   ],
+   "claw": [
+    160,
+    130
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "motivator",
+    "name": "warp motivator",
+    "rect": [
+     20,
+     57,
+     66,
+     38
+    ],
+    "look": "A white drum with a dark hole in the end: a warp motivator, large, expensive, and lying in the rubble like a cooking pot. Far too heavy for hands.",
+    "approach": [
+     60,
+     126
+    ]
+   },
+   {
+    "id": "ship",
+    "name": "shuttle",
+    "rect": [
+     95,
+     58,
+     190,
+     60
+    ],
+    "look": "A small shuttle lying in the junk, battered into a shape it was never designed for. It looks as if it still hopes.",
+    "approach": [
+     180,
+     128
+    ]
+   },
+   {
+    "id": "panel",
+    "name": "open panel",
+    "rect": [
+     105,
+     84,
+     50,
+     28
+    ],
+    "look": "An open maintenance panel in the shuttle. Inside there is a motivator-sized hole, and nothing to fill it.",
+    "approach": [
+     130,
+     126
+    ]
+   },
+   {
+    "id": "ladder",
+    "name": "ladder down",
+    "rect": [
+     0,
+     100,
+     18,
+     52
+    ],
+    "look": "The ladder down to the robot's platform.",
+    "approach": [
+     26,
+     132
+    ],
+    "exit": {
+     "room": "robot_head",
+     "entry": "top"
+    }
+   },
+   {
+    "id": "platform",
+    "name": "far platform",
+    "rect": [
+     296,
+     100,
+     24,
+     52
+    ],
+    "look": "The end of the rail platform. There is a chute here, and a railing that does not inspire trust.",
+    "approach": [
+     296,
+     132
+    ]
+   }
+  ]
+ },
+ {
+  "id": "yard_ladder",
+  "title": "On top of the head",
+  "act": 1,
+  "bg": "yard_ladder",
+  "walk": [
+   [
+    24,
+    108
+   ],
+   [
+    296,
+    108
+   ],
+   [
+    316,
+    152
+   ],
+   [
+    6,
+    152
+   ]
+  ],
+  "entries": {
+   "eye": [
+    40,
+    130
+   ],
+   "claw": [
+    160,
+    130
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "motivator",
+    "name": "warp motivator",
+    "rect": [
+     20,
+     57,
+     66,
+     38
+    ],
+    "look": "A white drum with a dark hole in the end: a warp motivator, large, expensive, and lying in the rubble like a cooking pot.",
+    "approach": [
+     60,
+     126
+    ]
+   },
+   {
+    "id": "ship",
+    "name": "shuttle",
+    "rect": [
+     95,
+     58,
+     190,
+     60
+    ],
+    "look": "A small shuttle lying in the junk, battered into a shape it was never designed for. A ladder now leans against its side.",
+    "approach": [
+     180,
+     128
+    ]
+   },
+   {
+    "id": "ladder_on",
+    "name": "ladder",
+    "rect": [
+     208,
+     66,
+     28,
+     44
+    ],
+    "look": "The ladder, leaning on the shuttle. Its rungs are thin, but so are your options.",
+    "approach": [
+     222,
+     128
+    ],
+    "default_verb": "Use"
+   },
+   {
+    "id": "hatch",
+    "name": "top hatch",
+    "rect": [
+     200,
+     56,
+     44,
+     14
+    ],
+    "look": "A small hatch on top of the shuttle, with a latch and a long history of being ignored.",
+    "approach": [
+     222,
+     128
+    ]
+   },
+   {
+    "id": "panel",
+    "name": "power panel",
+    "rect": [
+     110,
+     84,
+     46,
+     28
+    ],
+    "look": "The power panel: a reactor-shaped hole and a wire-shaped hole.",
+    "approach": [
+     130,
+     126
+    ]
+   },
+   {
+    "id": "ladder",
+    "name": "ladder down",
+    "rect": [
+     0,
+     100,
+     18,
+     52
+    ],
+    "look": "The ladder down to the robot's platform.",
+    "approach": [
+     26,
+     132
+    ],
+    "exit": {
+     "room": "robot_head",
+     "entry": "top"
+    }
+   },
+   {
+    "id": "platform",
+    "name": "far platform",
+    "rect": [
+     296,
+     100,
+     24,
+     52
+    ],
+    "look": "The end of the rail platform.",
+    "approach": [
+     296,
+     132
+    ]
+   }
+  ]
+ },
+ {
+  "id": "junk_field",
+  "title": "Junk field",
+  "act": 1,
+  "bg": "junk_field",
+  "walk": [
+   [
+    30,
+    100
+   ],
+   [
+    300,
+    100
+   ],
+   [
+    316,
+    152
+   ],
+   [
+    8,
+    152
+   ]
+  ],
+  "entries": {
+   "north": [
+    150,
+    112
+   ],
+   "east": [
+    290,
+    128
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "wheel",
+    "name": "wrecked fighter wheel",
+    "rect": [
+     20,
+     60,
+     85,
+     62
+    ],
+    "look": "A big round wheel from some old fighter, with six spokes. It looks like it could have been a gun's very expensive eye.",
+    "approach": [
+     60,
+     126
+    ]
+   },
+   {
+    "id": "rocket",
+    "name": "rocket tube",
+    "rect": [
+     215,
+     5,
+     60,
+     75
+    ],
+    "look": "A white and red rocket tube, standing in the junk like an enormous pen that has run out of ink.",
+    "approach": [
+     248,
+     126
+    ]
+   },
+   {
+    "id": "hull",
+    "name": "ship hull",
+    "rect": [
+     262,
+     10,
+     58,
+     70
+    ],
+    "look": "Part of a ship's hull. The letters say JUP. Whatever they spelled has been lost.",
+    "approach": [
+     286,
+     126
+    ]
+   },
+   {
+    "id": "box",
+    "name": "pink box",
+    "rect": [
+     70,
+     112,
+     60,
+     30
+    ],
+    "look": "A pink box with a door that does not close. It contains the same thing everything here contains: past.",
+    "approach": [
+     100,
+     142
+    ]
+   },
+   {
+    "id": "n",
+    "name": "way north",
+    "rect": [
+     100,
+     22,
+     120,
+     24
+    ],
+    "look": "Back to the crash site.",
+    "approach": [
+     150,
+     108
+    ],
+    "exit": {
+     "room": "crash_site",
+     "entry": "south"
+    }
+   },
+   {
+    "id": "e",
+    "name": "way east",
+    "rect": [
+     300,
+     60,
+     20,
+     90
+    ],
+    "look": "The junk continues east, towards a tall tower.",
+    "approach": [
+     296,
+     128
+    ],
+    "exit": {
+     "room": "junk_tower",
+     "entry": "west"
+    }
+   }
+  ]
+ },
+ {
+  "id": "junk_tower",
+  "title": "The lift tower",
+  "act": 1,
+  "bg": "junk_tower",
+  "walk": [
+   [
+    30,
+    100
+   ],
+   [
+    290,
+    100
+   ],
+   [
+    316,
+    152
+   ],
+   [
+    8,
+    152
+   ]
+  ],
+  "entries": {
+   "west": [
+    40,
+    128
+   ],
+   "top": [
+    200,
+    40
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "lift",
+    "name": "lift tower",
+    "rect": [
+     236,
+     5,
+     48,
+     112
+    ],
+    "look": "A tall tower with a lift platform hanging from a chain. A little bucket hangs at the top, collecting scrap and carrying it away to somewhere worse.",
+    "approach": [
+     258,
+     124
+    ],
+    "default_verb": "Use"
+   },
+   {
+    "id": "slab",
+    "name": "pink slab",
+    "rect": [
+     20,
+     70,
+     90,
+     60
+    ],
+    "look": "A pink slab leaning against a heap. It has the shape of a staircase for someone much, much bigger.",
+    "approach": [
+     64,
+     138
+    ]
+   },
+   {
+    "id": "pod",
+    "name": "wrecked pod",
+    "rect": [
+     0,
+     20,
+     110,
+     60
+    ],
+    "look": "A big wrecked pod, half buried. It wears a number and some scorch marks.",
+    "approach": [
+     60,
+     128
+    ]
+   },
+   {
+    "id": "w",
+    "name": "way west",
+    "rect": [
+     0,
+     100,
+     18,
+     52
+    ],
+    "look": "Back through the junk field.",
+    "approach": [
+     24,
+     128
+    ],
+    "exit": {
+     "room": "junk_field",
+     "entry": "east"
+    }
+   }
+  ]
+ },
+ {
+  "id": "conveyor",
+  "title": "The conveyor",
+  "act": 1,
+  "bg": "conveyor",
+  "walk": [
+   [
+    10,
+    118
+   ],
+   [
+    210,
+    118
+   ],
+   [
+    226,
+    130
+   ],
+   [
+    4,
+    130
+   ]
+  ],
+  "entries": {
+   "start": [
+    30,
+    126
+   ],
+   "lift": [
+    30,
+    126
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "belt",
+    "name": "conveyor belt",
+    "rect": [
+     0,
+     115,
+     180,
+     16
+    ],
+    "look": "A moving belt, carrying everything towards a shredder at its end. The belt does not care what.",
+    "approach": [
+     100,
+     126
+    ]
+   },
+   {
+    "id": "shredder",
+    "name": "shredder",
+    "rect": [
+     168,
+     126,
+     70,
+     30
+    ],
+    "look": "A shredder: a red box with steel teeth in a tidy row. It is patient, like the sea.",
+    "approach": [
+     200,
+     128
+    ]
+   },
+   {
+    "id": "rail",
+    "name": "cyan rail",
+    "rect": [
+     0,
+     66,
+     320,
+     14
+    ],
+    "look": "A glowing rail runs overhead. Within reach, if you can jump.",
+    "approach": [
+     150,
+     126
+    ],
+    "default_verb": "Use"
+   },
+   {
+    "id": "pipes",
+    "name": "overhead pipes",
+    "rect": [
+     0,
+     20,
+     320,
+     44
+    ],
+    "look": "Pipes and conduits, painted in the colours that someone chose in a hurry.",
+    "approach": [
+     150,
+     126
+    ]
+   }
+  ]
+ },
+ {
+  "id": "rail_west",
+  "title": "On the rail",
+  "act": 1,
+  "bg": "rail_west",
+  "walk": [
+   [
+    2,
+    100
+   ],
+   [
+    318,
+    100
+   ],
+   [
+    318,
+    112
+   ],
+   [
+    2,
+    112
+   ]
+  ],
+  "entries": {
+   "jump": [
+    250,
+    106
+   ],
+   "east": [
+    300,
+    106
+   ],
+   "west": [
+    30,
+    106
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "chute",
+    "name": "blue chute",
+    "rect": [
+     0,
+     56,
+     36,
+     50
+    ],
+    "look": "A blue chute leads down into the dark. A sign says ONE WAY, and nobody has painted the other way.",
+    "approach": [
+     20,
+     106
+    ],
+    "default_verb": "Use"
+   },
+   {
+    "id": "w",
+    "name": "west along the rail",
+    "rect": [
+     0,
+     96,
+     16,
+     20
+    ],
+    "look": "The rail continues west.",
+    "approach": [
+     10,
+     106
+    ],
+    "exit": {
+     "room": "rail_window",
+     "entry": "east"
+    }
+   },
+   {
+    "id": "e",
+    "name": "east along the rail",
+    "rect": [
+     304,
+     96,
+     16,
+     20
+    ],
+    "look": "The rail continues east.",
+    "approach": [
+     310,
+     106
+    ]
+   }
+  ]
+ },
+ {
+  "id": "rail_window",
+  "title": "The rail by the window",
+  "act": 1,
+  "bg": "rail_window",
+  "walk": [
+   [
+    2,
+    92
+   ],
+   [
+    318,
+    92
+   ],
+   [
+    318,
+    104
+   ],
+   [
+    2,
+    104
+   ]
+  ],
+  "entries": {
+   "east": [
+    300,
+    98
+   ],
+   "west": [
+    30,
+    98
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "window",
+    "name": "control room",
+    "rect": [
+     125,
+     20,
+     150,
+     62
+    ],
+    "look": "Through the glass: a control room, teal and spotless. A droid sits at the console, reading the same line again and again.",
+    "approach": [
+     200,
+     98
+    ]
+   },
+   {
+    "id": "w",
+    "name": "west along the rail",
+    "rect": [
+     0,
+     90,
+     16,
+     18
+    ],
+    "look": "The rail continues west.",
+    "approach": [
+     10,
+     98
+    ],
+    "exit": {
+     "room": "rail_tower",
+     "entry": "east"
+    }
+   },
+   {
+    "id": "e",
+    "name": "east along the rail",
+    "rect": [
+     304,
+     90,
+     16,
+     18
+    ],
+    "look": "Back along the rail.",
+    "approach": [
+     310,
+     98
+    ],
+    "exit": {
+     "room": "rail_west",
+     "entry": "west"
+    }
+   }
+  ]
+ },
+ {
+  "id": "rail_tower",
+  "title": "The rail tower",
+  "act": 1,
+  "bg": "rail_tower",
+  "walk": [
+   [
+    2,
+    100
+   ],
+   [
+    318,
+    100
+   ],
+   [
+    318,
+    112
+   ],
+   [
+    2,
+    112
+   ]
+  ],
+  "entries": {
+   "east": [
+    300,
+    106
+   ],
+   "west": [
+    30,
+    106
+   ],
+   "dismount": [
+    30,
+    106
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "tower",
+    "name": "magenta tower",
+    "rect": [
+     72,
+     10,
+     160,
+     126
+    ],
+    "look": "A tall magenta tower with a window of oval slots, standing in the middle of everything with great self-importance.",
+    "approach": [
+     150,
+     106
+    ]
+   },
+   {
+    "id": "grabber",
+    "name": "grabber",
+    "rect": [
+     226,
+     100,
+     40,
+     44
+    ],
+    "look": "A rail grabber: a little cab, a rod and a claw. Whoever left it went home early and left the keys in.",
+    "approach": [
+     250,
+     106
+    ],
+    "default_verb": "Use"
+   },
+   {
+    "id": "e",
+    "name": "east along the rail",
+    "rect": [
+     304,
+     92,
+     16,
+     22
+    ],
+    "look": "Back along the rail.",
+    "approach": [
+     310,
+     106
+    ],
+    "exit": {
+     "room": "rail_window",
+     "entry": "west"
+    }
+   }
+  ]
+ },
+ {
+  "id": "dark_room",
+  "title": "The dark room",
+  "act": 1,
+  "bg": "dark_room",
+  "walk": [
+   [
+    10,
+    100
+   ],
+   [
+    300,
+    100
+   ],
+   [
+    316,
+    152
+   ],
+   [
+    4,
+    152
+   ]
+  ],
+  "entries": {
+   "ladder": [
+    236,
+    120
+   ],
+   "chute": [
+    150,
+    112
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "reactor",
+    "name": "reactor",
+    "rect": [
+     128,
+     86,
+     62,
+     40
+    ],
+    "look": "A warp-core reactor, sitting in a hole in the rock with a red wire coming down to it like a leash. It hums in a tone that suggests it has plans.",
+    "approach": [
+     150,
+     124
+    ],
+    "default_verb": "Pick up"
+   },
+   {
+    "id": "hole",
+    "name": "hole",
+    "rect": [
+     108,
+     92,
+     70,
+     40
+    ],
+    "look": "A hole in the floor, big enough for the reactor and several regrets.",
+    "approach": [
+     140,
+     130
+    ]
+   },
+   {
+    "id": "wire",
+    "name": "red wire",
+    "rect": [
+     180,
+     20,
+     56,
+     66
+    ],
+    "look": "A red wire runs down from the ceiling into the hole. Somebody wanted this reactor to stay where it was.",
+    "approach": [
+     200,
+     112
+    ]
+   },
+   {
+    "id": "rats",
+    "name": "red eyes",
+    "rect": [
+     262,
+     16,
+     58,
+     34
+    ],
+    "look": "In the corners of the room, pairs of small red eyes keep a polite distance, and keep it carefully.",
+    "approach": [
+     250,
+     112
+    ]
+   },
+   {
+    "id": "ladder",
+    "name": "ladder",
+    "rect": [
+     215,
+     20,
+     30,
+     78
+    ],
+    "look": "A ladder up to the tube entrance.",
+    "approach": [
+     236,
+     124
+    ],
+    "exit": {
+     "room": "tube_entrance",
+     "entry": "pit"
+    }
+   }
+  ]
+ },
+ {
+  "id": "cockpit",
+  "title": "The cockpit",
+  "act": 1,
+  "bg": "cockpit",
+  "walk": [
+   [
+    70,
+    110
+   ],
+   [
+    250,
+    110
+   ],
+   [
+    300,
+    152
+   ],
+   [
+    20,
+    152
+   ]
+  ],
+  "entries": {
+   "start": [
+    150,
+    130
+   ]
+  },
+  "no_player": false,
+  "hotspots": [
+   {
+    "id": "seat",
+    "name": "pilot's seat",
+    "rect": [
+     4,
+     90,
+     82,
+     68
+    ],
+    "look": "The pilot's seat. It has the shape of a person who gave up long ago. The cushion is lumpy in a way that suggests savings.",
+    "approach": [
+     70,
+     134
+    ]
+   },
+   {
+    "id": "computer",
+    "name": "ship's computer",
+    "rect": [
+     205,
+     62,
+     115,
+     64
+    ],
+    "look": "A computer that thinks about it for a while, then says maybe.",
+    "approach": [
+     220,
+     134
+    ]
+   },
+   {
+    "id": "window",
+    "name": "viewport",
+    "rect": [
+     75,
+     50,
+     110,
+     68
+    ],
+    "look": "Through the round window: the robot's platform, and everything else in the world, still lying where it fell.",
+    "approach": [
+     150,
+     118
+    ]
+   },
+   {
+    "id": "launch",
+    "name": "launch lever",
+    "rect": [
+     150,
+     130,
+     24,
+     22
+    ],
+    "look": "The launch lever. It does nothing until the computer is ready, and the computer is never ready on the first try.",
+    "approach": [
+     160,
+     140
+    ]
+   },
+   {
+    "id": "hatch",
+    "name": "exit hatch",
+    "rect": [
+     0,
+     134,
+     34,
+     26
+    ],
+    "look": "The hatch back out onto the shuttle's roof.",
+    "approach": [
+     34,
+     148
+    ],
+    "exit": {
+     "room": "yard_ladder",
+     "entry": "eye"
+    }
+   }
+  ]
+ }
+]

@@ -12,7 +12,7 @@ FLOOR = (0, 60, 320, 200, {7, 8})     # the paneled floor: grey tiles are worn a
 # 'flat' boxes: (x0, y0, x1, y1, mode, amp) in screen coordinates; mode 'flat', 'cyl_v' (drum), 'cyl_h' (tube).
 # 'organic' boxes win over 'flat' boxes. Brown (rust, rubble) and green (slime) regions are always organic.
 ZONES = {
-    "garbage_mountain": {"flat": [(0, 10, 320, 92, "flat", 0.05)],
+    "crash_site": {"flat": [(0, 10, 320, 92, "flat", 0.05)],
                          "worn": [(92, 72, 198, 152), (0, 92, 92, 162), (192, 62, 240, 105), (182, 104, 224, 142), (196, 150, 252, 190), (262, 80, 320, 145), FLOOR]},
     "junk_field": {"flat": [(0, 10, 320, 44, "flat", 0.05)],
                    "worn": [(36, 95, 110, 150), (0, 35, 60, 160), (150, 10, 320, 100), (150, 10, 215, 100), (48, 135, 108, 175), (175, 95, 290, 160), FLOOR]},
@@ -22,28 +22,30 @@ ZONES = {
     "robot_head": {"flat": [(205, 100, 262, 200, "flat", 0.05)], "worn": [(175, 58, 320, 200), (0, 40, 100, 130), FLOOR]},
     "conveyor": {"flat": [FULL + ("flat", 0.05)], "worn": [(0, 148, 185, 200), (165, 155, 250, 200)]},
     "rail_west": {"flat": [FULL + ("flat", 0.05)]},
-    "crane_cabin": {"flat": [FULL + ("flat", 0.05)]},
-    "rail_walk": {"flat": [(72, 10, 232, 160, "cyl_v", 0.30), FULL + ("flat", 0.05)]},
-    "rat_lair": {"worn": [(150, 100, 200, 135), (250, 55, 275, 108)]},
-    "mallard_bay": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125), FLOOR]},
-    "mallard_bay_l": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125), FLOOR]},
+    "rail_window": {"flat": [FULL + ("flat", 0.05)]},
+    "rail_tower": {"flat": [(72, 10, 232, 160, "cyl_v", 0.30), FULL + ("flat", 0.05)]},
+    "dark_room": {"worn": [(130, 100, 190, 135)]},
+    "tube_entrance": {},
+    "yard": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125), FLOOR]},
+    "yard_ladder": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125), FLOOR]},
     "cockpit": {"flat": [FULL + ("flat", 0.05)], "organic": [(105, 118, 190, 200), (0, 95, 78, 195)]},
 }
-OUT = "../../assets/backgrounds_act1_restyle/"   # staging folder: moved into assets/backgrounds when the rooms are rewired
+OUT = "../../assets/backgrounds/"
 # name: (screen number, boxes to erase: Roger and other figures, in 320x200 screen coordinates)
 SPEC = {
-    "garbage_mountain": (14, [(137, 84, 156, 112)]),            # crash site (Roger is painted out of the pod window)
+    "crash_site": (14, [(137, 84, 156, 112)]),            # crash site (Roger is painted out of the pod window)
     "junk_field": (15, [(110, 98, 124, 128)]),
     "junk_tower": (16, [(236, 40, 256, 72)]),
     "wire_tube": (26, [(152, 122, 174, 152), (180, 120, 214, 152)]),
     "robot_head": (27, [(78, 120, 96, 150)]),
     "conveyor": (18, [(4, 136, 30, 158)]),
     "rail_west": (19, [(154, 100, 172, 134)]),
-    "crane_cabin": (20, [(134, 126, 164, 162)]),
-    "rail_walk": (21, [(234, 136, 264, 168)]),
-    "rat_lair": (24, [(248, 106, 268, 134)]),
-    "mallard_bay": (22, []),
-    "mallard_bay_l": (28, [(190, 74, 212, 100)]),   # painted out using the same yard from screen 22
+    "rail_window": (20, [(134, 126, 164, 162)]),
+    "rail_tower": (21, [(234, 136, 264, 168)]),
+    "dark_room": (23, [(80, 108, 98, 128)]),
+    "tube_entrance": (25, [(48, 90, 70, 124)]),
+    "yard": (22, []),
+    "yard_ladder": (28, [(190, 74, 212, 100)]),   # painted out using the same yard from screen 22
     "cockpit": (29, []),
 }
 
@@ -58,26 +60,26 @@ def main():
         if not os.path.exists(p):
             print("missing reference", p)
             continue
-        donor = REF + "s022.png" if name == "mallard_bay_l" else None
+        donor = REF + "s022.png" if name == "yard_ladder" else None
         pal = None
-        if name == "mallard_bay_l":          # same palette as the other ship-yard picture
-            pal = Image.open(OUT + "mallard_bay.png").convert("RGB").quantize(colors=112, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+        if name == "yard_ladder":          # same palette as the other ship-yard picture
+            pal = Image.open(OUT + "yard.png").convert("RGB").quantize(colors=112, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
         img, cmap = restyle(p, erase=boxes, donor=donor, zones=ZONES.get(name), return_class=True, palette_from=pal)
         img.save(OUT + name + ".png")
         CLASSES[name] = cmap
         done.append(name)
     # the two ship-yard pictures show the same place: take everything from the first one and use the second one's own pixels only
     # where the two source screens really differ (the ladder, the cart, Roger), so the ship has identical dents and rust in both
-    if "mallard_bay" in CLASSES and "mallard_bay_l" in CLASSES:
+    if "yard" in CLASSES and "yard_ladder" in CLASSES:
         import numpy as np
         from restyle import load_indices, box_blur
         ia, ib = load_indices(REF + "s022.png"), load_indices(REF + "s028.png")
         ys = np.minimum(((np.arange(160) + 0.5) * 190 / 160).astype(int), 189)
         real = (ia != ib)[ys]
         mask = box_blur(real.astype(np.float32), 4) > 0.02
-        A, B = np.asarray(Image.open(OUT + "mallard_bay.png").convert("RGB")), np.asarray(Image.open(OUT + "mallard_bay_l.png").convert("RGB"))
-        Image.fromarray(np.where(mask[..., None], B, A)).save(OUT + "mallard_bay_l.png")
-        CLASSES["mallard_bay_l"] = np.where(mask, CLASSES["mallard_bay_l"], CLASSES["mallard_bay"])
+        A, B = np.asarray(Image.open(OUT + "yard.png").convert("RGB")), np.asarray(Image.open(OUT + "yard_ladder.png").convert("RGB"))
+        Image.fromarray(np.where(mask[..., None], B, A)).save(OUT + "yard_ladder.png")
+        CLASSES["yard_ladder"] = np.where(mask, CLASSES["yard_ladder"], CLASSES["yard"])
     print(len(done), "backgrounds:", " ".join(done))
     if len(sys.argv) > 1:
         cols = 2

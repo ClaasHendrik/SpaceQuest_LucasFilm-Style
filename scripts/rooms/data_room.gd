@@ -18,9 +18,10 @@ func remove_hotspots(ids: Array) -> void:
 func setup(room_id: String) -> void:
 	if _db == null:
 		_db = {}
-		var f := FileAccess.open("res://data/rooms.json", FileAccess.READ)
-		for r in JSON.parse_string(f.get_as_text()):
-			_db[r["id"]] = r
+		for path in ["res://data/rooms.json", "res://data/act1_rooms.json"]:
+			var f := FileAccess.open(path, FileAccess.READ)
+			for r in JSON.parse_string(f.get_as_text()):
+				_db[r["id"]] = r
 	var d: Dictionary = _db[room_id]
 	id = room_id
 	title = d["title"]
