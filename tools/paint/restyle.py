@@ -111,7 +111,7 @@ def classify(lab, comp, n, zones, rows, height=190, top=10):
     def to_row(y):
         return (y - top) * rows / height
     org = [(x0, to_row(y0), x1, to_row(y1)) for (x0, y0, x1, y1) in zones.get("organic", [])]
-    worn = [(x0, to_row(y0), x1, to_row(y1)) for (x0, y0, x1, y1) in zones.get("worn", [])]
+    worn = [(z[0], to_row(z[1]), z[2], to_row(z[3]), set(z[4]) if len(z) > 4 else None) for z in zones.get("worn", [])]
     flat = [(x0, to_row(y0), x1, to_row(y1), mode, amp) for (x0, y0, x1, y1, mode, amp) in zones.get("flat", [])]
     info = {}
     for c in range(n):
@@ -126,8 +126,8 @@ def classify(lab, comp, n, zones, rows, height=190, top=10):
         mode, amp, box = "organic", 0.0, None
         if any(x0 <= cx <= x1 and y0 <= cy <= y1 for (x0, y0, x1, y1) in org):
             pass
-        elif any(x0 <= cx <= x1 and y0 <= cy <= y1 for (x0, y0, x1, y1) in worn):
-            mode = "worn"            # built as a structured object, now rounded and roughened by years of use
+        elif any(x0 <= cx <= x1 and y0 <= cy <= y1 and (allowed is None or colours <= allowed) for (x0, y0, x1, y1, allowed) in worn):
+            mode = "worn"            # built as a structured object, now dented and roughened by years of use
         else:
             hit = [z for z in flat if z[0] <= cx <= z[2] and z[1] <= cy <= z[3]]
             if hit:
@@ -208,18 +208,61 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
         if cnt < 40 or lab[m][0] == 0:
             continue
         mf = m.astype(np.float32)
-        bl = box_blur(box_blur(mf, 2), 2)
+        wornc = info[c][0] == "worn"
+        bl = box_blur(box_blur(mf, 1 if wornc else 2), 1 if wornc else 2)
         gy, gx = np.gradient(bl)
         lit = 0.7071 * (gx + gy)
         mx = np.abs(lit).max()
         if mx <= 0:
             continue
-        lit_total = np.where(m, lit / mx * (0.55 if info[c][0] == "worn" else 1.0), lit_total)
+        lit_total = np.where(m, lit / mx * (0.42 if wornc else 1.0), lit_total)
     k = np.where(lit_total > 0, 1 + volume * lit_total, 1 + volume * 0.8 * lit_total)
     k = np.clip(k, 0.72, 1.2)
     out = out * k[..., None]
     out[..., 0] *= 1 + 0.05 * lit_total
     out[..., 2] *= 1 - 0.05 * lit_total
+    # worn regions are beaten up rather than washed smooth: dings, scratches and a little grime, with the straight edges left alone
+    rngw = np.random.default_rng(seed + 11)
+    for c in range(n):
+        if info[c][0] != "worn":
+            continue
+        m = comp == c
+        cnt = int(m.sum())
+        if cnt < 120 or lab[m][0] == 0:
+            continue
+        ys_, xs_ = np.nonzero(m)
+        inner = box_blur(m.astype(np.float32), 1) > 0.99           # keep marks off the outline
+        iy, ix = np.nonzero(inner)
+        if len(ix) < 20:
+            continue
+        for _ in range(min(28, 1 + cnt // 130)):                    # dents: dark upper-left, lit lower-right inside the dent
+            j = int(rngw.integers(0, len(ix)))
+            cx_, cy_ = ix[j], iy[j]
+            r = float(rngw.uniform(1.8, 3.6))
+            x0_, x1_ = int(max(0, cx_ - 4)), int(min(w, cx_ + 5))
+            y0_, y1_ = int(max(0, cy_ - 4)), int(min(h, cy_ + 5))
+            for yy_ in range(y0_, y1_):
+                for xx_ in range(x0_, x1_):
+                    dx_, dy_ = (xx_ - cx_) / r, (yy_ - cy_) / (r * 0.8)
+                    d2 = dx_ * dx_ + dy_ * dy_
+                    if d2 < 1.0 and inner[yy_, xx_]:
+                        out[yy_, xx_] *= 1 + 0.42 * (dx_ + dy_) * 0.7071 * (1 - 0.3 * d2)
+        for _ in range(min(34, 1 + cnt // 100)):                    # scratches
+            j = int(rngw.integers(0, len(ix)))
+            ang = float(rngw.uniform(0, 3.1416))
+            ln = int(rngw.integers(4, 12))
+            k_ = 1.32 if rngw.random() < 0.5 else 0.7
+            for t_ in range(ln):
+                xx_, yy_ = int(ix[j] + np.cos(ang) * t_), int(iy[j] + np.sin(ang) * t_)
+                if 0 <= xx_ < w and 0 <= yy_ < h and inner[yy_, xx_]:
+                    out[yy_, xx_] *= k_
+        for _ in range(min(10, cnt // 300)):                        # grime runs: short darker vertical streaks
+            j = int(rngw.integers(0, len(ix)))
+            ln = int(rngw.integers(4, 12))
+            for t_ in range(ln):
+                yy_ = iy[j] + t_
+                if 0 <= yy_ < h and inner[yy_, ix[j]]:
+                    out[yy_, ix[j]] *= 0.88
     # edge light between neighbouring shapes
     L = lum(base)
     def shifted(arr, dy, dx):

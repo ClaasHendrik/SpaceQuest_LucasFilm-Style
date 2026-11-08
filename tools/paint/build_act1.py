@@ -7,18 +7,19 @@ from restyle import restyle
 
 REF = "ref/"
 FULL = (0, 10, 320, 200)
+FLOOR = (0, 60, 320, 200, {7, 8})     # the paneled floor: grey tiles are worn artificial wherever they are in the picture
 # which parts are ARTIFICIAL (structured, pristine: flat, crisp) rather than ORGANIC (worn, banged up, rounded).
 # 'flat' boxes: (x0, y0, x1, y1, mode, amp) in screen coordinates; mode 'flat', 'cyl_v' (drum), 'cyl_h' (tube).
 # 'organic' boxes win over 'flat' boxes. Brown (rust, rubble) and green (slime) regions are always organic.
 ZONES = {
     "garbage_mountain": {"flat": [(0, 10, 320, 92, "flat", 0.05)],
-                         "worn": [(92, 72, 198, 152), (0, 92, 92, 162), (192, 62, 240, 105), (182, 104, 224, 142), (196, 150, 252, 190), (262, 80, 320, 145)]},
+                         "worn": [(92, 72, 198, 152), (0, 92, 92, 162), (192, 62, 240, 105), (182, 104, 224, 142), (196, 150, 252, 190), (262, 80, 320, 145), FLOOR]},
     "junk_field": {"flat": [(0, 10, 320, 44, "flat", 0.05)],
-                   "worn": [(36, 95, 110, 150), (0, 35, 60, 160), (150, 10, 320, 100), (150, 10, 215, 100), (48, 135, 108, 175), (175, 95, 290, 160)]},
+                   "worn": [(36, 95, 110, 150), (0, 35, 60, 160), (150, 10, 320, 100), (150, 10, 215, 100), (48, 135, 108, 175), (175, 95, 290, 160), FLOOR]},
     "junk_tower": {"flat": [(232, 10, 320, 138, "flat", 0.05)],
-                   "worn": [(0, 35, 120, 150), (15, 95, 170, 180), (110, 20, 235, 45), (240, 115, 310, 160)]},
+                   "worn": [(0, 35, 120, 150), (15, 95, 170, 180), (110, 20, 235, 45), (240, 115, 310, 160), FLOOR]},
     "wire_tube": {"flat": [(18, 78, 312, 160, "cyl_h", 0.40)]},
-    "robot_head": {"flat": [(205, 100, 262, 200, "flat", 0.05)], "worn": [(175, 58, 320, 200), (0, 40, 100, 130)]},
+    "robot_head": {"flat": [(205, 100, 262, 200, "flat", 0.05)], "worn": [(175, 58, 320, 200), (0, 40, 100, 130), FLOOR]},
     "conveyor": {"flat": [FULL + ("flat", 0.05)], "worn": [(0, 148, 185, 200), (165, 155, 250, 200)]},
     "rail_west": {"flat": [FULL + ("flat", 0.05)]},
     "crane_cabin": {"flat": [FULL + ("flat", 0.05)]},
