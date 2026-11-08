@@ -35,10 +35,10 @@ const DEATH_PICS := {
 	"Decompression Blues": "decompression",
 }
 const SAVE_SLOT := "slot1"
-# Layout, 640x480: dialogue strip 0-40, scene 40-328, sentence line, verbs and inventory below.
-const STRIP_H := 40
-const STAGE_POS := Vector2(0, 40)
-const STAGE_SIZE := Vector2(640, 288)
+# Layout, 640x480: dialogue strip 0-32, scene 32-352 (art 320x160 at 2x), sentence line, verbs and inventory below.
+const STRIP_H := 32
+const STAGE_POS := Vector2(0, 32)
+const STAGE_SIZE := Vector2(640, 320)
 const COL_VERB := Color("00aa00")
 const COL_VERB_HOVER := Color("55ff55")
 const COL_GREY := Color("535552")
@@ -152,16 +152,16 @@ func _build_ui() -> void:
 	stage.add_child(player)
 
 	# speech appears in the black strip above the scene, like the original
-	message = _make_label(Vector2(8, 4), Vector2(624, 34), COL_ROGER)
+	message = _make_label(Vector2(8, 1), Vector2(624, 30), COL_ROGER)
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	message.add_theme_font_size_override("font_size", 20)
+	message.add_theme_font_size_override("font_size", 18)
 	message.add_theme_constant_override("line_spacing", -5)
 	message.visible = false
 	add_child(message)
 
-	sentence = _make_label(Vector2(6, 328), Vector2(320, 24), COL_SENTENCE)
+	sentence = _make_label(Vector2(6, 352), Vector2(320, 24), COL_SENTENCE)
 	add_child(sentence)
-	score_flash = _make_label(Vector2(330, 328), Vector2(304, 24), Color("55ff55"))
+	score_flash = _make_label(Vector2(330, 352), Vector2(304, 24), Color("55ff55"))
 	score_flash.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	score_flash.visible = false
 	add_child(score_flash)
@@ -172,7 +172,7 @@ func _build_ui() -> void:
 			var key: String = VERB_COLUMNS[c][r][1]
 			var b := _make_button(label, COL_VERB, COL_VERB_HOVER)
 			b.add_theme_color_override("font_disabled_color", COL_GREY)
-			b.position = Vector2(VERB_X[c], 354 + r * 18)
+			b.position = Vector2(VERB_X[c], 378 + r * 18)
 			b.size = Vector2(120, 18)
 			b.pressed.connect(_on_verb_pressed.bind(key))
 			b.mouse_entered.connect(_update_sentence)
@@ -180,17 +180,17 @@ func _build_ui() -> void:
 			verb_buttons[key] = b
 
 	inv_box = Control.new()
-	inv_box.position = Vector2(0, 414)
-	inv_box.size = Vector2(640, 60)
+	inv_box.position = Vector2(0, 438)
+	inv_box.size = Vector2(640, 40)
 	add_child(inv_box)
 	arrow_up = load("res://scripts/arrow.gd").new()
-	arrow_up.position = Vector2(318, 416)
+	arrow_up.position = Vector2(620, 440)
 	arrow_up.size = Vector2(14, 14)
 	arrow_up.pressed.connect(_scroll_inventory.bind(-1))
 	add_child(arrow_up)
 	arrow_down = load("res://scripts/arrow.gd").new()
 	arrow_down.up = false
-	arrow_down.position = Vector2(318, 456)
+	arrow_down.position = Vector2(620, 458)
 	arrow_down.size = Vector2(14, 14)
 	arrow_down.pressed.connect(_scroll_inventory.bind(1))
 	add_child(arrow_down)
@@ -243,7 +243,7 @@ func _update_verb_states() -> void:
 
 
 func _scroll_inventory(dir: int) -> void:
-	inv_offset = clampi(inv_offset + dir, 0, maxi(0, GameState.inventory.size() - 6))
+	inv_offset = clampi(inv_offset + dir * 3, 0, maxi(0, GameState.inventory.size() - 6))
 	_refresh_inventory()
 
 
@@ -258,8 +258,8 @@ func _refresh_inventory() -> void:
 		var id: String = GameState.inventory[idx]
 		var nm: String = GameState.items.get(id, {}).get("name", id)
 		var b := _make_button(nm, COL_INV, COL_INV_HOVER)
-		b.position = Vector2(6 if i < 3 else 352, (i % 3) * 18)
-		b.size = Vector2(300, 18)
+		b.position = Vector2(6 + (i % 3) * 208, (i / 3) * 18)
+		b.size = Vector2(200, 18)
 		b.pressed.connect(_on_target.bind("item", id))
 		b.mouse_entered.connect(_update_sentence.bind(nm))
 		b.mouse_exited.connect(_update_sentence)

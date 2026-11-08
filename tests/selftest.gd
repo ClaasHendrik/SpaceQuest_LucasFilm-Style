@@ -84,10 +84,10 @@ func run(m) -> void:
 				if not ids.has(h["exit"]["room"]):
 					bad_exits += 1
 			var rc: Array = h["rect"]
-			if rc[0] < 0 or rc[1] < 0 or rc[0] + rc[2] > 320 or rc[1] + rc[3] > 144:
+			if rc[0] < 0 or rc[1] < 0 or rc[0] + rc[2] > 320 or rc[1] + rc[3] > 160:
 				bad_rects += 1
 	check(bad_exits == 0, "every exit leads to an existing room")
-	check(bad_rects == 0, "every hotspot lies inside the 320x144 stage")
+	check(bad_rects == 0, "every hotspot lies inside the 320x160 stage")
 	for d in ["landing_strip", "monolith_exterior", "ortega_crater", "pestulon_exterior"]:
 		graph["cockpit"].append(d)   # reached through the navigation computer and launch lever
 	var seen := {"escape_pod": true}
@@ -108,14 +108,14 @@ func run(m) -> void:
 	for rid in m.room_ids:
 		m.change_room(rid, "start")
 		var t = m.room.Art.tex("res://assets/backgrounds/%s.png" % m.room.current_bg())
-		if t == null or t.get_width() != 320 or t.get_height() != 144:
+		if t == null or t.get_width() != 320 or (t.get_height() != 144 and t.get_height() != 160):
 			missing_art += 1
 			print("   bad art for ", rid)
 		var inside: bool = m.room.no_player or Geometry2D.is_point_in_polygon(m.player.position, m.room.walk_poly)
 		if not inside:
 			print("   entry outside walk area: ", rid)
 			missing_art += 1
-	check(missing_art == 0, "every room loads 320x144 art and starts Roger on walkable ground")
+	check(missing_art == 0, "every room loads 320x144 or 320x160 art and starts Roger on walkable ground")
 
 	print("--- interface")
 	m.change_room("escape_pod", "start")

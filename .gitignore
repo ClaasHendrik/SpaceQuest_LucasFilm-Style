@@ -1,3 +1,6 @@
 .godot/
 *.import
 build/
+tools/paint/ref/
+__pycache__/
+*.pyc

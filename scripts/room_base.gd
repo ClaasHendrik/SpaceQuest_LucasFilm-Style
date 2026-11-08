@@ -37,9 +37,11 @@ func current_bg() -> String:
 func _draw() -> void:
 	var t := Art.tex("res://assets/backgrounds/%s.png" % current_bg())
 	if t != null:
-		draw_texture_rect(t, Rect2(0, 0, 640, t.get_height() * 2), false)
+		var off := 0.0                                         # older 144-row rooms sit at the top of the 160-row picture area
+		draw_rect(Rect2(0, 0, 640, 320), Color.BLACK)
+		draw_texture_rect(t, Rect2(0, off, 640, t.get_height() * 2), false)
 	else:
-		draw_rect(Rect2(0, 0, 640, 288), Color.DARK_SLATE_GRAY)
+		draw_rect(Rect2(0, 0, 640, 320), Color.DARK_SLATE_GRAY)
 	if OS.has_environment("HOTSPOTS"):   # debug overlay: hotspot rectangles and the walkable area
 		for h in hotspots:
 			draw_rect(h["rect"], Color(1, 1, 0, 0.9), false, 1.0)
