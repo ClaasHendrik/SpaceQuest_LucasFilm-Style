@@ -141,7 +141,7 @@ def classify(lab, comp, n, zones, rows, height=190, top=10):
     return info
 
 
-def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, grain=0.3, texture=0.012, erase=(), volume=0.26, bands=5, colors=112, donor=None, zones=None, return_class=False):
+def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, grain=0.3, texture=0.012, erase=(), volume=0.26, bands=5, colors=112, donor=None, zones=None, return_class=False, palette_from=None):
     idx = load_indices(path, top, height)
     lab = dedither(idx)
     if donor is not None and erase:
@@ -221,48 +221,43 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
     out = out * k[..., None]
     out[..., 0] *= 1 + 0.05 * lit_total
     out[..., 2] *= 1 - 0.05 * lit_total
-    # worn regions are beaten up rather than washed smooth: dings, scratches and a little grime, with the straight edges left alone
-    rngw = np.random.default_rng(seed + 11)
-    for c in range(n):
-        if info[c][0] != "worn":
+    # worn regions are beaten up rather than washed smooth: dings, scratches and grime, with the straight edges left alone.
+    # The marks come from a fixed pattern tied to the position in the picture (not to the order of the regions), so the same
+    # object looks identical in every room it appears in (e.g. the ship in both ship-yard screens).
+    worn_f = (class_map == 3).astype(np.float32)
+    worn_in = (box_blur(worn_f, 1) > 0.99) & (lum(base) > 28)       # inside worn regions, off the dark outlines
+    rngw = np.random.default_rng(20261108)
+    n_d, n_s, n_g = int(h * w / 105), int(h * w / 60), int(h * w / 330)
+    for _ in range(n_d):                                             # dents: dark upper-left, lit lower-right inside the dent
+        cx_, cy_ = int(rngw.integers(0, w)), int(rngw.integers(0, h))
+        r = float(rngw.uniform(1.8, 3.6))
+        if not worn_in[cy_, cx_]:
             continue
-        m = comp == c
-        cnt = int(m.sum())
-        if cnt < 120 or lab[m][0] == 0:
+        for yy_ in range(max(0, cy_ - 4), min(h, cy_ + 5)):
+            for xx_ in range(max(0, cx_ - 4), min(w, cx_ + 5)):
+                dx_, dy_ = (xx_ - cx_) / r, (yy_ - cy_) / (r * 0.8)
+                d2 = dx_ * dx_ + dy_ * dy_
+                if d2 < 1.0 and worn_in[yy_, xx_]:
+                    out[yy_, xx_] *= 1 + 0.42 * (dx_ + dy_) * 0.7071 * (1 - 0.3 * d2)
+    for _ in range(n_s):                                             # scratches
+        sx, sy = int(rngw.integers(0, w)), int(rngw.integers(0, h))
+        ang, ln = float(rngw.uniform(0, 3.1416)), int(rngw.integers(4, 12))
+        k_ = 1.32 if rngw.random() < 0.5 else 0.7
+        if not worn_in[sy, sx]:
             continue
-        ys_, xs_ = np.nonzero(m)
-        inner = box_blur(m.astype(np.float32), 1) > 0.99           # keep marks off the outline
-        iy, ix = np.nonzero(inner)
-        if len(ix) < 20:
+        for t_ in range(ln):
+            xx_, yy_ = int(sx + np.cos(ang) * t_), int(sy + np.sin(ang) * t_)
+            if 0 <= xx_ < w and 0 <= yy_ < h and worn_in[yy_, xx_]:
+                out[yy_, xx_] *= k_
+    for _ in range(n_g):                                             # grime runs: short darker vertical streaks
+        gx_, gy_ = int(rngw.integers(0, w)), int(rngw.integers(0, h))
+        ln = int(rngw.integers(4, 12))
+        if not worn_in[gy_, gx_]:
             continue
-        for _ in range(min(28, 1 + cnt // 130)):                    # dents: dark upper-left, lit lower-right inside the dent
-            j = int(rngw.integers(0, len(ix)))
-            cx_, cy_ = ix[j], iy[j]
-            r = float(rngw.uniform(1.8, 3.6))
-            x0_, x1_ = int(max(0, cx_ - 4)), int(min(w, cx_ + 5))
-            y0_, y1_ = int(max(0, cy_ - 4)), int(min(h, cy_ + 5))
-            for yy_ in range(y0_, y1_):
-                for xx_ in range(x0_, x1_):
-                    dx_, dy_ = (xx_ - cx_) / r, (yy_ - cy_) / (r * 0.8)
-                    d2 = dx_ * dx_ + dy_ * dy_
-                    if d2 < 1.0 and inner[yy_, xx_]:
-                        out[yy_, xx_] *= 1 + 0.42 * (dx_ + dy_) * 0.7071 * (1 - 0.3 * d2)
-        for _ in range(min(34, 1 + cnt // 100)):                    # scratches
-            j = int(rngw.integers(0, len(ix)))
-            ang = float(rngw.uniform(0, 3.1416))
-            ln = int(rngw.integers(4, 12))
-            k_ = 1.32 if rngw.random() < 0.5 else 0.7
-            for t_ in range(ln):
-                xx_, yy_ = int(ix[j] + np.cos(ang) * t_), int(iy[j] + np.sin(ang) * t_)
-                if 0 <= xx_ < w and 0 <= yy_ < h and inner[yy_, xx_]:
-                    out[yy_, xx_] *= k_
-        for _ in range(min(10, cnt // 300)):                        # grime runs: short darker vertical streaks
-            j = int(rngw.integers(0, len(ix)))
-            ln = int(rngw.integers(4, 12))
-            for t_ in range(ln):
-                yy_ = iy[j] + t_
-                if 0 <= yy_ < h and inner[yy_, ix[j]]:
-                    out[yy_, ix[j]] *= 0.88
+        for t_ in range(ln):
+            yy_ = gy_ + t_
+            if 0 <= yy_ < h and worn_in[yy_, gx_]:
+                out[yy_, gx_] *= 0.88
     # edge light between neighbouring shapes
     L = lum(base)
     def shifted(arr, dy, dx):
@@ -283,7 +278,11 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
     out = out * (1 + (rng.random((h, w, 1)) - 0.5) * 2 * texture)
     out = out + rng.normal(0, grain, (h, w, 1))
     img = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), "RGB")
-    img = img.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
+    if palette_from is not None:
+        # share one colour palette with a sibling picture, so the same object gets exactly the same colours in both
+        img = img.quantize(palette=palette_from, dither=Image.Dither.NONE).convert("RGB")
+    else:
+        img = img.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
     return (img, class_map) if return_class else img
 
 

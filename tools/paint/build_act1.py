@@ -25,8 +25,8 @@ ZONES = {
     "crane_cabin": {"flat": [FULL + ("flat", 0.05)]},
     "rail_walk": {"flat": [(72, 10, 232, 160, "cyl_v", 0.30), FULL + ("flat", 0.05)]},
     "rat_lair": {"worn": [(150, 100, 200, 135), (250, 55, 275, 108)]},
-    "mallard_bay": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125)]},
-    "mallard_bay_l": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125)]},
+    "mallard_bay": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125), FLOOR]},
+    "mallard_bay_l": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125), FLOOR]},
     "cockpit": {"flat": [FULL + ("flat", 0.05)], "organic": [(105, 118, 190, 200), (0, 95, 78, 195)]},
 }
 OUT = "../../assets/backgrounds_act1_restyle/"   # staging folder: moved into assets/backgrounds when the rooms are rewired
@@ -59,10 +59,25 @@ def main():
             print("missing reference", p)
             continue
         donor = REF + "s022.png" if name == "mallard_bay_l" else None
-        img, cmap = restyle(p, erase=boxes, donor=donor, zones=ZONES.get(name), return_class=True)
+        pal = None
+        if name == "mallard_bay_l":          # same palette as the other ship-yard picture
+            pal = Image.open(OUT + "mallard_bay.png").convert("RGB").quantize(colors=112, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+        img, cmap = restyle(p, erase=boxes, donor=donor, zones=ZONES.get(name), return_class=True, palette_from=pal)
         img.save(OUT + name + ".png")
         CLASSES[name] = cmap
         done.append(name)
+    # the two ship-yard pictures show the same place: take everything from the first one and use the second one's own pixels only
+    # where the two source screens really differ (the ladder, the cart, Roger), so the ship has identical dents and rust in both
+    if "mallard_bay" in CLASSES and "mallard_bay_l" in CLASSES:
+        import numpy as np
+        from restyle import load_indices, box_blur
+        ia, ib = load_indices(REF + "s022.png"), load_indices(REF + "s028.png")
+        ys = np.minimum(((np.arange(160) + 0.5) * 190 / 160).astype(int), 189)
+        real = (ia != ib)[ys]
+        mask = box_blur(real.astype(np.float32), 4) > 0.02
+        A, B = np.asarray(Image.open(OUT + "mallard_bay.png").convert("RGB")), np.asarray(Image.open(OUT + "mallard_bay_l.png").convert("RGB"))
+        Image.fromarray(np.where(mask[..., None], B, A)).save(OUT + "mallard_bay_l.png")
+        CLASSES["mallard_bay_l"] = np.where(mask, CLASSES["mallard_bay_l"], CLASSES["mallard_bay"])
     print(len(done), "backgrounds:", " ".join(done))
     if len(sys.argv) > 1:
         cols = 2
