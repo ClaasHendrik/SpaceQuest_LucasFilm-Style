@@ -30,6 +30,7 @@ Rules of thumb:
 - The same object looks **identical** in every room where it appears (same dents, rust, colours). Technique: paint it once, or share
   the palette and composite only the real differences (see `build_act1.py`, ship yard).
 - Marks (dents, scratches, grime) come from a **fixed pattern tied to picture position**, never from the order of regions.
+- Wear stays **sparse and subtle** (agreed after a review): a few dents, a few dark scratches, a little grime. **No bright or white scratches** (they read as vapour). If an object looks 'made of damage', there are too many marks.
 - One palette per picture (112 colours, no dither); pictures that show the same place share a palette.
 
 ## 4. Interface and layout

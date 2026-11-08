@@ -227,7 +227,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
     worn_f = (class_map == 3).astype(np.float32)
     worn_in = (box_blur(worn_f, 1) > 0.99) & (lum(base) > 28)       # inside worn regions, off the dark outlines
     rngw = np.random.default_rng(20261108)
-    n_d, n_s, n_g = int(h * w / 105), int(h * w / 60), int(h * w / 330)
+    n_d, n_s, n_g = int(h * w / 520), int(h * w / 520), int(h * w / 800)      # few marks: pass-4 density, not pass-5
     for _ in range(n_d):                                             # dents: dark upper-left, lit lower-right inside the dent
         cx_, cy_ = int(rngw.integers(0, w)), int(rngw.integers(0, h))
         r = float(rngw.uniform(1.8, 3.6))
@@ -238,11 +238,12 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
                 dx_, dy_ = (xx_ - cx_) / r, (yy_ - cy_) / (r * 0.8)
                 d2 = dx_ * dx_ + dy_ * dy_
                 if d2 < 1.0 and worn_in[yy_, xx_]:
-                    out[yy_, xx_] *= 1 + 0.42 * (dx_ + dy_) * 0.7071 * (1 - 0.3 * d2)
+                    out[yy_, xx_] *= 1 + 0.28 * (dx_ + dy_) * 0.7071 * (1 - 0.3 * d2)
     for _ in range(n_s):                                             # scratches
         sx, sy = int(rngw.integers(0, w)), int(rngw.integers(0, h))
-        ang, ln = float(rngw.uniform(0, 3.1416)), int(rngw.integers(4, 12))
-        k_ = 1.32 if rngw.random() < 0.5 else 0.7
+        ang, ln = float(rngw.uniform(0, 3.1416)), int(rngw.integers(3, 8))
+        k_ = 0.82                                                 # dark scratches only: no bright ones (they read as vapour)
+        rngw.random()
         if not worn_in[sy, sx]:
             continue
         for t_ in range(ln):
