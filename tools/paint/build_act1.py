@@ -20,7 +20,7 @@ SPEC = {
     "rail_walk": (21, [(234, 136, 264, 168)]),
     "rat_lair": (24, [(248, 106, 268, 134)]),
     "mallard_bay": (22, []),
-    "mallard_bay_l": (28, [(190, 74, 212, 100)]),
+    "mallard_bay_l": (28, [(190, 74, 212, 100)]),   # painted out using the same yard from screen 22
     "cockpit": (29, []),
 }
 
@@ -32,7 +32,8 @@ def main():
         if not os.path.exists(p):
             print("missing reference", p)
             continue
-        restyle(p, erase=boxes).save(OUT + name + ".png")
+        donor = REF + "s022.png" if name == "mallard_bay_l" else None
+        restyle(p, erase=boxes, donor=donor).save(OUT + name + ".png")
         done.append(name)
     print(len(done), "backgrounds:", " ".join(done))
     if len(sys.argv) > 1:

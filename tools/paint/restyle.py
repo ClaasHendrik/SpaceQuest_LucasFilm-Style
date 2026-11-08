@@ -99,10 +99,16 @@ def erase_boxes(lab, boxes, top=10):
     return lab
 
 
-def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.22, grain=0.5, texture=0.018, erase=()):
+def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, grain=0.3, texture=0.012, erase=(), volume=0.26, bands=5, colors=112, donor=None):
     idx = load_indices(path, top, height)
     lab = dedither(idx)
-    lab = erase_boxes(lab, erase, top)
+    if donor is not None and erase:
+        # the same scene without the figure: copy the labels from there instead of guessing them
+        dlab = dedither(load_indices(donor, top, height))
+        for (x0, y0, x1, y1) in erase:
+            lab[max(0, y0 - top):y1 - top + 1, x0:x1 + 1] = dlab[max(0, y0 - top):y1 - top + 1, x0:x1 + 1]
+    else:
+        lab = erase_boxes(lab, erase, top)
     # resample rows (the picture is squeezed vertically to fit the game's picture area)
     ys = np.minimum(((np.arange(rows) + 0.5) * height / rows).astype(int), height - 1)
     lab = lab[ys]
@@ -113,7 +119,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.22, g
     comp, n = components(lab)
     out = base.copy()
     yy = np.arange(h)[:, None].repeat(w, 1)
-    # per-region vertical light: lighter at the top of each shape, darker at the bottom
+    # per-region light: a banded gradient from top to bottom, stronger on big surfaces
     for c in range(n):
         m = comp == c
         cnt = m.sum()
@@ -123,10 +129,33 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.22, g
         y0, y1 = ys_.min(), ys_.max()
         if y1 - y0 < 6:
             continue
+        amp = light * (2.2 if cnt > 1500 else 1.0)
         t = (yy - y0) / max(1, y1 - y0)
-        k = 1 + light * (0.5 - t)
-        out[m] = out[m] * k[m][:, None]
-    # edge light: top/left edges of a shape catch light, bottom/right edges fall into shade
+        tq = (np.floor(np.clip(t, 0, 0.999) * bands) + 0.5) / bands            # banded, as in the reference frames
+        out[m] = out[m] * (1 + amp * (0.5 - tq))[m][:, None]
+    # volume: each shape is lit from the top left, so its top/left rim brightens and its bottom/right rim darkens,
+    # rounded over a few pixels; lit areas turn slightly warm, shaded areas slightly cool
+    lit_total = np.zeros((h, w), np.float32)
+    for c in range(n):
+        m = comp == c
+        cnt = m.sum()
+        if cnt < 40 or lab[m][0] == 0:
+            continue
+        mf = m.astype(np.float32)
+        bl = box_blur(box_blur(mf, 2), 2)
+        gy, gx = np.gradient(bl)
+        lit = 0.7071 * (gx + gy)
+        mx = np.abs(lit).max()
+        if mx <= 0:
+            continue
+        lit = lit / mx
+        lit_total = np.where(m, lit, lit_total)
+    k = np.where(lit_total > 0, 1 + volume * lit_total, 1 + volume * 0.8 * lit_total)
+    k = np.clip(k, 0.72, 1.2)
+    out = out * k[..., None]
+    out[..., 0] *= 1 + 0.05 * lit_total
+    out[..., 2] *= 1 - 0.05 * lit_total
+    # edge light between neighbouring shapes
     L = lum(base)
     def shifted(arr, dy, dx):
         return np.roll(np.roll(arr, dy, 0), dx, 1)
@@ -134,7 +163,6 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.22, g
         nb_comp = shifted(comp, dy, dx)
         nb_L = shifted(L, dy, dx)
         diff = (nb_comp != comp) & (np.abs(nb_L - L) > 14)
-        # the neighbour must be darker for a highlight (light falls on the edge facing it), lighter for a shade
         if sign > 0:
             sel = diff & (nb_L < L)
             out = np.where(sel[..., None], out * (1 + edge), out)
@@ -146,7 +174,16 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.22, g
     out = out * (1 + (rng.random((h, w, 1)) - 0.5) * 2 * texture)
     out = out + rng.normal(0, grain, (h, w, 1))
     img = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), "RGB")
-    return img.quantize(colors=128, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
+    return img.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
+
+
+def box_blur(a, r):
+    k = 2 * r + 1
+    p = np.pad(a, r, mode="edge")
+    c = np.cumsum(np.pad(p, ((0, 0), (1, 0))), axis=1)
+    p = (c[:, k:] - c[:, :-k]) / k
+    c = np.cumsum(np.pad(p, ((1, 0), (0, 0))), axis=0)
+    return (c[k:] - c[:-k]) / k
 
 
 def lum(rgb):
