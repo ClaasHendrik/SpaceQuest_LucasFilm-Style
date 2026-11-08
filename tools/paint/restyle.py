@@ -111,6 +111,7 @@ def classify(lab, comp, n, zones, rows, height=190, top=10):
     def to_row(y):
         return (y - top) * rows / height
     org = [(x0, to_row(y0), x1, to_row(y1)) for (x0, y0, x1, y1) in zones.get("organic", [])]
+    worn = [(x0, to_row(y0), x1, to_row(y1)) for (x0, y0, x1, y1) in zones.get("worn", [])]
     flat = [(x0, to_row(y0), x1, to_row(y1), mode, amp) for (x0, y0, x1, y1, mode, amp) in zones.get("flat", [])]
     info = {}
     for c in range(n):
@@ -125,6 +126,8 @@ def classify(lab, comp, n, zones, rows, height=190, top=10):
         mode, amp, box = "organic", 0.0, None
         if any(x0 <= cx <= x1 and y0 <= cy <= y1 for (x0, y0, x1, y1) in org):
             pass
+        elif any(x0 <= cx <= x1 and y0 <= cy <= y1 for (x0, y0, x1, y1) in worn):
+            mode = "worn"            # built as a structured object, now rounded and roughened by years of use
         else:
             hit = [z for z in flat if z[0] <= cx <= z[2] and z[1] <= cy <= z[3]]
             if hit:
@@ -167,7 +170,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
         m = comp == c
         cnt = m.sum()
         mode, amp_z, box = info[c]
-        class_map[m] = 1 if mode == "organic" else 2
+        class_map[m] = {"organic": 1, "worn": 3}.get(mode, 2)
         if cnt < 30 or lab[m][0] == 0:
             continue
         ys_, xs_ = np.nonzero(m)
@@ -179,6 +182,11 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
             t = (yy - y0) / max(1, y1 - y0)
         elif mode == "flat":
             amp = amp_z
+            t = (yy - y0) / max(1, y1 - y0)
+        elif mode == "worn":
+            if y1 - y0 < 6:
+                continue
+            amp = light * 1.6
             t = (yy - y0) / max(1, y1 - y0)
         elif mode == "cyl_v":            # a vertical drum or pipe: bright on the lit left, dark on the right
             bx0, by0, bx1, by1 = box
@@ -193,7 +201,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
     # volume (organic regions only): lit from the top left, rounded over a few pixels; lit = warm, shaded = cool
     lit_total = np.zeros((h, w), np.float32)
     for c in range(n):
-        if info[c][0] != "organic":
+        if info[c][0] not in ("organic", "worn"):
             continue
         m = comp == c
         cnt = m.sum()
@@ -206,7 +214,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
         mx = np.abs(lit).max()
         if mx <= 0:
             continue
-        lit_total = np.where(m, lit / mx, lit_total)
+        lit_total = np.where(m, lit / mx * (0.55 if info[c][0] == "worn" else 1.0), lit_total)
     k = np.where(lit_total > 0, 1 + volume * lit_total, 1 + volume * 0.8 * lit_total)
     k = np.clip(k, 0.72, 1.2)
     out = out * k[..., None]
@@ -220,7 +228,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
         nb_comp = shifted(comp, dy, dx)
         nb_L = shifted(L, dy, dx)
         diff = (nb_comp != comp) & (np.abs(nb_L - L) > 14)
-        e_here = np.where(class_map == 2, edge * 1.6, edge)[..., None]
+        e_here = np.where(class_map == 2, edge * 1.6, np.where(class_map == 3, edge * 1.25, edge))[..., None]
         if sign > 0:
             sel = diff & (nb_L < L)
             out = np.where(sel[..., None], out * (1 + e_here), out)

@@ -11,18 +11,21 @@ FULL = (0, 10, 320, 200)
 # 'flat' boxes: (x0, y0, x1, y1, mode, amp) in screen coordinates; mode 'flat', 'cyl_v' (drum), 'cyl_h' (tube).
 # 'organic' boxes win over 'flat' boxes. Brown (rust, rubble) and green (slime) regions are always organic.
 ZONES = {
-    "garbage_mountain": {"flat": [(0, 10, 320, 92, "flat", 0.05)]},
-    "junk_field": {"flat": [(0, 10, 320, 44, "flat", 0.05)]},
-    "junk_tower": {"flat": [(232, 10, 320, 138, "flat", 0.05)]},
+    "garbage_mountain": {"flat": [(0, 10, 320, 92, "flat", 0.05)],
+                         "worn": [(92, 72, 198, 152), (0, 92, 92, 162), (192, 62, 240, 105), (182, 104, 224, 142), (196, 150, 252, 190), (262, 80, 320, 145)]},
+    "junk_field": {"flat": [(0, 10, 320, 44, "flat", 0.05)],
+                   "worn": [(36, 95, 110, 150), (0, 35, 60, 160), (150, 10, 320, 100), (150, 10, 215, 100), (48, 135, 108, 175), (175, 95, 290, 160)]},
+    "junk_tower": {"flat": [(232, 10, 320, 138, "flat", 0.05)],
+                   "worn": [(0, 35, 120, 150), (15, 95, 170, 180), (110, 20, 235, 45), (240, 115, 310, 160)]},
     "wire_tube": {"flat": [(18, 78, 312, 160, "cyl_h", 0.40)]},
-    "robot_head": {"flat": [(205, 100, 262, 200, "flat", 0.05)]},
-    "conveyor": {"flat": [FULL + ("flat", 0.05)], "organic": [(0, 148, 185, 200), (165, 155, 250, 200)]},
+    "robot_head": {"flat": [(205, 100, 262, 200, "flat", 0.05)], "worn": [(175, 58, 320, 200), (0, 40, 100, 130)]},
+    "conveyor": {"flat": [FULL + ("flat", 0.05)], "worn": [(0, 148, 185, 200), (165, 155, 250, 200)]},
     "rail_west": {"flat": [FULL + ("flat", 0.05)]},
     "crane_cabin": {"flat": [FULL + ("flat", 0.05)]},
     "rail_walk": {"flat": [(72, 10, 232, 160, "cyl_v", 0.30), FULL + ("flat", 0.05)]},
-    "rat_lair": {},
-    "mallard_bay": {"flat": [(190, 10, 320, 50, "flat", 0.05)]},
-    "mallard_bay_l": {"flat": [(190, 10, 320, 50, "flat", 0.05)]},
+    "rat_lair": {"worn": [(150, 100, 200, 135), (250, 55, 275, 108)]},
+    "mallard_bay": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125)]},
+    "mallard_bay_l": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125)]},
     "cockpit": {"flat": [FULL + ("flat", 0.05)], "organic": [(105, 118, 190, 200), (0, 95, 78, 195)]},
 }
 OUT = "../../assets/backgrounds_act1_restyle/"   # staging folder: moved into assets/backgrounds when the rooms are rewired
