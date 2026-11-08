@@ -99,7 +99,46 @@ def erase_boxes(lab, boxes, top=10):
     return lab
 
 
-def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, grain=0.3, texture=0.012, erase=(), volume=0.26, bands=5, colors=112, donor=None):
+ORGANIC_COLOURS = {6, 2}          # brown (rust, rubble) and green (slime): always worn / organic
+
+
+def classify(lab, comp, n, zones, rows, height=190, top=10):
+    """Decide for every region whether it is ORGANIC (rounded, worn, banged up) or ARTIFICIAL (structured, flat, crisp).
+    Priority: organic boxes, then flat boxes, then the colour hint (brown / green), then the shape (rectangular = artificial).
+    Returns per-region (mode, amp, zone_box): mode is 'organic', 'flat', 'cyl_v' or 'cyl_h'."""
+    h, w = lab.shape
+    zones = zones or {}
+    def to_row(y):
+        return (y - top) * rows / height
+    org = [(x0, to_row(y0), x1, to_row(y1)) for (x0, y0, x1, y1) in zones.get("organic", [])]
+    flat = [(x0, to_row(y0), x1, to_row(y1), mode, amp) for (x0, y0, x1, y1, mode, amp) in zones.get("flat", [])]
+    info = {}
+    for c in range(n):
+        m = comp == c
+        cnt = int(m.sum())
+        ys_, xs_ = np.nonzero(m)
+        cx, cy = xs_.mean(), ys_.mean()
+        label = int(lab[m][0])
+        colours = {label} if label < 16 else set(PAIRS[label - 16])
+        bw, bh = xs_.max() - xs_.min() + 1, ys_.max() - ys_.min() + 1
+        fill = cnt / float(bw * bh)
+        mode, amp, box = "organic", 0.0, None
+        if any(x0 <= cx <= x1 and y0 <= cy <= y1 for (x0, y0, x1, y1) in org):
+            pass
+        else:
+            hit = [z for z in flat if z[0] <= cx <= z[2] and z[1] <= cy <= z[3]]
+            if hit:
+                z = hit[0]
+                mode, amp, box = z[4], z[5], (z[0], z[1], z[2], z[3])
+            elif colours & ORGANIC_COLOURS:
+                pass
+            elif cnt >= 150 and fill >= 0.82:
+                mode, amp = "flat", 0.05
+        info[c] = (mode, amp, box)
+    return info
+
+
+def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, grain=0.3, texture=0.012, erase=(), volume=0.26, bands=5, colors=112, donor=None, zones=None, return_class=False):
     idx = load_indices(path, top, height)
     lab = dedither(idx)
     if donor is not None and erase:
@@ -119,24 +158,43 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
     comp, n = components(lab)
     out = base.copy()
     yy = np.arange(h)[:, None].repeat(w, 1)
-    # per-region light: a banded gradient from top to bottom, stronger on big surfaces
+    info = classify(lab, comp, n, zones, rows, height, top)
+    class_map = np.zeros((h, w), np.uint8)             # 1 = organic, 2 = artificial
+    yy_f = np.arange(h)[:, None].repeat(w, 1).astype(np.float32)
+    xx_f = np.arange(w)[None, :].repeat(h, 0).astype(np.float32)
+    # per-region light
     for c in range(n):
         m = comp == c
         cnt = m.sum()
-        if cnt < 60:
+        mode, amp_z, box = info[c]
+        class_map[m] = 1 if mode == "organic" else 2
+        if cnt < 30 or lab[m][0] == 0:
             continue
         ys_, xs_ = np.nonzero(m)
         y0, y1 = ys_.min(), ys_.max()
-        if y1 - y0 < 6:
-            continue
-        amp = light * (2.2 if cnt > 1500 else 1.0)
-        t = (yy - y0) / max(1, y1 - y0)
-        tq = (np.floor(np.clip(t, 0, 0.999) * bands) + 0.5) / bands            # banded, as in the reference frames
+        if mode == "organic":
+            if y1 - y0 < 6:
+                continue
+            amp = light * (2.2 if cnt > 1500 else 1.0)
+            t = (yy - y0) / max(1, y1 - y0)
+        elif mode == "flat":
+            amp = amp_z
+            t = (yy - y0) / max(1, y1 - y0)
+        elif mode == "cyl_v":            # a vertical drum or pipe: bright on the lit left, dark on the right
+            bx0, by0, bx1, by1 = box
+            amp = amp_z
+            t = (xx_f - bx0) / max(1.0, bx1 - bx0)
+        else:                            # "cyl_h": a horizontal tube: bright along the top, dark along the bottom
+            bx0, by0, bx1, by1 = box
+            amp = amp_z
+            t = (yy_f - by0) / max(1.0, by1 - by0)
+        tq = (np.floor(np.clip(t, 0, 0.999) * bands) + 0.5) / bands
         out[m] = out[m] * (1 + amp * (0.5 - tq))[m][:, None]
-    # volume: each shape is lit from the top left, so its top/left rim brightens and its bottom/right rim darkens,
-    # rounded over a few pixels; lit areas turn slightly warm, shaded areas slightly cool
+    # volume (organic regions only): lit from the top left, rounded over a few pixels; lit = warm, shaded = cool
     lit_total = np.zeros((h, w), np.float32)
     for c in range(n):
+        if info[c][0] != "organic":
+            continue
         m = comp == c
         cnt = m.sum()
         if cnt < 40 or lab[m][0] == 0:
@@ -148,8 +206,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
         mx = np.abs(lit).max()
         if mx <= 0:
             continue
-        lit = lit / mx
-        lit_total = np.where(m, lit, lit_total)
+        lit_total = np.where(m, lit / mx, lit_total)
     k = np.where(lit_total > 0, 1 + volume * lit_total, 1 + volume * 0.8 * lit_total)
     k = np.clip(k, 0.72, 1.2)
     out = out * k[..., None]
@@ -163,18 +220,20 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
         nb_comp = shifted(comp, dy, dx)
         nb_L = shifted(L, dy, dx)
         diff = (nb_comp != comp) & (np.abs(nb_L - L) > 14)
+        e_here = np.where(class_map == 2, edge * 1.6, edge)[..., None]
         if sign > 0:
             sel = diff & (nb_L < L)
-            out = np.where(sel[..., None], out * (1 + edge), out)
+            out = np.where(sel[..., None], out * (1 + e_here), out)
         else:
             sel = diff & (nb_L > L)
-            out = np.where(sel[..., None], out * (1 - edge * 0.8), out)
+            out = np.where(sel[..., None], out * (1 - e_here * 0.8), out)
     # texture and grain
     rng = np.random.default_rng(seed)
     out = out * (1 + (rng.random((h, w, 1)) - 0.5) * 2 * texture)
     out = out + rng.normal(0, grain, (h, w, 1))
     img = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), "RGB")
-    return img.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
+    img = img.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
+    return (img, class_map) if return_class else img
 
 
 def box_blur(a, r):

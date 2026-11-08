@@ -6,6 +6,25 @@ from PIL import Image
 from restyle import restyle
 
 REF = "ref/"
+FULL = (0, 10, 320, 200)
+# which parts are ARTIFICIAL (structured, pristine: flat, crisp) rather than ORGANIC (worn, banged up, rounded).
+# 'flat' boxes: (x0, y0, x1, y1, mode, amp) in screen coordinates; mode 'flat', 'cyl_v' (drum), 'cyl_h' (tube).
+# 'organic' boxes win over 'flat' boxes. Brown (rust, rubble) and green (slime) regions are always organic.
+ZONES = {
+    "garbage_mountain": {"flat": [(0, 10, 320, 92, "flat", 0.05)]},
+    "junk_field": {"flat": [(0, 10, 320, 44, "flat", 0.05)]},
+    "junk_tower": {"flat": [(232, 10, 320, 138, "flat", 0.05)]},
+    "wire_tube": {"flat": [(18, 78, 312, 160, "cyl_h", 0.40)]},
+    "robot_head": {"flat": [(205, 100, 262, 200, "flat", 0.05)]},
+    "conveyor": {"flat": [FULL + ("flat", 0.05)], "organic": [(0, 148, 185, 200), (165, 155, 250, 200)]},
+    "rail_west": {"flat": [FULL + ("flat", 0.05)]},
+    "crane_cabin": {"flat": [FULL + ("flat", 0.05)]},
+    "rail_walk": {"flat": [(72, 10, 232, 160, "cyl_v", 0.30), FULL + ("flat", 0.05)]},
+    "rat_lair": {},
+    "mallard_bay": {"flat": [(190, 10, 320, 50, "flat", 0.05)]},
+    "mallard_bay_l": {"flat": [(190, 10, 320, 50, "flat", 0.05)]},
+    "cockpit": {"flat": [FULL + ("flat", 0.05)], "organic": [(105, 118, 190, 200), (0, 95, 78, 195)]},
+}
 OUT = "../../assets/backgrounds_act1_restyle/"   # staging folder: moved into assets/backgrounds when the rooms are rewired
 # name: (screen number, boxes to erase: Roger and other figures, in 320x200 screen coordinates)
 SPEC = {
@@ -25,6 +44,9 @@ SPEC = {
 }
 
 
+CLASSES = {}
+
+
 def main():
     done = []
     for name, (n, boxes) in SPEC.items():
@@ -33,7 +55,9 @@ def main():
             print("missing reference", p)
             continue
         donor = REF + "s022.png" if name == "mallard_bay_l" else None
-        restyle(p, erase=boxes, donor=donor).save(OUT + name + ".png")
+        img, cmap = restyle(p, erase=boxes, donor=donor, zones=ZONES.get(name), return_class=True)
+        img.save(OUT + name + ".png")
+        CLASSES[name] = cmap
         done.append(name)
     print(len(done), "backgrounds:", " ".join(done))
     if len(sys.argv) > 1:
