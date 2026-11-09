@@ -28,4 +28,15 @@ func run(m) -> void:
 	m.room.t_anim = 0.5
 	m.room.queue_redraw()
 	await _save(m, "rats")
+	m.change_room("conveyor", "start")
+	m.room.t_anim = 0.0
+	m.room.queue_redraw()
+	await _save(m, "belt0")
+	m.room.t_anim = 0.3
+	m.room.queue_redraw()
+	await _save(m, "belt1")
+	m.change_room("dark_room", "chute")
+	m.room.t_anim = 1.55
+	m.room.queue_redraw()
+	await _save(m, "rats_b")
 	m.get_tree().quit()
