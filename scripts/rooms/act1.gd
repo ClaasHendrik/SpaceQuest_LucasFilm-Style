@@ -46,8 +46,17 @@ func setup(room_id: String) -> void:
 
 
 func current_bg() -> String:
-	if id == "yard" and GameState.flag("ladder_placed"):
-		return "yard_ladder"
+	match id:
+		"wire_tube":
+			return "wire_tube_nowire" if GameState.flag("wire_taken") else "wire_tube"
+		"dark_room":
+			return "dark_room_noreactor" if GameState.flag("reactor_taken") else "dark_room"
+		"yard", "yard_ladder":
+			var gone: bool = GameState.flag("motivator_held") or GameState.flag("motivator_installed")
+			var lad: bool = GameState.flag("ladder_placed")
+			if lad:
+				return "yard_ladder_nomot" if gone else "yard_ladder"
+			return "yard_nomot" if gone else "yard"
 	return id
 
 
@@ -89,7 +98,9 @@ func _ladder_pick(m, _o) -> void:
 
 func _rat_steal(m) -> void:
 	GameState.set_flag("rat_done")
+	Sfx.play("squeak")
 	await m.get_tree().create_timer(0.1 if m.fast else 1.5).timeout
+	Sfx.play("steal")
 	if GameState.has_item("reactor"):
 		GameState.take_item("reactor")
 		GameState.set_flag("reactor_taken", false)
@@ -150,6 +161,13 @@ func _draw() -> void:
 				draw_circle(c + Vector2(3, 1.5), 9.0, Color(1, 0.15, 0.1, 0.12))
 				draw_rect(Rect2(c.x - 1, c.y, 4, 3), Color("ff3b2e"))
 				draw_rect(Rect2(c.x + 7, c.y, 4, 3), Color("ff3b2e"))
+	if id == "tube_entrance" and not GameState.flag("ladder_taken"):
+		_draw_ladder(Vector2(242, 134) * 2.0, Vector2(262, 84) * 2.0)
+	if (id == "yard" or id == "yard_ladder") and GameState.flag("motivator_installed"):
+		draw_rect(Rect2(236, 184, 50, 22), Color("e8f0ee"))                 # the motivator, seated in the open panel
+		draw_rect(Rect2(236, 184, 50, 4), Color("ffffff"))
+		draw_rect(Rect2(236, 202, 50, 4), Color("8a98a4"))
+		draw_rect(Rect2(256, 190, 10, 10), Color("1a2a30"))
 	if id == "conveyor":
 		# the belt runs: dark ribs slide towards the shredder
 		for i in range(-1, 26):
@@ -167,6 +185,22 @@ func _draw() -> void:
 		else:
 			draw_line(Vector2(x - 14, 94), Vector2(x - 8, 110), Color("c04848"), 3.0)
 			draw_line(Vector2(x + 14, 94), Vector2(x + 8, 110), Color("c04848"), 3.0)
+
+
+func _draw_ladder(b: Vector2, t: Vector2) -> void:
+	# a light ladder leaning against the junk (painted in code: the original screens do not show it)
+	var d := t - b
+	var off := Vector2(28, 0)
+	draw_line(b + Vector2(5, 4), t + Vector2(5, 4), Color(0, 0, 0, 0.35), 6.0)
+	for k in 2:
+		var o := off * k
+		draw_line(b + o, t + o, Color("9aa6b6"), 5.0)
+		draw_line(b + o - Vector2(1, 0), t + o - Vector2(1, 0), Color("e8f0ff"), 2.0)
+		draw_line(b + o + Vector2(2, 0), t + o + Vector2(2, 0), Color("5a6474"), 1.5)
+	for i in range(1, 8):
+		var f := i / 8.0
+		draw_line(b + d * f, b + d * f + off, Color("7a8494"), 4.0)
+		draw_line(b + d * f - Vector2(0, 1), b + d * f + off - Vector2(0, 1), Color("c8d4e4"), 1.5)
 
 
 func _start_riding(m) -> void:
@@ -190,6 +224,7 @@ func walk_request(m, pos: Vector2) -> bool:
 
 
 func _press(m) -> void:
+	Sfx.play("click")
 	if GameState.flag("motivator_held"):
 		if absf(claw_x - PANEL_X) <= 22.0:
 			GameState.set_flag("motivator_held", false)
@@ -295,6 +330,7 @@ func _go_cockpit(m, _o) -> void:
 
 # ---------------------------------------------------------------- lift, conveyor, rail, chute
 func _lift(m, _o) -> void:
+	Sfx.play("lift")
 	m.award("trash_bucket")
 	await m.say("You step into the little bucket on the lift. It lurches upward with the grace of a bad idea.")
 	m.change_room("conveyor", "lift")

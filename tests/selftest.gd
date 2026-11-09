@@ -137,6 +137,11 @@ func run(m) -> void:
 	m.change_room("cockpit", "start")
 	check(m.verb_enabled("Travel"), "Travel is active in the cockpit")
 	check(not m.verb_buttons["Travel"].disabled, "the Travel button is enabled there")
+	m.room._menu(m)
+	check(m.overlay != null, "the flight screen of the ship's computer opens")
+	m.room._wall_menu(m)
+	check(m.overlay != null, "the weapons screen of the ship's computer opens")
+	m._close_overlay()
 
 	print("--- space travel")
 	m._on_restart()
@@ -247,9 +252,8 @@ func _act1(m) -> void:
 	check(GameState.has_item("buckazoids"), "buckazoids found in the pilot's seat")
 	for f in ["sys_engines", "sys_radar", "sys_weapons", "sys_front"]:
 		GameState.set_flag(f)
-	m.room._takeoff(m)
-	m.room._fire(m)
-	await m.get_tree().create_timer(0.2).timeout
+	await m.room._takeoff(m)
+	await m.room._fire(m)
 	check(GameState.flag("escaped_freighter"), "the Mallard blasts out of the freighter")
 	check(GameState.score == 145, "Act 1 is worth exactly 145 points (score %d)" % GameState.score)
 	# deaths

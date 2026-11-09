@@ -28,6 +28,10 @@ ZONES = {
     "tube_entrance": {},
     "yard": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125), FLOOR]},
     "yard_ladder": {"flat": [(190, 10, 320, 50, "flat", 0.05)], "worn": [(90, 80, 285, 155), (160, 22, 205, 58), (165, 140, 235, 182), (28, 72, 85, 125), FLOOR]},
+    "cut_takeoff": {"flat": [FULL + ("flat", 0.05)]},
+    "cut_blast": {"flat": [FULL + ("flat", 0.05)]},
+    "cut_free": {},
+    "cut_away": {},
     "cockpit": {"flat": [FULL + ("flat", 0.05)], "organic": [(105, 118, 190, 200), (0, 95, 78, 195)]},
 }
 OUT = "../../assets/backgrounds/"
@@ -47,10 +51,23 @@ SPEC = {
     "yard": (22, []),
     "yard_ladder": (28, [(190, 74, 212, 100)]),   # painted out using the same yard from screen 22
     "cockpit": (29, []),
+    "cut_takeoff": (31, []),
+    "cut_blast": (34, []),
+    "cut_free": (36, []),
+    "cut_away": (37, []),
 }
 
 
 CLASSES = {}
+# picture states: the same room after something was taken. name: (base room, boxes to erase, in 320x200 screen coordinates).
+# The variant is rendered from the same source with the extra boxes erased and copied over the base only inside those boxes,
+# so everything else stays identical to the base picture.
+STATES = {
+    "wire_tube_nowire": ("wire_tube", [(130, 76, 222, 106)]),
+    "dark_room_noreactor": ("dark_room", [(124, 108, 196, 164, -72, 0)]),
+    "yard_nomot": ("yard", [(14, 74, 92, 126, 0, 50)]),
+    "yard_ladder_nomot": ("yard_ladder", [(14, 74, 92, 126, 0, 50)]),
+}
 
 
 def main():
@@ -80,6 +97,19 @@ def main():
         A, B = np.asarray(Image.open(OUT + "yard.png").convert("RGB")), np.asarray(Image.open(OUT + "yard_ladder.png").convert("RGB"))
         Image.fromarray(np.where(mask[..., None], B, A)).save(OUT + "yard_ladder.png")
         CLASSES["yard_ladder"] = np.where(mask, CLASSES["yard_ladder"], CLASSES["yard"])
+    import numpy as np
+    from restyle import box_blur
+    for name, (base, extra) in STATES.items():
+        n, boxes = SPEC[base]
+        donor = REF + "s022.png" if base == "yard_ladder" else None
+        var = restyle(REF + "s%03d.png" % n, erase=boxes + extra, donor=donor, zones=ZONES.get(base))
+        basearr = np.asarray(Image.open(OUT + base + ".png").convert("RGB"))
+        mask = np.zeros(basearr.shape[:2], bool)
+        for (x0, y0, x1, y1) in [e[:4] for e in extra]:
+            ya, yb = int((y0 - 10) * 160 / 190) - 2, int((y1 - 10) * 160 / 190) + 2
+            mask[max(0, ya):yb, max(0, x0 - 2):x1 + 2] = True
+        Image.fromarray(np.where(mask[..., None], np.asarray(var), basearr)).save(OUT + name + ".png")
+        done.append(name)
     print(len(done), "backgrounds:", " ".join(done))
     if len(sys.argv) > 1:
         cols = 2

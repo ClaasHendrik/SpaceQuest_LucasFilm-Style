@@ -8,6 +8,7 @@ config/features=PackedStringArray("4.3")
 
 [autoload]
 GameState="*res://scripts/game_state.gd"
+Sfx="*res://scripts/sfx.gd"
 
 [display]
 window/size/viewport_width=640

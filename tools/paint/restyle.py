@@ -85,7 +85,13 @@ def erase_boxes(lab, boxes, top=10):
     """paint figures out of the background: each box (x0, y0, x1, y1 in 320x200 screen coordinates) is refilled row by
     row from the labels just outside it (left half from the left, right half from the right, flat if both agree)"""
     h, w = lab.shape
-    for (x0, y0, x1, y1) in boxes:
+    for box in boxes:
+        if len(box) == 6:          # clone stamp: copy the labels from a patch of the same picture shifted by (dx, dy)
+            x0, y0, x1, y1, dx, dy = box
+            ya, yb = max(0, y0 - top), min(h - 1, y1 - top)
+            lab[ya:yb + 1, x0:x1 + 1] = lab[ya + dy:yb + 1 + dy, x0 + dx:x1 + 1 + dx]
+            continue
+        x0, y0, x1, y1 = box
         y0, y1 = max(0, y0 - top), min(h - 1, y1 - top)
         xa, xb = max(0, x0 - 1), min(w - 1, x1 + 1)
         for y in range(y0, y1 + 1):
@@ -144,13 +150,17 @@ def classify(lab, comp, n, zones, rows, height=190, top=10):
 def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, grain=0.3, texture=0.012, erase=(), volume=0.26, bands=5, colors=112, donor=None, zones=None, return_class=False, palette_from=None):
     idx = load_indices(path, top, height)
     lab = dedither(idx)
-    if donor is not None and erase:
+    four = [e for e in erase if len(e) == 4]
+    clones = [e for e in erase if len(e) == 6]
+    if donor is not None and four:
         # the same scene without the figure: copy the labels from there instead of guessing them
         dlab = dedither(load_indices(donor, top, height))
-        for (x0, y0, x1, y1) in erase:
+        for (x0, y0, x1, y1) in four:
             lab[max(0, y0 - top):y1 - top + 1, x0:x1 + 1] = dlab[max(0, y0 - top):y1 - top + 1, x0:x1 + 1]
     else:
-        lab = erase_boxes(lab, erase, top)
+        lab = erase_boxes(lab, four, top)
+    if clones:
+        lab = erase_boxes(lab, clones, top)
     # resample rows (the picture is squeezed vertically to fit the game's picture area)
     ys = np.minimum(((np.arange(rows) + 0.5) * height / rows).astype(int), height - 1)
     lab = lab[ys]

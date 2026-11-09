@@ -87,6 +87,7 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color.BLACK)
 	_build_ui()
 	GameState.inventory_changed.connect(_refresh_inventory)
+	GameState.inventory_changed.connect(func(): Sfx.play("pickup"))
 	_load_room_ids()
 	var start_room: String = GameState.current_room
 	for a in OS.get_cmdline_user_args():
@@ -94,7 +95,10 @@ func _ready() -> void:
 			start_room = a.substr(7)
 	change_room(start_room, "start")
 	_refresh_inventory()
-	if OS.get_cmdline_user_args().has("--shot-anim"):
+	if OS.get_cmdline_user_args().has("--shot-finish"):
+		_selftest = load("res://tests/shot_finish.gd").new()
+		_selftest.run(self)
+	elif OS.get_cmdline_user_args().has("--shot-anim"):
 		_selftest = load("res://tests/shot_anim.gd").new()
 		_selftest.run(self)
 	elif OS.get_cmdline_user_args().has("--shot-act1"):
@@ -333,6 +337,28 @@ func walk_to(pos: Vector2) -> void:
 		await get_tree().process_frame
 
 
+# A cutscene: a list of [picture, seconds, text] shown over the picture area (pictures are res://assets/backgrounds/<name>.png).
+# A click skips a frame's wait. Text goes to the speech strip.
+func play_cutscene(frames: Array) -> void:
+	var ov := TextureRect.new()
+	ov.position = STAGE_POS
+	ov.size = STAGE_SIZE
+	ov.stretch_mode = TextureRect.STRETCH_SCALE
+	ov.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	ov.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(ov)
+	for f in frames:
+		ov.texture = load("res://scripts/art.gd").tex("res://assets/backgrounds/%s.png" % f[0])
+		if f[2] != "":
+			await say(f[2])
+		var t := 0.0
+		var dur: float = 0.05 if fast else float(f[1])
+		while t < dur and not _say_skip:
+			await get_tree().process_frame
+			t += get_process_delta_time()
+	ov.queue_free()
+
+
 # --- speech, score, death -----------------------------------------------------
 func say(text: String, col := Color("ffff55")) -> void:
 	message.text = text
@@ -350,6 +376,7 @@ func say(text: String, col := Color("ffff55")) -> void:
 func award(id: String) -> void:
 	var p := GameState.add_score(id)
 	if p > 0:
+		Sfx.play("points")
 		_flash("+%d points   Score: %d of %d" % [p, GameState.score, GameState.max_score])
 
 
@@ -363,6 +390,7 @@ func _flash(text: String) -> void:
 
 func die(title: String, text: String) -> void:
 	dead = true
+	Sfx.play("jingle_death")
 	_show_overlay(title, text, [["Restore", _on_restore], ["Restart", _on_restart], ["Quit", _on_quit]], DEATH_PICS.get(title, ""))
 	await _never
 
