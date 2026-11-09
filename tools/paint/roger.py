@@ -96,17 +96,19 @@ def frame(outfit, f, pose=None):
     # neck, head, hair
     poly(d, [(11.4, 13.5 - bob), (14.6, 13.5 - bob), (14.8, 16.6 - bob), (11.2, 16.6 - bob)], SKIN_D)
     hx, hy = 13.4, 8.2 - bob
-    d.ellipse([(hx - 5.4) * S, (hy - 6.0) * S, (hx + 5.4) * S, (hy + 6.0) * S], fill=SKIN)
-    d.ellipse([(hx - 0.5) * S, (hy - 5.4) * S, (hx + 5.4) * S, (hy + 5.8) * S], fill=SKIN_L)
-    d.ellipse([(hx + 4.6) * S, (hy - 0.4) * S, (hx + 7.0) * S, (hy + 2.4) * S], fill=SKIN)   # nose
+    # the head: a flatter forehead (a nearly straight front) and a squarer jaw, not an egg
+    poly(d, [(hx - 5.4, hy - 1.0), (hx - 4.6, hy - 5.2), (hx - 1.0, hy - 6.2), (hx + 3.0, hy - 5.8), (hx + 4.8, hy - 4.2), (hx + 5.0, hy + 0.5),
+             (hx + 4.6, hy + 4.0), (hx + 2.4, hy + 5.8), (hx - 2.2, hy + 6.0), (hx - 4.8, hy + 3.8)], SKIN)
+    poly(d, [(hx + 0.6, hy - 5.4), (hx + 3.0, hy - 5.4), (hx + 4.6, hy - 4.0), (hx + 4.8, hy + 0.5), (hx + 4.4, hy + 3.8), (hx + 1.0, hy + 5.2)], SKIN_L)
+    d.ellipse([(hx + 4.6) * S, (hy - 0.2) * S, (hx + 6.0) * S, (hy + 1.8) * S], fill=SKIN)   # a small nose
     poly(d, [(hx - 6.2, hy - 1), (hx - 5.2, hy - 5.6), (hx - 1.0, hy - 7.6), (hx + 4.2, hy - 6.6), (hx + 5.6, hy - 3.6),
              (hx + 1.6, hy - 4.6), (hx - 2.0, hy - 3.4), (hx - 3.4, hy + 0.6), (hx - 4.6, hy + 3.4)], HAIR)
     poly(d, [(hx - 5.6, hy - 3), (hx - 1.0, hy - 7.2), (hx + 3.0, hy - 6.4), (hx - 1.0, hy - 5.4)], HAIR_L)
     poly(d, [(hx - 6.0, hy), (hx - 4.4, hy + 3.8), (hx - 3.0, hy + 1.0)], HAIR_D)
-    d.ellipse([(hx + 2.4) * S, (hy - 1.2) * S, (hx + 4.4) * S, (hy + 0.9) * S], fill=(250, 250, 250))   # eye
-    d.ellipse([(hx + 3.2) * S, (hy - 0.9) * S, (hx + 4.4) * S, (hy + 0.7) * S], fill=(24, 24, 40))
+    d.ellipse([(hx + 2.2) * S, (hy - 1.2) * S, (hx + 4.2) * S, (hy + 0.9) * S], fill=(250, 250, 250))   # eye
+    d.ellipse([(hx + 3.0) * S, (hy - 0.9) * S, (hx + 4.2) * S, (hy + 0.7) * S], fill=(24, 24, 40))
     d.line([(hx + 2.0) * S, (hy - 2.0) * S, (hx + 4.8) * S, (hy - 2.2) * S], fill=HAIR_D, width=int(0.7 * S))     # brow
-    d.line([(hx + 3.0) * S, (hy + 3.2) * S, (hx + 5.2) * S, (hy + 3.0) * S], fill=SKIN_D, width=int(0.6 * S))     # mouth
+    d.line([(hx + 2.8) * S, (hy + 3.2) * S, (hx + 4.6) * S, (hy + 3.0) * S], fill=SKIN_D, width=int(0.6 * S))     # mouth
     d.ellipse([(hx - 3.0) * S, (hy + 0.2) * S, (hx - 1.2) * S, (hy + 2.6) * S], fill=SKIN_D)                          # ear
     # front arm over the torso
     sh = (13.4, 17.5 - bob)
