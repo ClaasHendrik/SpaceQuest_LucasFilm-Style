@@ -11,8 +11,8 @@ SKIN, SKIN_D, SKIN_L = (238, 168, 148), (192, 118, 106), (252, 206, 188)
 TROUSER = ((150, 154, 166), (98, 102, 116), (196, 200, 212))
 SLEEVE = ((186, 38, 176), (118, 20, 112), (238, 112, 228))
 GREY_T, GREY_D, GREY_L = (176, 180, 190), (120, 124, 138), (216, 220, 228)
-BELT = (196, 34, 40)
-BOOT = (66, 70, 84)
+BELT = (30, 30, 38)          # black belt (seen at full size in the pathfinding video), with a grey pouch
+BOOT = (22, 22, 30)          # tall black boots
 HAIR, HAIR_D, HAIR_L = (158, 78, 38), (104, 46, 24), (214, 122, 62)
 OUTLINE = (34, 22, 26)
 
@@ -87,7 +87,8 @@ def frame(outfit, f):
     poly(d, [(9.4, 17 - bob), (10.6, 17 - bob), (10.4, 31 - bob), (9.2, 31 - bob)], GREY_L)                   # lit edge
     poly(d, [(8.5, 16.2 - bob), (17.5, 16.2 - bob), (17.2, 18.0 - bob), (8.8, 18.0 - bob)], GREY_D)           # collar
     poly(d, [(8.9, 28.4 - bob), (17.0, 28.4 - bob), (17.0, 30.6 - bob), (8.9, 30.6 - bob)], BELT)             # red belt
-    poly(d, [(12.2, 28.4 - bob), (13.8, 28.4 - bob), (13.8, 30.6 - bob), (12.2, 30.6 - bob)], (236, 200, 90)) # buckle
+    poly(d, [(9.4, 29.6 - bob), (12.4, 29.6 - bob), (12.4, 33.4 - bob), (9.4, 33.4 - bob)], (150, 154, 166))   # pouch on the hip
+    poly(d, [(9.4, 29.6 - bob), (12.4, 29.6 - bob), (12.4, 30.6 - bob), (9.4, 30.6 - bob)], (96, 100, 114))
     poly(d, [(12.6, 18.0 - bob), (13.4, 18.0 - bob), (13.4, 28.4 - bob), (12.6, 28.4 - bob)], GREY_D)         # zip line
     # neck, head, hair
     poly(d, [(11.4, 13.5 - bob), (14.6, 13.5 - bob), (14.8, 16.6 - bob), (11.2, 16.6 - bob)], SKIN_D)
