@@ -33,8 +33,9 @@ Rules of thumb:
 - Wear stays **sparse and subtle** (agreed after a review): a few dents, a few dark scratches, a little grime. **No bright or white scratches** (they read as vapour). If an object looks 'made of damage', there are too many marks.
 - One palette per picture (112 colours, no dither); pictures that show the same place share a palette.
 
-- **Painting out figures:** never patch with copied or filled pixels (it gives repeats and boxes). Repaint the area as a proper object that
-  fits its surroundings (`tools/paint/touchup.py`: the pod window as a glass pane, the empty arch as a receding tunnel). A sensible picture first, closeness to the original second.
+- **Removing figures (Roger) from a background:** only the figure's EXACT pixels are removed, never a box or an area. `restyle.figure_mask`
+  finds the pixels (his own colours plus the jumpsuit grey connected to them, plus a one-pixel dark rim); `restyle.inpaint` rebuilds only those
+  pixels from their nearest unmasked neighbours, outside in, on the original pixel colours before any smoothing. No patches, no hand painting, no boxes.
 
 ## 3b. Animation (Lucasfilm style, not Sierra)
 - Reference: the Sierra video shows content only (what happens), not the style of motion. The motion style follows the SCUMM/Lucasfilm

@@ -81,6 +81,74 @@ def components(lab):
     return comp, n
 
 
+ROGER_CORE = {12, 6, 4, 13, 5}      # skin, hair, dark red (face detail), magenta (sleeves): colours only Roger has
+ROGER_BODY = {7, 15}                # the grey and white of his jumpsuit (only counted where it touches the core)
+
+
+def figure_mask(idx, box, top=10):
+    """The exact pixels of a figure: everything in `box` with a figure-only colour, plus the grey/white of the jumpsuit that is
+    connected to those, plus small gaps between them (eyes, mouth). Nothing outside the figure's own pixels is touched."""
+    x0, y0, x1, y1 = box
+    sub = idx[y0 - top:y1 - top + 1, x0:x1 + 1]
+    h, w = sub.shape
+    core = np.isin(sub, list(ROGER_CORE))
+    body = np.isin(sub, list(ROGER_BODY))
+    m = core.copy()
+    changed = True
+    while changed:                                       # grow the jumpsuit grey from the core, 8-connected
+        grow = np.zeros_like(m)
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                grow |= np.roll(np.roll(m, dy, 0), dx, 1)
+        new = m | (grow & body)
+        changed = bool((new != m).any())
+        m = new
+    for y in range(h):                                   # close small gaps inside a row (the eyes, the belt)
+        xs = np.nonzero(m[y])[0]
+        if len(xs) >= 2:
+            for a, b in zip(xs[:-1], xs[1:]):
+                if 1 < b - a <= 4:
+                    m[y, a:b] = True
+    dark = np.isin(sub, [0, 8])                           # the sprite's dark outline pixels: one rim of dark pixels next to the figure
+    rim = np.zeros_like(m)
+    for dy in (-1, 0, 1):
+        for dx in (-1, 0, 1):
+            rim |= np.roll(np.roll(m, dy, 0), dx, 1)
+    m = m | (rim & dark)
+    full = np.zeros(idx.shape, bool)
+    full[y0 - top:y1 - top + 1, x0:x1 + 1] = m
+    return full
+
+
+def inpaint(lab, mask):
+    """Reconstruct ONLY the masked pixels from their nearest unmasked neighbours, from the outside in: each round every masked pixel
+    that touches known pixels takes the most common label among its known 8-neighbours (horizontal neighbours count double)."""
+    lab = lab.copy()
+    todo = mask.copy()
+    h, w = lab.shape
+    while todo.any():
+        ys, xs = np.nonzero(todo)
+        new = []
+        for y, x in zip(ys, xs):
+            votes = {}
+            for dy in (-1, 0, 1):
+                for dx in (-1, 0, 1):
+                    if dy == 0 and dx == 0:
+                        continue
+                    ny, nx = y + dy, x + dx
+                    if 0 <= ny < h and 0 <= nx < w and not todo[ny, nx]:
+                        v = int(lab[ny, nx])
+                        votes[v] = votes.get(v, 0) + (2 if dy == 0 else 1)
+            if votes:
+                new.append((y, x, max(votes.items(), key=lambda kv: kv[1])[0]))
+        if not new:
+            break
+        for y, x, v in new:
+            lab[y, x] = v
+            todo[y, x] = False
+    return lab
+
+
 def erase_boxes(lab, boxes, top=10):
     """paint figures out of the background: each box (x0, y0, x1, y1 in 320x200 screen coordinates) is refilled row by
     row from the labels just outside it (left half from the left, right half from the right, flat if both agree)"""
@@ -153,7 +221,11 @@ def classify(lab, comp, n, zones, rows, height=190, top=10):
 
 def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, grain=0.3, texture=0.012, erase=(), volume=0.26, bands=5, colors=112, donor=None, zones=None, return_class=False, palette_from=None):
     idx = load_indices(path, top, height)
+    figs = [e[1] for e in erase if len(e) == 2 and e[0] == 'figure']
+    for fb in figs:                       # remove figures on the ORIGINAL pixel colours, before any smoothing
+        idx = inpaint(idx, figure_mask(idx, fb, top))
     lab = dedither(idx)
+    erase = [e for e in erase if not (len(e) == 2 and e[0] == 'figure')]
     four = [e for e in erase if len(e) == 4]
     fills = [e for e in erase if len(e) == 5]
     clones = [e for e in erase if len(e) == 6]
@@ -168,6 +240,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
         lab = erase_boxes(lab, clones, top)
     if fills:
         lab = erase_boxes(lab, fills, top)
+
     # resample rows (the picture is squeezed vertically to fit the game's picture area)
     ys = np.minimum(((np.arange(rows) + 0.5) * height / rows).astype(int), height - 1)
     lab = lab[ys]
