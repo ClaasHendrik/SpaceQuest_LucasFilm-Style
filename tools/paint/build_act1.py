@@ -37,7 +37,7 @@ ZONES = {
 OUT = "../../assets/backgrounds/"
 # name: (screen number, boxes to erase: Roger and other figures, in 320x200 screen coordinates)
 SPEC = {
-    "crash_site": (14, [(137, 84, 156, 112)]),            # crash site (Roger is painted out of the pod window)
+    "crash_site": (14, [(138, 94, 157, 114, 11)]),            # crash site (Roger is painted out of the pod window)
     "junk_field": (15, [(110, 98, 124, 128)]),
     "junk_tower": (16, [(236, 40, 256, 72)]),
     "wire_tube": (26, [(152, 122, 174, 152), (180, 120, 214, 152)]),
@@ -47,7 +47,7 @@ SPEC = {
     "rail_window": (20, [(134, 126, 164, 162)]),
     "rail_tower": (21, [(234, 136, 264, 168)]),
     "dark_room": (23, [(80, 108, 98, 128)]),
-    "tube_entrance": (25, [(48, 90, 70, 124)]),
+    "tube_entrance": (25, [(44, 116, 72, 152)]),
     "yard": (22, []),
     "yard_ladder": (28, [(190, 74, 212, 100)]),   # painted out using the same yard from screen 22
     "cockpit": (29, []),
@@ -62,12 +62,7 @@ CLASSES = {}
 # picture states: the same room after something was taken. name: (base room, boxes to erase, in 320x200 screen coordinates).
 # The variant is rendered from the same source with the extra boxes erased and copied over the base only inside those boxes,
 # so everything else stays identical to the base picture.
-STATES = {
-    "wire_tube_nowire": ("wire_tube", [(130, 76, 222, 106)]),
-    "dark_room_noreactor": ("dark_room", [(124, 108, 196, 164, -72, 0)]),
-    "yard_nomot": ("yard", [(14, 74, 92, 126, 0, 50)]),
-    "yard_ladder_nomot": ("yard_ladder", [(14, 74, 92, 126, 0, 50)]),
-}
+STATES = {}      # no picture variants: copying nearby patches over taken objects looked wrong, so the pictures stay as the originals
 
 
 def main():

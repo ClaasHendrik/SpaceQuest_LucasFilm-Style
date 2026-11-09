@@ -3,7 +3,7 @@
 Done
 - 14 rooms rebuilt from the original screens in the Lucasfilm style (organic / artificial / worn artificial), docs/ART_PRINCIPLES.md
 - Room map, puzzles, timers and deaths on the original layout (docs/ACT1_PLAN.md); full-route test = exactly 145 points
-- Picture states: the tube without its wires, the dark room without the reactor, the yard without the motivator (and with it seated), a painted ladder at the tube entrance
+- Pictures stay as the originals (no state variants: patching erased objects looked wrong; the ladder at the tube entrance is painted in code)
 - Cutscene (takeoff, blast, escape) from the original frames; the ship's computer in the original screen layout (flight screen, weapons screen)
 - Roger: original outfit, side / front / back, pick-up gesture; rats' eyes and the conveyor belt animated
 - Sound (synthesised): points, pickup, click, lift, takeoff, blast, death jingle, squeak, steal

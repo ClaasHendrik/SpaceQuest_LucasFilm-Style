@@ -46,17 +46,8 @@ func setup(room_id: String) -> void:
 
 
 func current_bg() -> String:
-	match id:
-		"wire_tube":
-			return "wire_tube_nowire" if GameState.flag("wire_taken") else "wire_tube"
-		"dark_room":
-			return "dark_room_noreactor" if GameState.flag("reactor_taken") else "dark_room"
-		"yard", "yard_ladder":
-			var gone: bool = GameState.flag("motivator_held") or GameState.flag("motivator_installed")
-			var lad: bool = GameState.flag("ladder_placed")
-			if lad:
-				return "yard_ladder_nomot" if gone else "yard_ladder"
-			return "yard_nomot" if gone else "yard"
+	if id == "yard" and GameState.flag("ladder_placed"):
+		return "yard_ladder"
 	return id
 
 
@@ -163,11 +154,6 @@ func _draw() -> void:
 				draw_rect(Rect2(c.x + 7, c.y, 4, 3), Color("ff3b2e"))
 	if id == "tube_entrance" and not GameState.flag("ladder_taken"):
 		_draw_ladder(Vector2(242, 134) * 2.0, Vector2(262, 84) * 2.0)
-	if (id == "yard" or id == "yard_ladder") and GameState.flag("motivator_installed"):
-		draw_rect(Rect2(236, 184, 50, 22), Color("e8f0ee"))                 # the motivator, seated in the open panel
-		draw_rect(Rect2(236, 184, 50, 4), Color("ffffff"))
-		draw_rect(Rect2(236, 202, 50, 4), Color("8a98a4"))
-		draw_rect(Rect2(256, 190, 10, 10), Color("1a2a30"))
 	if id == "conveyor":
 		# the belt runs: dark ribs slide towards the shredder
 		for i in range(-1, 26):

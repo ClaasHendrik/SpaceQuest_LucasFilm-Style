@@ -86,6 +86,10 @@ def erase_boxes(lab, boxes, top=10):
     row from the labels just outside it (left half from the left, right half from the right, flat if both agree)"""
     h, w = lab.shape
     for box in boxes:
+        if len(box) == 5:          # flat fill with one colour label (e.g. the glass of a window)
+            x0, y0, x1, y1, col = box
+            lab[max(0, y0 - top):y1 - top + 1, x0:x1 + 1] = col
+            continue
         if len(box) == 6:          # clone stamp: copy the labels from a patch of the same picture shifted by (dx, dy)
             x0, y0, x1, y1, dx, dy = box
             ya, yb = max(0, y0 - top), min(h - 1, y1 - top)
@@ -151,6 +155,7 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
     idx = load_indices(path, top, height)
     lab = dedither(idx)
     four = [e for e in erase if len(e) == 4]
+    fills = [e for e in erase if len(e) == 5]
     clones = [e for e in erase if len(e) == 6]
     if donor is not None and four:
         # the same scene without the figure: copy the labels from there instead of guessing them
@@ -161,6 +166,8 @@ def restyle(path, rows=160, top=10, height=190, seed=3, light=0.07, edge=0.12, g
         lab = erase_boxes(lab, four, top)
     if clones:
         lab = erase_boxes(lab, clones, top)
+    if fills:
+        lab = erase_boxes(lab, fills, top)
     # resample rows (the picture is squeezed vertically to fit the game's picture area)
     ys = np.minimum(((np.arange(rows) + 0.5) * height / rows).astype(int), height - 1)
     lab = lab[ys]
