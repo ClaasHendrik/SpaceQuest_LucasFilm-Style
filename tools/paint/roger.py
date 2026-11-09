@@ -37,7 +37,7 @@ def fk(hip, t1, bend, l1=9.0, l2=9.0):
     return knee, foot
 
 
-def frame(outfit, f):
+def frame(outfit, f, pose=None):
     img = Image.new("RGBA", (LW * S, LH * S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     phase = [None, 0.0, 0.25, 0.5, 0.75][f]
@@ -55,6 +55,9 @@ def frame(outfit, f):
             bend_f = 0.0
         swing = 0.5 * s
         bob = 0.9 * abs(c)
+    if pose in ("r1", "r2", "r3"):          # pick-up gesture: arm out, then a crouch with the arm down
+        a_f, a_b, bend_f, bend_b, swing = (0.06, -0.06, 0.0, 0.0, 0.0) if pose == "r1" else (0.9, 0.5, 1.5, 1.5, 0.0)
+        bob = 0.0 if pose == "r1" else -5.0
     base_y = 50.0
     hip = (13.0, 31.0 - bob)
     uniform = outfit == 1
@@ -109,10 +112,20 @@ def frame(outfit, f):
     sh = (13.4, 17.5 - bob)
     elb = (sh[0] + 2.2 * math.sin(-swing), sh[1] + 6.5)
     hand = (elb[0] + 2.4 * math.sin(-swing * 1.2) + 0.5, elb[1] + 6.0)
+    if pose == "r1":
+        elb, hand = (sh[0] + 3.6, sh[1] + 3.4), (sh[0] + 8.0, sh[1] + 4.6)
+    elif pose == "r2":
+        elb, hand = (sh[0] + 3.0, sh[1] + 6.0), (sh[0] + 7.2, sh[1] + 12.0)
+    elif pose == "r3":
+        elb, hand = (sh[0] + 3.2, sh[1] + 5.4), (sh[0] + 6.4, sh[1] + 10.0)
     acol = SLEEVE
     limb(d, sh, elb, 3.8, *acol)
     limb(d, elb, hand, 3.3, *acol)
     limb(d, hand, (hand[0] + 0.5, hand[1] + 1.2), 2.8, SKIN, SKIN_D, SKIN_L)
+    return finalize(img)
+
+
+def finalize(img):
     # --- reduce: coverage-weighted box filter, hard alpha edge, dark rim outline
     arr = np.asarray(img, np.float32)
     a = arr[..., 3] / 255.0
@@ -145,10 +158,73 @@ def frame(outfit, f):
     return Image.fromarray(out, "RGBA")
 
 
+
+def _figure_front(f, back=False):
+    """front or back view: symmetric legs and arms, face (or hair only for the back)"""
+    img = Image.new("RGBA", (LW * S, LH * S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    ph = [0, 1, 0, 2, 0][f]
+    bob = 0.0 if f == 0 else 0.7
+    cx = 14.0
+    sw = [0.0, -1.2, 0.0, 1.2, 0.0][f]
+    hip = 31.0 - bob
+    for side, px in ((-1, cx - 2.6), (1, cx + 2.6)):
+        lift = 2.4 if (ph == 1 and side == -1) or (ph == 2 and side == 1) else 0.0
+        bot = 50.0 - lift
+        limb(d, (px, hip), (px, bot - 4.5), 4.6, *TROUSER)
+        poly(d, [(px - 2.7, bot - 5.5), (px + 2.7, bot - 5.5), (px + 3.1, bot), (px - 3.1, bot)], BOOT)
+        poly(d, [(px - 2.7, bot - 5.5), (px - 1.2, bot - 5.5), (px - 1.4, bot - 0.5), (px - 2.9, bot)], (48, 48, 62))
+    for side in (-1, 1):
+        sx = cx + side * 6.4
+        sh_y = 17.6 - bob
+        sw_ = sw * side
+        limb(d, (sx, sh_y), (sx + side * 0.6, sh_y + 6.5 + sw_ * 0.4), 3.8, *SLEEVE)
+        limb(d, (sx + side * 0.6, sh_y + 6.5 + sw_ * 0.4), (sx + side * 0.9, sh_y + 12.0 + sw_), 3.3, *SLEEVE)
+        limb(d, (sx + side * 0.9, sh_y + 11.6 + sw_), (sx + side * 0.9, sh_y + 13.4 + sw_), 2.8, SKIN, SKIN_D, SKIN_L)
+    poly(d, [(cx - 6.6, 16.2 - bob), (cx + 6.6, 16.2 - bob), (cx + 6.2, 31.5 - bob), (cx - 6.2, 31.5 - bob)], GREY_T)
+    poly(d, [(cx + 2.4, 16.8 - bob), (cx + 6.6, 16.2 - bob), (cx + 6.2, 31.5 - bob), (cx + 2.0, 31.5 - bob)], GREY_D)
+    poly(d, [(cx - 6.2, 17.0 - bob), (cx - 4.6, 17.0 - bob), (cx - 4.8, 31.0 - bob), (cx - 6.1, 31.0 - bob)], GREY_L)
+    if not back:
+        poly(d, [(cx - 3.0, 16.4 - bob), (cx - 1.0, 16.4 - bob), (cx - 1.4, 28.4 - bob), (cx - 2.8, 28.4 - bob)], SLEEVE[0])
+    poly(d, [(cx - 6.6, 16.2 - bob), (cx + 6.6, 16.2 - bob), (cx + 6.4, 18.2 - bob), (cx - 6.4, 18.2 - bob)], GREY_D)
+    poly(d, [(cx - 6.2, 28.4 - bob), (cx + 6.2, 28.4 - bob), (cx + 6.2, 30.6 - bob), (cx - 6.2, 30.6 - bob)], BELT)
+    if not back:
+        poly(d, [(cx + 3.4, 29.4 - bob), (cx + 6.2, 29.4 - bob), (cx + 6.2, 33.0 - bob), (cx + 3.4, 33.0 - bob)], (150, 154, 166))
+    poly(d, [(cx - 2.2, 13.6 - bob), (cx + 2.2, 13.6 - bob), (cx + 2.4, 16.8 - bob), (cx - 2.4, 16.8 - bob)], SKIN_D)
+    hy = 8.2 - bob
+    if back:
+        d.ellipse([(cx - 5.4) * S, (hy - 6.0) * S, (cx + 5.4) * S, (hy + 6.2) * S], fill=HAIR)
+        d.ellipse([(cx - 4.6) * S, (hy - 5.6) * S, (cx + 1.0) * S, (hy + 1.0) * S], fill=HAIR_L)
+        poly(d, [(cx - 5.4, hy + 1.0), (cx + 5.4, hy + 1.0), (cx + 4.2, hy + 5.6), (cx - 4.2, hy + 5.6)], HAIR_D)
+        d.ellipse([(cx - 6.4) * S, (hy - 0.6) * S, (cx - 4.6) * S, (hy + 2.4) * S], fill=SKIN_D)
+        d.ellipse([(cx + 4.6) * S, (hy - 0.6) * S, (cx + 6.4) * S, (hy + 2.4) * S], fill=SKIN_D)
+    else:
+        d.ellipse([(cx - 5.2) * S, (hy - 6.0) * S, (cx + 5.2) * S, (hy + 6.0) * S], fill=SKIN)
+        d.ellipse([(cx - 4.6) * S, (hy - 5.4) * S, (cx + 1.0) * S, (hy + 5.8) * S], fill=SKIN_L)
+        poly(d, [(cx - 5.8, hy + 0.6), (cx - 5.4, hy - 5.4), (cx - 1.5, hy - 7.6), (cx + 3.5, hy - 7.0), (cx + 5.6, hy - 4.6), (cx + 5.8, hy + 0.2),
+                 (cx + 4.4, hy - 3.6), (cx + 0.5, hy - 4.6), (cx - 3.0, hy - 3.6), (cx - 4.6, hy - 0.5)], HAIR)
+        poly(d, [(cx - 4.6, hy - 5.4), (cx - 1.0, hy - 7.2), (cx + 2.5, hy - 6.4), (cx - 1.0, hy - 5.0)], HAIR_L)
+        for ex in (-2.6, 1.6):
+            d.ellipse([(cx + ex) * S, (hy - 0.8) * S, (cx + ex + 1.8) * S, (hy + 1.0) * S], fill=(250, 250, 250))
+            d.ellipse([(cx + ex + 0.4) * S, (hy - 0.5) * S, (cx + ex + 1.4) * S, (hy + 0.8) * S], fill=(24, 24, 40))
+        d.line([(cx - 3.0) * S, (hy - 1.8) * S, (cx - 0.8) * S, (hy - 2.0) * S], fill=HAIR_D, width=int(0.7 * S))
+        d.line([(cx + 0.8) * S, (hy - 2.0) * S, (cx + 3.0) * S, (hy - 1.8) * S], fill=HAIR_D, width=int(0.7 * S))
+        d.line([(cx - 1.0) * S, (hy + 3.4) * S, (cx + 1.0) * S, (hy + 3.4) * S], fill=SKIN_D, width=int(0.6 * S))
+        d.ellipse([(cx - 0.6) * S, (hy + 1.2) * S, (cx + 0.6) * S, (hy + 2.6) * S], fill=SKIN_D)
+        for ex in (-5.8, 4.4):
+            d.ellipse([(cx + ex) * S, (hy - 0.4) * S, (cx + ex + 1.4) * S, (hy + 2.2) * S], fill=SKIN_D)
+    return finalize(img)
+
+
 def build(path):
-    sheet = Image.new("RGBA", (FW * 5, FH), (0, 0, 0, 0))
+    """sheet of 16x30 frames: 0-4 side (stand + 4 walk), 5-9 front, 10-14 back, 15-17 pick-up gesture (side)"""
+    sheet = Image.new("RGBA", (FW * 18, FH), (0, 0, 0, 0))
     for f in range(5):
         sheet.paste(frame(1, f), (f * FW, 0))
+        sheet.paste(_figure_front(f, False), ((5 + f) * FW, 0))
+        sheet.paste(_figure_front(f, True), ((10 + f) * FW, 0))
+    for k, pz in enumerate(("r1", "r2", "r3")):
+        sheet.paste(frame(1, 0, pz), ((15 + k) * FW, 0))
     sheet.save(path)
     return sheet
 

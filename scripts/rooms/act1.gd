@@ -7,6 +7,7 @@ const PANEL_X := 130.0
 var claw_x := 160.0
 var riding := false
 var grabber_tex: Texture2D
+var t_anim := 0.0
 
 
 func setup(room_id: String) -> void:
@@ -131,8 +132,29 @@ func _setup_yard(room_id: String) -> void:
 			"verbs": {"Look at": func(m, _o): await m.say("The shuttle's cockpit, through the open hatch."), "Open": _go_cockpit, "Use": _go_cockpit, "Walk to": _go_cockpit}})
 
 
+func _process(delta: float) -> void:
+	if id == "dark_room" or id == "conveyor":
+		t_anim += delta
+		queue_redraw()
+
+
 func _draw() -> void:
 	super._draw()
+	if id == "dark_room":
+		# the rats: three pairs of red eyes in the corners that blink and drift, never quite in the same place twice
+		var spots := [Vector2(258, 18), Vector2(284, 120), Vector2(26, 146)]
+		for k in spots.size():
+			var ph := fmod(t_anim * 0.55 + k * 1.1, 3.0)
+			if ph < 2.35:
+				var c: Vector2 = spots[k] * 2.0 + Vector2(sin(t_anim * 0.7 + k) * 2.0, 0.0)
+				draw_circle(c + Vector2(3, 1.5), 9.0, Color(1, 0.15, 0.1, 0.12))
+				draw_rect(Rect2(c.x - 1, c.y, 4, 3), Color("ff3b2e"))
+				draw_rect(Rect2(c.x + 7, c.y, 4, 3), Color("ff3b2e"))
+	if id == "conveyor":
+		# the belt runs: dark ribs slide towards the shredder
+		for i in range(-1, 26):
+			var x := fposmod(i * 8.0 + t_anim * 26.0, 200.0)
+			draw_rect(Rect2(x * 2.0, 119 * 2.0, 2, 12), Color(0.08, 0.05, 0.04, 0.5))
 	if (id == "yard" or id == "yard_ladder") and (riding or GameState.flag("riding")):
 		var x := claw_x * 2.0
 		draw_line(Vector2(x, 0), Vector2(x, 86), Color("c8d0dc"), 3.0)

@@ -32,15 +32,15 @@ def para(text, y, size=9.5, font="Helvetica", width=IW, lead=4.6, x=M):
 
 
 STEPS = [
-    ("Escape pod", "Open the wall locker and take the pod manual (it explains the ship's computer: engines first, radar before takeoff, front shields before firing). Read it with Look. Then open the airlock hatch.", []),
-    ("Garbage mountain", "Pick up the wire. Go east to the robot head.", ["wire"]),
-    ("Robot head", "Use the broken eye to climb in and see the Mallard's open panel. Don't touch the chasm or the metal plate. Go back and south.", ["robot_eye"]),
-    ("Conveyor", "A clock is running: the crusher is coming. Use the trash bucket to be carried up to the rail.", ["trash_bucket"]),
-    ("Overhead rail", "Use the rail to jump up, then Use the grabber to climb on. Click along the rail to ride it. At the pedestal (left) Push the grabber to lift the warp motivator; ride to the ship's open panel (right) and Push again. Get off, then Use the blue chute at the left end of the rail.", ["jump_rail", "grab_motivator", "install_motivator", "fall_chute"]),
-    ("Reactor cavern", "Another clock: the rat. Pick up the portable ladder, then Use the iron ladder to climb to the crane cabin.", ["get_ladder"]),
-    ("Crane cabin", "Push the stick until the reticle is over the reactor pit, then Push the red button to grab the reactor. Push the stick again to move to the construction bay and Push the button to drop it. Then use the hatch to climb down.", ["get_reactor"]),
-    ("Construction bay", "Pick up the reactor. Use the ladder with the ship, Open the top hatch, then Use the reactor and the wire with the engine panel. Open the ramp to board.", ["ladder_ship_top", "open_hatch", "install_reactor", "install_wire"]),
-    ("Cockpit", "Use the pilot's seat to search it for buckazoids. Use the computer: switch on Engines and Radar, then Takeoff; turn on Weapons and Front shields, then Fire. Radar off or shields off is fatal.", ["search_cushion", "escape_freighter"]),
+    ("Escape pod (the script's opening)", "Open the locker, take the pod manual (it says: engines first, radar before takeoff, front shields before firing). Open the hatch.", []),
+    ("Crash site and the tube", "East to the tube entrance, through the middle arch into the tube. Pick up the hanging wires.", ["wire"]),
+    ("Robot head", "East to the robot head. Use the broken eye to climb up to the shuttle. Look at it, note the open panel, climb down the ladder. Do not step into the chasm.", ["robot_eye"]),
+    ("Junk field and lift tower", "Back to the crash site, south, east. Use the lift tower: the bucket carries you up to the conveyor.", ["trash_bucket"]),
+    ("Conveyor (timed)", "The belt carries you to the shredder. Use the rail overhead to jump before it arrives.", ["jump_rail"]),
+    ("Rail and the grabber", "Walk west along the rail to the tower; Use the grabber. In the claw view click along the yard: Push the warp motivator (white drum) to lift it, move over the shuttle's open panel and Push again. Walk off at the platform, then Use the blue chute.", ["grab_motivator", "install_motivator", "fall_chute"]),
+    ("Dark room (rats on a timer)", "Pick up the reactor from the hole. Climb the ladder to the tube entrance. In the tube the rat steals the reactor and the wire: go back down for both, then pick up the ladder at the tube entrance.", ["get_reactor", "get_ladder"]),
+    ("Shuttle yard", "Climb the robot's eye again. Use the ladder with the shuttle, open the top hatch, use the reactor and the wire on the power panel, then go through the hatch.", ["ladder_ship_top", "open_hatch", "install_reactor", "install_wire"]),
+    ("Cockpit", "Use the seat for the buckazoids. Use the computer: Engines, Radar, Takeoff; then Weapons and Front shields, Fire.", ["search_cushion", "escape_freighter"]),
 ]
 
 y = PH - 25 * mm
@@ -48,7 +48,7 @@ c.setFont("Helvetica-Bold", 20)
 c.drawString(M, y, "Act 1: The Garbage Freighter")
 y -= 8 * mm
 c.setFont("Helvetica", 11)
-c.drawString(M, y, "Route, points and example screens. Playable from the first screen to the escape.")
+c.drawString(M, y, "Route, points and screens on the original layout. Playable from the first screen to the escape.")
 y -= 10 * mm
 total = 0
 for room, text, ev in STEPS:
@@ -68,23 +68,17 @@ for room, text, ev in STEPS:
 c.setFont("Helvetica-Bold", 11)
 c.drawString(M, y - 2 * mm, "Act 1 total: %d points (of 738)" % total)
 y -= 9 * mm
-y = para("Deaths in this act, each with its own painted picture: the chasm, the metal plate, the crusher (too slow), stepping off the rail, "
+y = para("Deaths in this act, each with its own painted picture: the chasm, the metal plate, the shredder (too slow), stepping off the rail, "
          "the rat (too slow), taking off without radar, switching the engines off in flight, and firing without front shields. "
          "The game checks the whole route from the first screen to the escape: all 15 events, exactly 145 points.", y, 9)
 footer(1)
 c.showPage()
 
-SHOTS = [
-    ("a1_0_pod.png", "The escape pod: Roger in his original suit, the locker open with the manual on the shelf."),
-    ("a1_1_conveyor.png", "Conveyor: the clock is running. The trash bucket (left) is the way up."),
-    ("a1_2_rail_ride.png", "Overhead rail: Roger rides the grabber to the pedestal."),
-    ("a1_3_motivator_installed.png", "The motivator, lowered into the Mallard's open panel."),
-    ("a1_4_rat_lair.png", "Reactor cavern: the portable ladder, and something breathing."),
-    ("a1_5_crane.png", "Crane cabin: the reticle hovers over the reactor pit."),
-    ("a1_6_bay.png", "Construction bay: the ladder is up and the reactor is on the deck."),
-    ("a1_7_computer.png", "The ship's computer: Engines, Radar, Weapons, Takeoff."),
-    ("a1_10_death_plate.png", "One of the deaths, now with its own picture."),
-]
+ROOMS14 = ["crash_site", "tube_entrance", "wire_tube", "robot_head", "yard", "yard_ladder", "junk_field", "junk_tower", "conveyor", "rail_west", "rail_window", "rail_tower", "dark_room", "cockpit"]
+TITLES = {"crash_site": "Crash site", "tube_entrance": "Tube entrance", "wire_tube": "Inside the tube", "robot_head": "The robot head", "yard": "On top of the head",
+          "yard_ladder": "With the ladder", "junk_field": "Junk field", "junk_tower": "The lift tower", "conveyor": "The conveyor", "rail_west": "On the rail",
+          "rail_window": "The rail by the window", "rail_tower": "The rail tower", "dark_room": "The dark room (rats)", "cockpit": "The cockpit"}
+SHOTS = [(r + ".png", TITLES[r]) for r in ROOMS14]
 hw = (IW - 6 * mm) / 2
 hh = hw * 960 / 1280
 n = 2

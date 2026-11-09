@@ -33,6 +33,15 @@ Rules of thumb:
 - Wear stays **sparse and subtle** (agreed after a review): a few dents, a few dark scratches, a little grime. **No bright or white scratches** (they read as vapour). If an object looks 'made of damage', there are too many marks.
 - One palette per picture (112 colours, no dither); pictures that show the same place share a palette.
 
+## 3b. Animation (Lucasfilm style, not Sierra)
+- Reference: the Sierra video shows content only (what happens), not the style of motion. The motion style follows the SCUMM/Lucasfilm
+  conventions as far as they are known to us from stills: a character turns to face the way he walks (side, front, back; left is the side view flipped),
+  a smooth 4-frame walk cycle, a deliberate pose when doing something (reach and crouch for picking up).
+- Roger: 16x30 frames, sheet in `assets/sprites/roger.png` (side 0-4, front 5-9, back 10-14, pick-up 15-17; built by `tools/paint/roger.py`).
+- Roger walks in a straight line to the click and stops at the first obstacle (original behaviour).
+- Dangers are shown, not only told: the rats' eyes blink in the dark room, the conveyor belt runs. New animations are drawn in code over the still background.
+- Still missing: climbing, falling, talking, lying flat (Act 2), and the animated deaths.
+
 ## 4. Interface and layout
 - 640x480 window, fullscreen on Linux. Picture 320x160 shown at 2x (older rooms are 320x144 and sit at the top).
 - Speech in the black strip on top (Roger yellow); cyan sentence line; green verb grid in five columns; magenta inventory with scroll arrows.

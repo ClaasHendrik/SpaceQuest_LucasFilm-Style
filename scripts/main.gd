@@ -94,7 +94,10 @@ func _ready() -> void:
 			start_room = a.substr(7)
 	change_room(start_room, "start")
 	_refresh_inventory()
-	if OS.get_cmdline_user_args().has("--shot-act1"):
+	if OS.get_cmdline_user_args().has("--shot-anim"):
+		_selftest = load("res://tests/shot_anim.gd").new()
+		_selftest.run(self)
+	elif OS.get_cmdline_user_args().has("--shot-act1"):
 		_selftest = load("res://tests/shot_act1.gd").new()
 		_selftest.run(self)
 	elif OS.get_cmdline_user_args().has("--shot-pilot"):
@@ -569,6 +572,8 @@ func _run_hotspot(v: String, hid: String, other: Dictionary) -> void:
 		await walk_to(hs.get("approach", (hs["rect"] as Rect2).get_center()))
 	if v == "Walk to" and not verbs.has("Walk to"):
 		return
+	if v == "Pick up" and not fast and not room.no_player and player.visible:
+		await player.reach()
 	var h = verbs.get(v)
 	if h is Callable:
 		await h.call(self, other)

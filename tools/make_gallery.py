@@ -11,17 +11,13 @@ SHOTS = sys.argv[1]
 ART = "assets/backgrounds/"
 PAGE_W, PAGE_H = A4
 M = 15 * mm
-rooms = json.load(open("data/rooms.json"))
+rooms = json.load(open("data/act1_rooms.json")) + json.load(open("data/rooms.json"))
 byid = {r["id"]: r for r in rooms}
 # scripted rooms live in GDScript; describe them here
 byid["escape_pod"] = {"id": "escape_pod", "title": "Escape Pod", "act": 1, "hotspots": [
     {"name": "cryo-chamber"}, {"name": "wall locker"}, {"name": "pod manual (after opening locker)"},
-    {"name": "airlock hatch", "exit": {"room": "garbage_mountain"}}]}
-byid["garbage_mountain"] = {"id": "garbage_mountain", "title": "Garbage Mountain", "act": 1, "hotspots": [
-    {"name": "escape pod", "exit": {"room": "escape_pod"}}, {"name": "wire"}, {"name": "junk heap"},
-    {"name": "wrecked starfighter"}, {"name": "path east", "exit": {"room": "robot_head"}},
-    {"name": "way south", "exit": {"room": "conveyor"}}]}
-order = ["escape_pod", "garbage_mountain"] + [r["id"] for r in rooms]
+    {"name": "airlock hatch", "exit": {"room": "crash_site"}}]}
+order = ["escape_pod"] + [r["id"] for r in rooms]
 ACTS = {1: "Act 1: The Garbage Freighter", 2: "Act 2: Phleebhut", 3: "Act 3: Monolith Burger",
         4: "Act 4: Ortega", 5: "Act 5: Pestulon (ScumSoft)"}
 NOTES = {
@@ -58,7 +54,7 @@ y = PAGE_H - 52 * mm
 intro = ("Each screenshot is taken from the running game: the 640x480 view with the speech strip on top and the verb grid and "
          "inventory underneath, in the style of the Lucasfilm Games interface. The scenes are painted at 320x144 pixels with "
          "gradients, lighting and texture, reduced to a 190-colour palette and shown at 2x. Each planet has its own palette. "
-         "It is a draft to work from, not final art: some rooms (the escape pod, the garbage mountain) are more finished than others "
+         "It is a draft to work from, not final art: some rooms (the escape pod and all Act 1 rooms, rebuilt from the original screens) are more finished than others "
          "(the hangar, the cell block). Roger is a placeholder sprite. Objects listed under each screen can be examined in the game; "
          "exits lead to the rooms named.")
 for ln in wrap(intro, "Helvetica", 10, PAGE_W - 2 * M):
@@ -148,7 +144,7 @@ c.setFont("Helvetica-Bold", 14)
 c.drawString(M, PAGE_H - 25 * mm, "Room variants (the art changes as you play)")
 variants = [("escape_pod_open", "Escape pod: locker opened, manual on the shelf"),
             ("escape_pod_open_empty", "Escape pod: locker opened, manual taken"),
-            ("garbage_mountain_nowire", "Garbage mountain: wire taken")]
+            ("yard_ladder", "Shuttle yard with the ladder against the shuttle")]
 y = PAGE_H - 35 * mm
 vw = (PAGE_W - 2 * M) * 0.85
 vh = vw * 144 / 320
