@@ -77,6 +77,9 @@ def main():
         if name == "yard_ladder":          # same palette as the other ship-yard picture
             pal = Image.open(OUT + "yard.png").convert("RGB").quantize(colors=112, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
         img, cmap = restyle(p, erase=boxes, donor=donor, zones=ZONES.get(name), return_class=True, palette_from=pal)
+        from touchup import TOUCHUPS
+        if name in TOUCHUPS:
+            img = TOUCHUPS[name](img)
         img.save(OUT + name + ".png")
         CLASSES[name] = cmap
         done.append(name)
