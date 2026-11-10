@@ -94,6 +94,11 @@ def figure_mask(idx, box, top=10):
     core = np.isin(sub, list(ROGER_CORE))
     body = np.isin(sub, list(ROGER_BODY))
     m = core.copy()
+    if core.any():                                       # the body can only lie within Roger's own proportions around his core pixels
+        cy, cx = np.nonzero(core)
+        yy_, xx_ = np.mgrid[0:h, 0:w]
+        limit = (yy_ >= cy.min() - 1) & (yy_ <= cy.min() + 30) & (xx_ >= cx.min() - 4) & (xx_ <= cx.max() + 4)
+        body = body & limit
     changed = True
     while changed:                                       # grow the jumpsuit grey from the core, 8-connected
         grow = np.zeros_like(m)
