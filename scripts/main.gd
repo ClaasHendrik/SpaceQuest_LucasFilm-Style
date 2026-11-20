@@ -98,6 +98,9 @@ func _ready() -> void:
 	if OS.get_cmdline_user_args().has("--shot-finish"):
 		_selftest = load("res://tests/shot_finish.gd").new()
 		_selftest.run(self)
+	elif OS.get_cmdline_user_args().has("--clips"):
+		_selftest = load("res://tests/shot_clips.gd").new()
+		_selftest.run(self)
 	elif OS.get_cmdline_user_args().has("--shot-anim"):
 		_selftest = load("res://tests/shot_anim.gd").new()
 		_selftest.run(self)
@@ -330,6 +333,7 @@ func change_room(room_id: String, entry = "start") -> void:
 func walk_to(pos: Vector2) -> void:
 	_walk_token += 1
 	var tok := _walk_token
+	player.fast = fast
 	player.speed = 130.0 * (30.0 if fast else 1.0)
 	player.walk_target = room.clamp_to_walk(pos)
 	player.walking = true
@@ -360,6 +364,9 @@ func play_cutscene(frames: Array) -> void:
 
 
 # --- speech, score, death -----------------------------------------------------
+var _say_token := 0
+
+
 func say(text: String, col := Color("ffff55")) -> void:
 	message.text = text
 	message.add_theme_color_override("font_color", col)
@@ -367,10 +374,15 @@ func say(text: String, col := Color("ffff55")) -> void:
 	_say_skip = false
 	var dur := 0.03 if fast else maxf(1.5, text.length() * 0.05)
 	var t := 0.0
+	var tok := (_say_token + 1)
+	_say_token = tok
+	player.talking = text.begins_with("\"") or text.begins_with("'")   # only real speech moves his mouth
 	while t < dur and not _say_skip:
 		await get_tree().process_frame
 		t += get_process_delta_time()
-	message.visible = false
+	if _say_token == tok:
+		player.talking = false
+		message.visible = false
 
 
 func award(id: String) -> void:

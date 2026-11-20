@@ -37,7 +37,7 @@ def fk(hip, t1, bend, l1=9.0, l2=9.0):
     return knee, foot
 
 
-def frame(outfit, f, pose=None):
+def frame(outfit, f, pose=None, mouth=False):
     img = Image.new("RGBA", (LW * S, LH * S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     phase = [None, 0.0, 0.25, 0.5, 0.75][f]
@@ -97,18 +97,22 @@ def frame(outfit, f, pose=None):
     poly(d, [(11.4, 13.5 - bob), (14.6, 13.5 - bob), (14.8, 16.6 - bob), (11.2, 16.6 - bob)], SKIN_D)
     hx, hy = 13.4, 8.2 - bob
     # the head: a flatter forehead (a nearly straight front) and a squarer jaw, not an egg
-    poly(d, [(hx - 5.4, hy - 1.0), (hx - 4.6, hy - 5.2), (hx - 1.0, hy - 6.2), (hx + 3.0, hy - 5.8), (hx + 4.8, hy - 4.2), (hx + 5.0, hy + 0.5),
-             (hx + 4.6, hy + 4.0), (hx + 2.4, hy + 5.8), (hx - 2.2, hy + 6.0), (hx - 4.8, hy + 3.8)], SKIN)
-    poly(d, [(hx + 0.6, hy - 5.4), (hx + 3.0, hy - 5.4), (hx + 4.6, hy - 4.0), (hx + 4.8, hy + 0.5), (hx + 4.4, hy + 3.8), (hx + 1.0, hy + 5.2)], SKIN_L)
-    d.ellipse([(hx + 4.6) * S, (hy - 0.2) * S, (hx + 6.0) * S, (hy + 1.8) * S], fill=SKIN)   # a small nose
+    poly(d, [(hx - 5.4, hy - 1.0), (hx - 4.6, hy - 5.2), (hx - 1.0, hy - 6.2), (hx + 2.8, hy - 5.8), (hx + 4.2, hy - 4.2), (hx + 4.4, hy + 0.8),
+             (hx + 4.2, hy + 4.0), (hx + 2.4, hy + 5.8), (hx - 2.2, hy + 6.0), (hx - 4.8, hy + 3.8)], SKIN)
+    poly(d, [(hx + 0.2, hy + 0.6), (hx + 2.6, hy + 0.6), (hx + 2.8, hy + 3.6), (hx + 0.4, hy + 3.8)], SKIN_L)                 # cheek highlight, well behind the profile
+    poly(d, [(hx + 4.2, hy + 0.2), (hx + 6.3, hy + 2.3), (hx + 4.2, hy + 2.9)], SKIN)                                        # the nose: one clear step out of the face
+    d.line([(hx + 4.3) * S, (hy + 3.0) * S, (hx + 6.1) * S, (hy + 2.5) * S], fill=SKIN_D, width=int(0.5 * S))
     poly(d, [(hx - 6.2, hy - 1), (hx - 5.2, hy - 5.6), (hx - 1.0, hy - 7.6), (hx + 4.2, hy - 6.6), (hx + 5.6, hy - 3.6),
              (hx + 1.6, hy - 4.6), (hx - 2.0, hy - 3.4), (hx - 3.4, hy + 0.6), (hx - 4.6, hy + 3.4)], HAIR)
     poly(d, [(hx - 5.6, hy - 3), (hx - 1.0, hy - 7.2), (hx + 3.0, hy - 6.4), (hx - 1.0, hy - 5.4)], HAIR_L)
     poly(d, [(hx - 6.0, hy), (hx - 4.4, hy + 3.8), (hx - 3.0, hy + 1.0)], HAIR_D)
-    d.ellipse([(hx + 2.2) * S, (hy - 1.2) * S, (hx + 4.2) * S, (hy + 0.9) * S], fill=(250, 250, 250))   # eye
-    d.ellipse([(hx + 3.0) * S, (hy - 0.9) * S, (hx + 4.2) * S, (hy + 0.7) * S], fill=(24, 24, 40))
-    d.line([(hx + 2.0) * S, (hy - 2.0) * S, (hx + 4.8) * S, (hy - 2.2) * S], fill=HAIR_D, width=int(0.7 * S))     # brow
-    d.line([(hx + 2.8) * S, (hy + 3.2) * S, (hx + 4.6) * S, (hy + 3.0) * S], fill=SKIN_D, width=int(0.6 * S))     # mouth
+    d.ellipse([(hx + 1.8) * S, (hy - 1.0) * S, (hx + 3.5) * S, (hy + 0.8) * S], fill=(250, 250, 250))   # eye, set back from the profile
+    d.ellipse([(hx + 2.5) * S, (hy - 0.8) * S, (hx + 3.5) * S, (hy + 0.6) * S], fill=(24, 24, 40))
+    d.line([(hx + 1.6) * S, (hy - 1.9) * S, (hx + 3.6) * S, (hy - 2.0) * S], fill=HAIR_D, width=int(0.6 * S))     # brow
+    if mouth:
+        d.ellipse([(hx + 2.2) * S, (hy + 3.0) * S, (hx + 4.0) * S, (hy + 4.8) * S], fill=(96, 28, 40))                 # open mouth, talking
+    else:
+        d.line([(hx + 2.4) * S, (hy + 3.9) * S, (hx + 4.0) * S, (hy + 3.8) * S], fill=SKIN_D, width=int(0.6 * S))     # mouth
     d.ellipse([(hx - 3.0) * S, (hy + 0.2) * S, (hx - 1.2) * S, (hy + 2.6) * S], fill=SKIN_D)                          # ear
     # front arm over the torso
     sh = (13.4, 17.5 - bob)
@@ -161,7 +165,7 @@ def finalize(img):
 
 
 
-def _figure_front(f, back=False):
+def _figure_front(f, back=False, mode=None, mouth=False):
     """front or back view: symmetric legs and arms, face (or hair only for the back)"""
     img = Image.new("RGBA", (LW * S, LH * S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
@@ -172,7 +176,17 @@ def _figure_front(f, back=False):
     hip = 31.0 - bob
     for side, px in ((-1, cx - 2.6), (1, cx + 2.6)):
         lift = 2.4 if (ph == 1 and side == -1) or (ph == 2 and side == 1) else 0.0
+        spread = 0.0
+        if mode and mode.startswith("climb"):
+            lift = 5.0 if (side == -1) == (int(mode[5:]) % 2 == 0) else 0.0
+        if mode and mode.startswith("fall"):
+            lift, spread = 3.0 + 1.5 * int(mode[4:]) * side, 3.0 * side
+            px = cx + side * 3.2
         bot = 50.0 - lift
+        if spread:
+            limb(d, (px - spread * 0.3, hip), (px + spread, bot - 4.5), 4.6, *TROUSER)
+            poly(d, [(px + spread - 2.7, bot - 5.5), (px + spread + 2.7, bot - 5.5), (px + spread + 3.1, bot), (px + spread - 3.1, bot)], BOOT)
+            continue
         limb(d, (px, hip), (px, bot - 4.5), 4.6, *TROUSER)
         poly(d, [(px - 2.7, bot - 5.5), (px + 2.7, bot - 5.5), (px + 3.1, bot), (px - 3.1, bot)], BOOT)
         poly(d, [(px - 2.7, bot - 5.5), (px - 1.2, bot - 5.5), (px - 1.4, bot - 0.5), (px - 2.9, bot)], (48, 48, 62))
@@ -180,6 +194,21 @@ def _figure_front(f, back=False):
         sx = cx + side * 6.4
         sh_y = 17.6 - bob
         sw_ = sw * side
+        if mode and mode.startswith("climb"):
+            up = (side == -1) == (int(mode[5:]) % 2 == 0)
+            e = (sx + side * 1.0, sh_y - 2.0) if up else (sx + side * 0.6, sh_y + 6.0)
+            h = (sx + side * 0.4, sh_y - 9.5) if up else (sx + side * 0.9, sh_y + 8.6)
+            limb(d, (sx, sh_y), e, 3.8, *SLEEVE)
+            limb(d, e, h, 3.3, *SLEEVE)
+            limb(d, h, (h[0], h[1] - 1.6), 2.8, SKIN, SKIN_D, SKIN_L)
+            continue
+        if mode and mode.startswith("fall"):
+            e = (sx + side * 3.6, sh_y - 1.5)
+            h = (sx + side * 6.0, sh_y - 8.0 - 1.5 * int(mode[4:]))
+            limb(d, (sx, sh_y), e, 3.8, *SLEEVE)
+            limb(d, e, h, 3.3, *SLEEVE)
+            limb(d, h, (h[0] + side * 0.4, h[1] - 1.4), 2.8, SKIN, SKIN_D, SKIN_L)
+            continue
         limb(d, (sx, sh_y), (sx + side * 0.6, sh_y + 6.5 + sw_ * 0.4), 3.8, *SLEEVE)
         limb(d, (sx + side * 0.6, sh_y + 6.5 + sw_ * 0.4), (sx + side * 0.9, sh_y + 12.0 + sw_), 3.3, *SLEEVE)
         limb(d, (sx + side * 0.9, sh_y + 11.6 + sw_), (sx + side * 0.9, sh_y + 13.4 + sw_), 2.8, SKIN, SKIN_D, SKIN_L)
@@ -211,7 +240,10 @@ def _figure_front(f, back=False):
             d.ellipse([(cx + ex + 0.4) * S, (hy - 0.5) * S, (cx + ex + 1.4) * S, (hy + 0.8) * S], fill=(24, 24, 40))
         d.line([(cx - 3.0) * S, (hy - 1.8) * S, (cx - 0.8) * S, (hy - 2.0) * S], fill=HAIR_D, width=int(0.7 * S))
         d.line([(cx + 0.8) * S, (hy - 2.0) * S, (cx + 3.0) * S, (hy - 1.8) * S], fill=HAIR_D, width=int(0.7 * S))
-        d.line([(cx - 1.0) * S, (hy + 3.4) * S, (cx + 1.0) * S, (hy + 3.4) * S], fill=SKIN_D, width=int(0.6 * S))
+        if mouth or (mode and mode.startswith("fall")):
+            d.ellipse([(cx - 1.3) * S, (hy + 2.8) * S, (cx + 1.3) * S, (hy + 5.0) * S], fill=(96, 28, 40))
+        else:
+            d.line([(cx - 1.0) * S, (hy + 3.4) * S, (cx + 1.0) * S, (hy + 3.4) * S], fill=SKIN_D, width=int(0.6 * S))
         d.ellipse([(cx - 0.6) * S, (hy + 1.2) * S, (cx + 0.6) * S, (hy + 2.6) * S], fill=SKIN_D)
         for ex in (-5.8, 4.4):
             d.ellipse([(cx + ex) * S, (hy - 0.4) * S, (cx + ex + 1.4) * S, (hy + 2.2) * S], fill=SKIN_D)
@@ -220,13 +252,19 @@ def _figure_front(f, back=False):
 
 def build(path):
     """sheet of 16x30 frames: 0-4 side (stand + 4 walk), 5-9 front, 10-14 back, 15-17 pick-up gesture (side)"""
-    sheet = Image.new("RGBA", (FW * 18, FH), (0, 0, 0, 0))
+    sheet = Image.new("RGBA", (FW * 26, FH), (0, 0, 0, 0))
     for f in range(5):
         sheet.paste(frame(1, f), (f * FW, 0))
         sheet.paste(_figure_front(f, False), ((5 + f) * FW, 0))
         sheet.paste(_figure_front(f, True), ((10 + f) * FW, 0))
     for k, pz in enumerate(("r1", "r2", "r3")):
         sheet.paste(frame(1, 0, pz), ((15 + k) * FW, 0))
+    for k in range(4):                                   # 18-21 climbing (back view, hands and feet alternate)
+        sheet.paste(_figure_front(0, True, "climb%d" % k), ((18 + k) * FW, 0))
+    for k in range(2):                                   # 22-23 falling (arms up, legs apart, mouth open)
+        sheet.paste(_figure_front(0, False, "fall%d" % k), ((22 + k) * FW, 0))
+    sheet.paste(frame(1, 0, None, True), (24 * FW, 0))   # 24 talking, side
+    sheet.paste(_figure_front(0, False, None, True), (25 * FW, 0))   # 25 talking, front
     sheet.save(path)
     return sheet
 

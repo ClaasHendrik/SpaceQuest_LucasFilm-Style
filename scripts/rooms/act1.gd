@@ -8,6 +8,11 @@ var claw_x := 160.0
 var riding := false
 var grabber_tex: Texture2D
 var t_anim := 0.0
+var shred := 0.0          # 0..1: how close the shredder is (spins faster, glows)
+var shred_rot := 0.0
+var rat_on := false
+var rat_pos := Vector2.ZERO
+var rat_dir := 1.0
 
 
 func setup(room_id: String) -> void:
@@ -90,8 +95,9 @@ func _ladder_pick(m, _o) -> void:
 func _rat_steal(m) -> void:
 	GameState.set_flag("rat_done")
 	Sfx.play("squeak")
-	await m.get_tree().create_timer(0.1 if m.fast else 1.5).timeout
+	await m.get_tree().create_timer(0.1 if m.fast else 1.0).timeout
 	Sfx.play("steal")
+	await _rat_run(m, 228.0, 700.0, -60.0, 1.1)
 	if GameState.has_item("reactor"):
 		GameState.take_item("reactor")
 		GameState.set_flag("reactor_taken", false)
@@ -112,6 +118,7 @@ func _eye(m, _o) -> void:
 
 
 func _chasm(m, _o) -> void:
+	await m.player.fall(300.0)
 	await m.die("Deceleration Trauma", "You step off the edge of the world and take the long way down.\nIt is very quiet, for a while. Then it is not, and then it is again.")
 
 
@@ -135,8 +142,9 @@ func _setup_yard(room_id: String) -> void:
 
 
 func _process(delta: float) -> void:
-	if id == "dark_room" or id == "conveyor":
+	if id == "dark_room" or id == "conveyor" or rat_on:
 		t_anim += delta
+		shred_rot += delta * (2.0 + shred * 14.0)
 		queue_redraw()
 
 
@@ -154,7 +162,15 @@ func _draw() -> void:
 				draw_rect(Rect2(c.x + 7, c.y, 4, 3), Color("ff3b2e"))
 	if id == "tube_entrance" and not GameState.flag("ladder_taken"):
 		_draw_ladder(Vector2(242, 134) * 2.0, Vector2(262, 84) * 2.0)
+	if rat_on:
+		_draw_rat(rat_pos, rat_dir)
 	if id == "conveyor":
+		_gear(Vector2(184, 128) * 2.0, 22.0, shred_rot)
+		_gear(Vector2(184, 146) * 2.0, 22.0, -shred_rot + 0.3)
+		if shred > 0.5:
+			for i in 5:     # sparks
+				var a := t_anim * 9.0 + i * 1.3
+				draw_rect(Rect2(Vector2(184, 134) * 2.0 + Vector2(sin(a * 3.0) * 26.0, -8.0 - fposmod(a * 12.0, 22.0)), Vector2(3, 3)), Color("ffd060"))
 		# the belt runs: dark ribs slide towards the shredder
 		for i in range(-1, 26):
 			var x := fposmod(i * 8.0 + t_anim * 26.0, 200.0)
@@ -171,6 +187,62 @@ func _draw() -> void:
 		else:
 			draw_line(Vector2(x - 14, 94), Vector2(x - 8, 110), Color("c04848"), 3.0)
 			draw_line(Vector2(x + 14, 94), Vector2(x + 8, 110), Color("c04848"), 3.0)
+
+
+func _ell(c: Vector2, rx: float, ry: float, col: Color) -> void:
+	var pts := PackedVector2Array()
+	for i in 14:
+		var a := i * TAU / 14.0
+		pts.append(c + Vector2(cos(a) * rx, sin(a) * ry))
+	draw_colored_polygon(pts, col)
+
+
+func _gear(c: Vector2, r: float, rot: float) -> void:
+	var n := 9
+	var pts := PackedVector2Array()
+	for i in n * 4:
+		var a := rot + i * TAU / (n * 4.0)
+		var rr := r if (i % 4 == 0 or i % 4 == 1) else r * 0.7
+		pts.append(c + Vector2(cos(a), sin(a)) * rr)
+	draw_colored_polygon(pts, Color("5c6470"))
+	draw_circle(c, r * 0.62, Color("3a414c"))
+	draw_circle(c, r * 0.22, Color("c04848").lerp(Color("ff6a40"), shred))
+	draw_arc(c, r, 0.0, TAU, 28, Color("1c2026"), 1.5)
+
+
+func _draw_rat(p: Vector2, dir: float) -> void:
+	var f := dir if dir != 0.0 else 1.0
+	var body := Color("6a5240")
+	var dark := Color("362a20")
+	var pink := Color("d89090")
+	var run := sin(t_anim * 34.0)
+	var tail := PackedVector2Array()
+	for i in 9:
+		tail.append(p + Vector2(-f * (11.0 + i * 3.4), -6.0 + sin(t_anim * 16.0 + i * 0.7) * 3.0 + i * 0.5))
+	draw_polyline(tail, pink, 1.8)
+	for k in 4:
+		var lx := (k - 1.5) * 5.5
+		var sw := run * (3.5 if k % 2 == 0 else -3.5)
+		draw_line(p + Vector2(f * lx, -4.0), p + Vector2(f * (lx + sw), 1.0), dark, 2.0)
+	_ell(p + Vector2(0, -8), 11.0, 6.0, body)
+	_ell(p + Vector2(f * 12.0, -7), 6.5, 4.0, body)
+	_ell(p + Vector2(f * 7.0, -13), 2.6, 3.0, pink)
+	draw_rect(Rect2(p.x + f * 14.0 - 1.0, p.y - 9.0, 2, 2), Color("ff3b2e"))
+	draw_circle(p + Vector2(f * 18.0, -6.0), 1.5, pink)
+
+
+# A rat crosses the room at height y, from x0 to x1 (screen pixels) in secs seconds.
+func _rat_run(m, y: float, x0: float, x1: float, secs: float) -> void:
+	rat_on = true
+	rat_dir = signf(x1 - x0)
+	var t := 0.0
+	var dur := 0.05 if m.fast else secs
+	while t < dur and m.room == self:
+		await m.get_tree().process_frame
+		t += m.get_process_delta_time()
+		rat_pos = Vector2(lerpf(x0, x1, minf(t / dur, 1.0)), y)
+	rat_on = false
+	queue_redraw()
 
 
 func _draw_ladder(b: Vector2, t: Vector2) -> void:
@@ -204,6 +276,7 @@ func walk_request(m, pos: Vector2) -> bool:
 		return true
 	if id == "rail_west" or id == "rail_window" or id == "rail_tower":
 		if pos.y > 2.0 * 118.0:
+			await m.player.fall(260.0)
 			await m.die("Deceleration Trauma", "You step off the rail. The floor, far below, has been looking forward to this since the freighter was built.")
 			return true
 	return false
@@ -279,9 +352,11 @@ func _use_ship(m, other: Dictionary) -> void:
 
 
 func _open_hatch(m, _o) -> void:
+	await m.player.climb(-66.0, 1.1)
 	GameState.set_flag("hatch_open")
 	m.award("open_hatch")
 	await m.say("You climb up and pop the hatch. Underneath: a power panel with a reactor-shaped hole and a wire-shaped hole, and a faint smell of old toast.")
+	await m.player.climb(66.0, 0.8)
 
 
 func _look_power(m, _o) -> void:
@@ -327,11 +402,17 @@ func _shredder(m) -> void:
 		await m.get_tree().create_timer(1.0).timeout
 		if m.room != self or m.dead:
 			return
+		shred = i / 26.0
 		if i == 13:
 			m.say("Somewhere ahead, the shredder clears its throat. It has an appointment, and you are in it.")
 		if i == 21:
 			m.say("The shredder is getting closer faster than your plan is getting together.")
 	if m.room == self and not m.dead:
+		shred = 1.0
+		m.player.face("side")
+		await m.walk_to(Vector2(356.0, 262.0))
+		m.player.visible = false
+		await m.get_tree().create_timer(0.7).timeout
 		await m.die("It Slices, It Dices...", "The shredder arrives with the punctuality of a bureaucrat and the warmth of a sales rep.\nRoger, afterwards, is considerably more compact and considerably less of a problem.")
 
 
@@ -382,4 +463,5 @@ func _rats(m) -> void:
 		if i == 32:
 			m.say("The breathing has stopped. That is worse.")
 	if m.room == self and not m.dead:
+		await _rat_run(m, m.player.position.y, 640.0, m.player.position.x + 26.0, 1.2)
 		await m.die("Rats!", "The rat reaches you first. It is large, patient and has been waiting a very long time for someone exactly this unlucky.")
