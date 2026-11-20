@@ -37,6 +37,11 @@ Rules of thumb:
   finds the pixels (his own colours plus the jumpsuit grey connected to them, plus a one-pixel dark rim); `restyle.inpaint` rebuilds only those
   pixels from their nearest unmasked neighbours, outside in, on the original pixel colours before any smoothing. No patches, no hand painting, no boxes.
 
+- **Best method for removing Roger: a second screenshot.** With a second screenshot of the same room (Roger elsewhere, even taken from a video: the
+  frame maps back to the 320x200 grid at 4.5 x 5.4 with no offset, `video_screens.py`), `combine.py` takes every pixel Roger hides from the other
+  screenshot, skipping anywhere that one has Roger or the mouse cursor. No pixel is invented. Rooms done this way: crash site, junk field,
+  conveyor, rail, rail window, rail tower, dark room, tube entrance, tube, robot head.
+
 ## 3b. Animation (Lucasfilm style, not Sierra)
 - Reference: the Sierra video shows content only (what happens), not the style of motion. The motion style follows the SCUMM/Lucasfilm
   conventions as far as they are known to us from stills: a character turns to face the way he walks (side, front, back; left is the side view flipped),

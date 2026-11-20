@@ -108,6 +108,17 @@ def figure_mask(idx, box, top=10):
         new = m | (grow & body)
         changed = bool((new != m).any())
         m = new
+    if core.any():                                       # his black boots: dark pixels below the hands, connected to the body, inside his proportions
+        cy, cx = np.nonzero(core)
+        yy_, xx_ = np.mgrid[0:h, 0:w]
+        low = (yy_ >= cy.max() + 3) & (yy_ <= cy.min() + 30) & (xx_ >= cx.min() - 4) & (xx_ <= cx.max() + 4)
+        dark_ok = np.isin(sub, [0, 8]) & low
+        for _ in range(4):
+            grow = np.zeros_like(m)
+            for dy in (-1, 0, 1):
+                for dx in (-1, 0, 1):
+                    grow |= np.roll(np.roll(m, dy, 0), dx, 1)
+            m = m | (grow & dark_ok)
     for y in range(h):                                   # close small gaps inside a row (the eyes, the belt)
         xs = np.nonzero(m[y])[0]
         if len(xs) >= 2:

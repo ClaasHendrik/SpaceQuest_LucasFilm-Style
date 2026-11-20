@@ -37,17 +37,17 @@ ZONES = {
 OUT = "../../assets/backgrounds/"
 # name: (screen number, boxes to erase: Roger and other figures, in 320x200 screen coordinates)
 SPEC = {
-    "crash_site": (14, [("figure", (129, 92, 152, 121))]),            # crash site (Roger is painted out of the pod window)
-    "junk_field": (15, [(110, 98, 124, 128)]),
+    "crash_site": (14, []),            # crash site (Roger is painted out of the pod window)
+    "junk_field": (15, []),
     "junk_tower": (16, [(236, 40, 256, 72)]),
-    "wire_tube": (26, [(152, 122, 174, 152), (180, 120, 214, 152)]),
-    "robot_head": (27, [(78, 120, 96, 150)]),
-    "conveyor": (18, [(4, 136, 30, 158)]),
-    "rail_west": (19, [(154, 100, 172, 134)]),
-    "rail_window": (20, [(134, 126, 164, 162)]),
-    "rail_tower": (21, [(234, 136, 264, 168)]),
-    "dark_room": (23, [(80, 108, 98, 128)]),
-    "tube_entrance": (25, [("figure", (48, 120, 68, 150))]),
+    "wire_tube": (26, []),
+    "robot_head": (27, []),
+    "conveyor": (18, []),
+    "rail_west": (19, []),
+    "rail_window": (20, []),
+    "rail_tower": (21, []),
+    "dark_room": (23, []),
+    "tube_entrance": (25, []),
     "yard": (22, []),
     "yard_ladder": (28, [(190, 74, 212, 100)]),   # painted out using the same yard from screen 22
     "cockpit": (29, []),

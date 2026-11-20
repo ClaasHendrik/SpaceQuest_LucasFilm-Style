@@ -17,3 +17,5 @@ Open (in the order planned)
 5. The guesses listed in ACT1_PLAN.md (rail connections, one-view claw)
 
 How to repeat for the next act: copy build_act1.py (zones), make_act1_rooms.py (rooms and hotspots), act1.gd (puzzles), extend selftest with a full-route test, build the original | redo | classification overview, then the walkthrough PDF.
+
+Roger removed from backgrounds with second screenshots (combine.py): 10 rooms done. Still open: lift tower (s016, the new screenshot has a different, darker look with Roger at the same spot, so a screenshot with Roger elsewhere is needed).
